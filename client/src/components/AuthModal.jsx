@@ -46,7 +46,7 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
       onAuthSuccess(res.data.user);
       onClose();
     } catch (err) {
-      setError(err.response?.data?.message || 'Google Sign-In failed. (Server could not verify identity or network error)');
+      setError(err.response?.data?.message || err.message || 'Google Sign-In failed. (Server could not verify identity or network error)');
     } finally {
       setLoading(false);
     }

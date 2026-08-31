@@ -58,7 +58,7 @@ const LoginPage = ({ onAuthSuccess }) => {
       navigate('/');
     } catch (err) {
       console.error('[Google Auth Error]', err);
-      setError(err.response?.data?.message || 'Google Authentication failed. (Server could not verify identity or network error)');
+      setError(err.response?.data?.message || err.message || 'Google Authentication failed. (Server could not verify identity or network error)');
     } finally {
       setLoading(false);
     }
