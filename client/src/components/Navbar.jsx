@@ -21,20 +21,20 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center space-x-3 group">
+        <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
           <img 
             src="/coders-club-logo.png" 
             alt="Coders' Club Logo" 
-            className="w-10 h-10 object-contain bg-white rounded-lg p-0.5 shadow-sm group-hover:scale-105 transition-transform" 
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain bg-white rounded-lg p-0.5 shadow-sm group-hover:scale-105 transition-transform" 
           />
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-extrabold text-base tracking-wide text-white">CODEX 4.0</span>
-              <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase">
+            <div className="flex items-center space-x-1.5 sm:space-x-2">
+              <span className="font-extrabold text-sm sm:text-base tracking-wide text-white whitespace-nowrap">CODEX 4.0</span>
+              <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 sm:px-2 rounded-full uppercase">
                 GPREC
               </span>
             </div>
-            <p className="text-[11px] text-[#CBD5E1] font-normal">Coders' Club Flagship Event</p>
+            <p className="text-[10px] sm:text-[11px] text-[#CBD5E1] font-normal hidden sm:block">Coders' Club Flagship Event</p>
           </div>
         </Link>
 
