@@ -1,0 +1,19 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and Credential files
+.env
+.env.local
+google-service-account.json
+
+# Build output
+dist/
+build/
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,526 @@
+const Registration = require('../models/Registration');
+const User = require('../models/User');
+const { getNextSequenceValue } = require('../models/Counter');
+const { createRazorpayOrder, verifyPaymentSignature, getRazorpayKeyId } = require('../utils/razorpay');
+const { sendConfirmationEmail } = require('../utils/mailer');
+const { syncRegistrationToSheet } = require('../utils/googleSheets');
+
+/**
+ * Clean up expired pending registrations helper
+ */
+const cleanupExpiredPending = async () => {
+  try {
+    const now = new Date();
+    await Registration.deleteMany({ status: 'pending', expiresAt: { $lt: now } });
+  } catch (err) {
+    console.error('[Cleanup] Error removing expired pending registrations:', err);
+  }
+};
+
+/**
+ * POST /api/register/check-roll
+ * Check if roll numbers are already registered in paid or active pending teams
+ */
+const checkRollNumbers = async (req, res) => {
+  try {
+    await cleanupExpiredPending();
+
+    const { rollNumbers } = req.body;
+    if (!rollNumbers || !Array.isArray(rollNumbers) || rollNumbers.length === 0) {
+      return res.status(400).json({ success: false, message: 'Invalid or empty roll numbers array.' });
+    }
+
+    const cleanRolls = rollNumbers.map((r) => String(r).trim().toUpperCase()).filter(Boolean);
+
+    // Find any paid or active non-expired pending registrations containing these roll numbers
+    const now = new Date();
+    const existing = await Registration.find({
+      $or: [
+        { status: 'paid' },
+        { status: 'pending', expiresAt: { $gt: now } },
+      ],
+      'members.rollNo': { $in: cleanRolls },
+    });
+
+    const registeredRolls = [];
+    existing.forEach((reg) => {
+      reg.members.forEach((m) => {
+        if (cleanRolls.includes(m.rollNo) && !registeredRolls.includes(m.rollNo)) {
+          registeredRolls.push(m.rollNo);
+        }
+      });
+    });
+
+    return res.json({
+      success: true,
+      available: registeredRolls.length === 0,
+      occupiedRolls: registeredRolls,
+    });
+  } catch (error) {
+    console.error('[checkRollNumbers] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error checking roll numbers.' });
+  }
+};
+
+/**
+ * POST /api/register/create-order
+ * Validates team details, enforces 4th year rule & uniqueness, creates Razorpay Order & MongoDB record
+ */
+const createOrder = async (req, res) => {
+  try {
+    await cleanupExpiredPending();
+
+    const { teamName, members } = req.body;
+
+    // 1. Basic Payload Validation
+    if (!teamName || !teamName.trim()) {
+      return res.status(400).json({ success: false, message: 'Team Name is required.' });
+    }
+
+    if (!members || !Array.isArray(members) || members.length < 2 || members.length > 3) {
+      return res.status(400).json({
+        success: false,
+        message: 'Team size constraint violation: Team must consist of 2 to 3 members.',
+      });
+    }
+
+    // 2. Strict 4th Year Student Constraint (Max 1 allowed)
+    const fourthYearMembers = members.filter((m) => String(m.year).trim() === '4th');
+    if (fourthYearMembers.length > 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Rule Violation: A team may include zero or ONE 4th-year student — never two or more.',
+      });
+    }
+
+    // 3. Member Format & Duplicate Check within the payload
+    const rollNumbersInPayload = [];
+    const emailsInPayload = [];
+    let leaderFound = false;
+
+    for (let i = 0; i < members.length; i++) {
+      const m = members[i];
+      if (!m.name || !m.email || !m.rollNo || !m.year || !m.branch || !m.mobile) {
+        return res.status(400).json({
+          success: false,
+          message: `All fields are required for Member ${i + 1} (${m.name || 'Unnamed'}).`,
+        });
+      }
+
+      // Mobile 10-digit validation
+      const cleanMobile = String(m.mobile).trim();
+      if (!/^\d{10}$/.test(cleanMobile)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid mobile number for ${m.name}. Mobile number must be 10 digits.`,
+        });
+      }
+
+      // Email validation
+      const cleanEmail = String(m.email).trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid email address format for ${m.name}.`,
+        });
+      }
+
+      const cleanRoll = String(m.rollNo).trim().toUpperCase();
+      if (rollNumbersInPayload.includes(cleanRoll)) {
+        return res.status(400).json({
+          success: false,
+          message: `Duplicate roll number '${cleanRoll}' entered within your team.`,
+        });
+      }
+      rollNumbersInPayload.push(cleanRoll);
+
+      if (emailsInPayload.includes(cleanEmail)) {
+        return res.status(400).json({
+          success: false,
+          message: `Duplicate email '${cleanEmail}' entered within your team.`,
+        });
+      }
+      emailsInPayload.push(cleanEmail);
+
+      if (m.isLeader) leaderFound = true;
+    }
+
+    // Default member 1 as leader if not explicitly specified
+    if (!leaderFound && members.length > 0) {
+      members[0].isLeader = true;
+    }
+
+    // 4. Registration Cap Check
+    const registrationCap = parseInt(process.env.REGISTRATION_CAP || '50', 10);
+    const paidTeamsCount = await Registration.countDocuments({ status: 'paid' });
+    if (paidTeamsCount >= registrationCap) {
+      return res.status(400).json({
+        success: false,
+        message: 'Registration Full: The maximum cap of registered teams has been reached.',
+      });
+    }
+
+    // 5. Database Roll Number Uniqueness Check
+    const now = new Date();
+    const existingRegistrations = await Registration.find({
+      $or: [
+        { status: 'paid' },
+        { status: 'pending', expiresAt: { $gt: now } },
+      ],
+      'members.rollNo': { $in: rollNumbersInPayload },
+    });
+
+    if (existingRegistrations.length > 0) {
+      const leaderEmail = members[0]?.email?.trim()?.toLowerCase();
+      const existingLeaderPending = existingRegistrations.find(
+        (reg) => reg.status === 'pending' && reg.members[0]?.email?.toLowerCase() === leaderEmail
+      );
+
+      if (existingLeaderPending) {
+        const feeAmount = existingLeaderPending.paymentDetails?.amount || parseInt(process.env.EVENT_FEE_PER_TEAM || '150', 10);
+        const razorpayOrder = await createRazorpayOrder(feeAmount, existingLeaderPending.teamId);
+
+        existingLeaderPending.paymentDetails.razorpayOrderId = razorpayOrder.id;
+        await existingLeaderPending.save();
+
+        return res.status(200).json({
+          success: true,
+          message: 'Resumed your existing pending registration.',
+          teamId: existingLeaderPending.teamId,
+          order: razorpayOrder,
+          keyId: getRazorpayKeyId(),
+          registrationId: existingLeaderPending._id,
+          amount: feeAmount,
+          isExistingPending: true,
+        });
+      }
+
+      const conflictingRolls = [];
+      existingRegistrations.forEach((reg) => {
+        reg.members.forEach((m) => {
+          if (rollNumbersInPayload.includes(m.rollNo) && !conflictingRolls.includes(m.rollNo)) {
+            conflictingRolls.push(m.rollNo);
+          }
+        });
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: `The following roll number(s) are already registered in another active team: ${conflictingRolls.join(', ')}`,
+        conflictingRolls,
+      });
+    }
+
+    // 6. Generate Unique Team ID (e.g. CDX4-0001)
+    const teamId = await getNextSequenceValue('teamId');
+
+    // 7. Calculate Fee (Configurable per team or default ₹150)
+    const feeAmount = parseInt(process.env.EVENT_FEE_PER_TEAM || '150', 10);
+
+    // 8. Create Razorpay Order
+    const razorpayOrder = await createRazorpayOrder(feeAmount, teamId);
+
+    // 9. Save Pending Registration in MongoDB
+    // Pending registration holds slots for 10 minutes
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    const formattedMembers = members.map((m) => ({
+      name: String(m.name).trim(),
+      email: String(m.email).trim().toLowerCase(),
+      rollNo: String(m.rollNo).trim().toUpperCase(),
+      year: String(m.year).trim(),
+      branch: String(m.branch).trim(),
+      college: m.college ? String(m.college).trim() : 'GPREC',
+      mobile: String(m.mobile).trim(),
+      isLeader: Boolean(m.isLeader),
+    }));
+
+    const newRegistration = new Registration({
+      teamId,
+      teamName: String(teamName).trim(),
+      members: formattedMembers,
+      status: 'pending',
+      paymentDetails: {
+        razorpayOrderId: razorpayOrder.id,
+        amount: feeAmount,
+        currency: 'INR',
+      },
+      expiresAt,
+    });
+
+    await newRegistration.save();
+
+    return res.status(201).json({
+      success: true,
+      message: 'Razorpay order created successfully.',
+      teamId,
+      order: razorpayOrder,
+      keyId: getRazorpayKeyId(),
+      registrationId: newRegistration._id,
+      amount: feeAmount,
+    });
+  } catch (error) {
+    console.error('[createOrder] Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error creating registration order.',
+    });
+  }
+};
+
+/**
+ * POST /api/register/verify-payment
+ * Verify signature, update status to paid, trigger confirmation email
+ */
+const verifyPayment = async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, teamId } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing Razorpay payment verification details.',
+      });
+    }
+
+    // 1. Find registration record by order ID or team ID
+    let registration = null;
+    if (teamId) {
+      registration = await Registration.findOne({ teamId });
+    } else {
+      registration = await Registration.findOne({ 'paymentDetails.razorpayOrderId': razorpay_order_id });
+    }
+
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Registration record not found for the provided order/team ID.',
+      });
+    }
+
+    if (registration.status === 'paid') {
+      return res.json({
+        success: true,
+        message: 'Payment was already verified and confirmed.',
+        teamId: registration.teamId,
+        registration,
+      });
+    }
+
+    // 2. Verify HMAC SHA256 Signature
+    const isValidSignature = verifyPaymentSignature(
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    );
+
+    if (!isValidSignature) {
+      registration.status = 'failed';
+      await registration.save();
+      return res.status(400).json({
+        success: false,
+        message: 'Payment verification failed: Invalid Razorpay signature.',
+      });
+    }
+
+    // 3. Update registration to PAID
+    registration.status = 'paid';
+    registration.paymentDetails.razorpayPaymentId = razorpay_payment_id;
+    registration.paymentDetails.razorpaySignature = razorpay_signature;
+    registration.paymentDetails.paidAt = new Date();
+    registration.expiresAt = undefined; // Remove expiration
+
+    await registration.save();
+
+    // 3.5. Sync to Google Sheets (Async background sync)
+    syncRegistrationToSheet(registration).catch((sheetErr) => {
+      console.error('[GoogleSheets] Sync error during verification:', sheetErr.message);
+    });
+
+    // 4. Sync team members into User collection ONLY AFTER successful payment verification
+    for (const m of registration.members) {
+      try {
+        await User.findOneAndUpdate(
+          { email: m.email.toLowerCase() },
+          {
+            $set: {
+              name: m.name,
+              email: m.email.toLowerCase(),
+              rollNo: m.rollNo,
+              year: m.year,
+              branch: m.branch,
+              college: m.college || 'GPREC',
+              mobile: m.mobile,
+            },
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+      } catch (uErr) {
+        console.log('[verifyPayment] User sync note:', uErr.message);
+      }
+    }
+
+    // 4. Send Confirmation Email (Async non-blocking)
+    const emailResult = await sendConfirmationEmail(registration);
+    if (emailResult) {
+      registration.emailSent = true;
+      registration.emailSentAt = new Date();
+      await registration.save();
+    }
+
+    return res.json({
+      success: true,
+      message: 'Payment verified successfully! Registration is now complete.',
+      teamId: registration.teamId,
+      registration,
+    });
+  } catch (error) {
+    console.error('[verifyPayment] Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error verifying payment signature.',
+    });
+  }
+};
+
+/**
+ * GET /api/register/pending
+ * Retrieve active non-expired pending registration for user
+ */
+const getPendingRegistration = async (req, res) => {
+  try {
+    await cleanupExpiredPending();
+    const email = req.query.email || req.user?.email;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email parameter required.' });
+    }
+
+    const cleanEmail = String(email).trim().toLowerCase();
+    const now = new Date();
+
+    const pending = await Registration.findOne({
+      status: 'pending',
+      expiresAt: { $gt: now },
+      'members.email': cleanEmail,
+    });
+
+    if (!pending) {
+      return res.json({ success: true, pending: null });
+    }
+
+    return res.json({
+      success: true,
+      pending: {
+        teamId: pending.teamId,
+        teamName: pending.teamName,
+        members: pending.members,
+        expiresAt: pending.expiresAt,
+        amount: pending.paymentDetails?.amount || 300,
+      },
+    });
+  } catch (error) {
+    console.error('[getPendingRegistration] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error checking pending registration.' });
+  }
+};
+
+/**
+ * POST /api/register/retry-order
+ * Retry/resume payment for active pending registration
+ */
+const retryPendingOrder = async (req, res) => {
+  try {
+    await cleanupExpiredPending();
+    const { teamId } = req.body;
+    if (!teamId) {
+      return res.status(400).json({ success: false, message: 'teamId is required.' });
+    }
+
+    const now = new Date();
+    const registration = await Registration.findOne({
+      teamId,
+      status: 'pending',
+      expiresAt: { $gt: now },
+    });
+
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Pending registration expired or not found. Please register again.',
+      });
+    }
+
+    const feeAmount = registration.paymentDetails?.amount || parseInt(process.env.EVENT_FEE_PER_TEAM || '150', 10);
+    const razorpayOrder = await createRazorpayOrder(feeAmount, teamId);
+
+    registration.paymentDetails.razorpayOrderId = razorpayOrder.id;
+    await registration.save();
+
+    return res.json({
+      success: true,
+      message: 'Pending registration order ready.',
+      teamId: registration.teamId,
+      order: razorpayOrder,
+      keyId: getRazorpayKeyId(),
+      amount: feeAmount,
+      registration,
+    });
+  } catch (error) {
+    console.error('[retryPendingOrder] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error retrying pending order.' });
+  }
+};
+
+/**
+ * POST /api/register/cancel-pending
+ * Cancel an active pending registration
+ */
+const cancelPendingRegistration = async (req, res) => {
+  try {
+    const { teamId } = req.body;
+    if (!teamId) {
+      return res.status(400).json({ success: false, message: 'teamId is required.' });
+    }
+
+    await Registration.updateOne(
+      { teamId, status: 'pending' },
+      { status: 'cancelled', expiresAt: new Date() }
+    );
+
+    return res.json({ success: true, message: 'Pending registration cancelled successfully.' });
+  } catch (error) {
+    console.error('[cancelPendingRegistration] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error cancelling pending registration.' });
+  }
+};
+
+/**
+ * GET /api/register/system-settings
+ * Retrieve public system settings
+ */
+const getSystemSettings = async (req, res) => {
+  try {
+    const SystemSetting = require('../models/SystemSetting');
+    const underConstructionSetting = await SystemSetting.findOne({ key: 'underConstruction' });
+    const underConstruction = underConstructionSetting ? underConstructionSetting.value === true : false;
+    return res.json({
+      success: true,
+      settings: {
+        underConstruction,
+      },
+    });
+  } catch (error) {
+    console.error('[getSystemSettings] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error retrieving system settings.' });
+  }
+};
+
+module.exports = {
+  checkRollNumbers,
+  createOrder,
+  verifyPayment,
+  getPendingRegistration,
+  retryPendingOrder,
+  cancelPendingRegistration,
+  getSystemSettings,
+};
