@@ -10,7 +10,7 @@ Full-stack MERN application for **Codex 4.0** (Overnight 8-Hour Technical Coding
 - **Strict 4th-Year Student Constraint:** Server-enforced rule permitting **0 or at most 1** 4th-year student per team (2 or 3 4th-year members strictly rejected).
 - **Roll Number Uniqueness:** Database-backed duplicate check prevents registered students from re-registering across teams.
 - **Razorpay Payment Gateway:** Server-side HMAC SHA256 signature verification and Razorpay Webhook fallback handler.
-- **Email Automation:** Nodemailer HTML email notifications with Team ID (`CDX4-XXXX`), date/time (24th Aug, 9:00 PM – 5:00 AM), venue, and member breakdown.
+- **Email Automation:** Nodemailer HTML email notifications with Team ID (`CDX4-XXXX`), date/time (24th Aug, 9:00 AM – 5:00 PM), venue, and member breakdown.
 - **On-Demand Excel Export:** Generated directly from MongoDB Atlas using `exceljs` via protected admin route `GET /api/admin/export`.
 - **Pending Registration TTL:** Holds slots for 15 minutes during checkout before releasing roll numbers if unpaid.
 - **Admin Dashboard:** Password/Secret protected portal with live statistics, search/filter capabilities, email resend actions, and manual status updates.
