@@ -3,16 +3,22 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Wrench, Loader2 } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import ProtectedRoute from './components/ProtectedRoute';
 import api from './api/axiosInstance';
 
-// Individual Pages
+// Event Pages
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import RulesPage from './pages/RulesPage';
 import FAQPage from './pages/FAQPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
+
+// Legal & Razorpay Policy Pages
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import RefundPolicyPage from './pages/RefundPolicyPage';
+import ContactPage from './pages/ContactPage';
+import ShippingPolicyPage from './pages/ShippingPolicyPage';
 
 // Scroll to top helper component on route change
 function ScrollToTop() {
@@ -29,7 +35,6 @@ function UnderConstructionPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#F8FAFC] text-[#0F172A] relative overflow-hidden text-center">
-
       <div className="relative z-10 max-w-lg bg-white p-8 sm:p-10 rounded-2xl border border-amber-200 shadow-card-hover space-y-6">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 mx-auto shadow-xs">
           <Wrench className="w-8 h-8 animate-bounce" />
@@ -77,8 +82,27 @@ function App() {
   const handleAuthSuccess = (userData) => {
     if (userData) {
       setUser(userData);
+      localStorage.setItem('codex_user_data', JSON.stringify(userData));
     }
   };
+
+  // Attempt silent session restore on mount
+  useEffect(() => {
+    const restoreSession = async () => {
+      try {
+        const res = await api.get('/user/me');
+        if (res.data?.user) {
+          setUser(res.data.user);
+          localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
+        }
+      } catch (err) {
+        // Not logged in — public visitor
+      }
+    };
+    if (!user) {
+      restoreSession();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -95,12 +119,19 @@ function App() {
     };
 
     fetchSettings();
-    // Poll settings every 10 seconds for real-time live sync across all open tabs/users
+    // Poll settings every 10 seconds for real-time live sync across open tabs/users
     const interval = setInterval(fetchSettings, 10000);
     return () => clearInterval(interval);
   }, [location.pathname]);
 
-  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  const isBypassRoute =
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/login') ||
+    location.pathname.startsWith('/terms') ||
+    location.pathname.startsWith('/privacy') ||
+    location.pathname.startsWith('/refund-policy') ||
+    location.pathname.startsWith('/shipping-policy') ||
+    location.pathname.startsWith('/contact');
 
   if (checkingSettings) {
     return (
@@ -110,8 +141,8 @@ function App() {
     );
   }
 
-  // If system is Under Construction and user is NOT accessing admin/login routes, show Under Construction page
-  if (underConstruction && !isAdminRoute) {
+  // If system is Under Construction and user is NOT on an admin, login, or legal page, show Under Construction page
+  if (underConstruction && !isBypassRoute) {
     return <UnderConstructionPage />;
   }
 
@@ -123,26 +154,34 @@ function App() {
         {/* Unprotected Public Login Route */}
         <Route path="/login" element={<LoginPage onAuthSuccess={handleAuthSuccess} />} />
 
-        {/* Protected App Routes */}
+        {/* Main Application Routes with Unified Navbar & Footer */}
         <Route
           path="/*"
           element={
-            <ProtectedRoute onUserLoaded={setUser}>
-              <div className="flex flex-col min-h-screen">
-                <Navbar user={user} />
-                <main className="flex-1">
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/rules" element={<RulesPage />} />
-                    <Route path="/faq" element={<FAQPage />} />
-                    <Route path="/admin" element={<AdminPage />} />
-                    <Route path="*" element={<HomePage />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </div>
-            </ProtectedRoute>
+            <div className="flex flex-col min-h-screen">
+              <Navbar user={user} />
+              <main className="flex-1">
+                <Routes>
+                  {/* Event Routes */}
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/rules" element={<RulesPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/admin" element={<AdminPage />} />
+
+                  {/* Legal & Merchant Policy Routes for Razorpay Verification */}
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/refund-policy" element={<RefundPolicyPage />} />
+                  <Route path="/shipping-policy" element={<ShippingPolicyPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+
+                  {/* Catch-all fallback */}
+                  <Route path="*" element={<HomePage />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
           }
         />
       </Routes>
