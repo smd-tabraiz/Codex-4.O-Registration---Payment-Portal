@@ -119,6 +119,7 @@ const createCashfreeOrder = async (amountInINR, teamId, customerDetails = {}) =>
       order_status: data.order_status,
       order_amount: data.order_amount,
       order_currency: data.order_currency,
+      environment: getCashfreeEnv().toLowerCase(),
       isMock: false,
     };
   } catch (error) {
@@ -130,6 +131,7 @@ const createCashfreeOrder = async (amountInINR, teamId, customerDetails = {}) =>
         order_status: 'ACTIVE',
         order_amount: Number(amountInINR),
         order_currency: 'INR',
+        environment: 'sandbox',
         isMock: true,
       };
     }

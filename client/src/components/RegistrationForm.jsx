@@ -416,10 +416,20 @@ const RegistrationForm = ({ onSuccess }) => {
         return;
       }
 
+      if (!sessionId || typeof sessionId !== 'string' || !sessionId.trim()) {
+        setLoading(false);
+        setErrorMsg('Payment session ID is missing or invalid. Please refresh and try again.');
+        return;
+      }
+
       try {
-        const cashfreeMode = import.meta.env.VITE_CASHFREE_MODE || 'sandbox';
+        const cashfreeMode =
+          (order?.environment || order?.cfEnv || import.meta.env.VITE_CASHFREE_MODE || 'production').toLowerCase();
+        
+        console.log(`[Cashfree] Initializing SDK in [${cashfreeMode}] mode with session ID: ${sessionId.slice(0, 20)}...`);
+
         const cashfree = window.Cashfree({
-          mode: cashfreeMode,
+          mode: cashfreeMode === 'production' ? 'production' : 'sandbox',
         });
 
         const checkoutOptions = {
