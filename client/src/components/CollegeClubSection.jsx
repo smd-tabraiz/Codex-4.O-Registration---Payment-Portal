@@ -3,7 +3,7 @@ import { Building2, Code2, Award, GraduationCap, Trophy, Users, BookOpen, CheckC
 
 const CollegeClubSection = () => {
   return (
-    <div className="py-12 bg-white border-y border-[#E2E8F0] my-8 animate-fade-in-up">
+    <div id="about" className="py-12 bg-white border-y border-[#E2E8F0] my-8 animate-fade-in-up scroll-mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         
         {/* Section Header */}

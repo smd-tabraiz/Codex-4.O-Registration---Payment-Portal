@@ -19,13 +19,24 @@ import PrivacyPage from './pages/PrivacyPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import ContactPage from './pages/ContactPage';
 import ShippingPolicyPage from './pages/ShippingPolicyPage';
+import PricingPage from './pages/PricingPage';
 
-// Scroll to top helper component on route change
+// Scroll to top helper component on route change, with smooth hash anchor support
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   useEffect(() => {
+    if (hash) {
+      const targetId = hash.replace('#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+        return;
+      }
+    }
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [pathname, hash]);
   return null;
 }
 
@@ -131,6 +142,8 @@ function App() {
     location.pathname.startsWith('/privacy') ||
     location.pathname.startsWith('/refund-policy') ||
     location.pathname.startsWith('/shipping-policy') ||
+    location.pathname.startsWith('/pricing') ||
+    location.pathname.startsWith('/services') ||
     location.pathname.startsWith('/contact');
 
   if (checkingSettings) {
@@ -169,7 +182,9 @@ function App() {
                   <Route path="/faq" element={<FAQPage />} />
                   <Route path="/admin" element={<AdminPage />} />
 
-                  {/* Legal & Merchant Policy Routes for Razorpay Verification */}
+                  {/* Legal & Merchant Policy Routes for Cashfree Verification */}
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/services" element={<PricingPage />} />
                   <Route path="/terms" element={<TermsPage />} />
                   <Route path="/privacy" element={<PrivacyPage />} />
                   <Route path="/refund-policy" element={<RefundPolicyPage />} />

@@ -6,8 +6,8 @@ const REFUND_SECTIONS = [
   {
     heading: 'General Policy & Non-Refundable Registration Fee',
     paragraphs: [
-      'Codex 4.0 is an on-campus technical competition organized by Coders\' Club, GPREC, with a capped participant capacity (limited slots) and substantial upfront logistical planning (prize pool allocation, laboratory reservations, catering, certificates, and infrastructure).',
-      'Therefore, registration fees of ₹300 per team are strictly NON-REFUNDABLE once payment is completed and confirmed via the payment gateway.',
+      'Codex 4.0 is an on-campus technical competition organized by Coders\' Club, GPREC, with a capped participant capacity (limited to 50 teams) and substantial upfront logistical commitments (₹50,000 INR prize pool allocation, laboratory reservations, catering, certificates, and infrastructure).',
+      'Therefore, the registration fee of ₹300.00 INR (Indian Rupees) per team is strictly NON-REFUNDABLE once payment is completed and confirmed via the payment gateway.',
       'Once a team registers and payment is confirmed, the slot is locked and unavailable to other aspiring teams.',
     ],
   },

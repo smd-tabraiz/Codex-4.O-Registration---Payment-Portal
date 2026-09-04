@@ -39,6 +39,9 @@ const Footer = () => {
                 <Link to="/" className="hover:text-white transition-colors">Home</Link>
               </li>
               <li>
+                <Link to="/pricing" className="hover:text-white transition-colors">Pricing & Services (INR)</Link>
+              </li>
+              <li>
                 <Link to="/register" className="hover:text-white transition-colors">Team Registration</Link>
               </li>
               <li>
@@ -50,13 +53,16 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Col 3: Legal & Razorpay Policy Links */}
+          {/* Col 3: Legal & Merchant Policy Links */}
           <div className="space-y-3">
             <h4 className="text-white text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
               <span>Legal & Policies</span>
             </h4>
             <ul className="space-y-2 text-xs">
+              <li>
+                <Link to="/pricing" className="hover:text-blue-400 transition-colors">Products, Services & Pricing</Link>
+              </li>
               <li>
                 <Link to="/terms" className="hover:text-blue-400 transition-colors">Terms & Conditions</Link>
               </li>

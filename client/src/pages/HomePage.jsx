@@ -143,30 +143,61 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Venue & Facilities Strip */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-card">
-          <h3 className="text-lg font-bold text-[#0F172A] mb-4 flex items-center space-x-2">
-            <Sparkles className="w-5 h-5 text-[#2563EB]" />
-            <span>Campus Amenities & Participant Support</span>
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            <div className="flex items-center space-x-2.5 bg-white p-3 rounded-xl border border-[#E2E8F0]">
-              <Wifi className="w-4 h-4 text-[#2563EB] shrink-0" />
-              <span className="font-medium text-[#0F172A]">High-Speed Wi-Fi</span>
+      {/* Products, Services & INR Pricing Section */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="bg-white border border-[#E2E8F0] rounded-3xl p-6 sm:p-10 shadow-card space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E2E8F0]">
+            <div>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-[#2563EB] text-xs font-semibold uppercase tracking-wider mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Service & INR Pricing Details</span>
+              </div>
+              <h3 className="text-2xl font-extrabold text-[#0F172A]">
+                Codex 4.0 Team Registration Pass
+              </h3>
+              <p className="text-xs sm:text-sm text-[#64748B] mt-1">
+                Official registration ticket for 2 to 3 student participants (Includes entry to all rounds, food & certificates).
+              </p>
             </div>
-            <div className="flex items-center space-x-2.5 bg-white p-3 rounded-xl border border-[#E2E8F0]">
-              <Laptop className="w-4 h-4 text-purple-600 shrink-0" />
-              <span className="font-medium text-[#0F172A]">Power & Extension Sockets</span>
+
+            <div className="bg-[#F8FAFC] border border-[#E2E8F0] p-4 sm:p-5 rounded-2xl flex items-baseline space-x-2 shrink-0">
+              <span className="text-3xl sm:text-4xl font-extrabold text-[#0F172A]">₹300</span>
+              <span className="text-xs font-bold text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                INR / Team
+              </span>
             </div>
-            <div className="flex items-center space-x-2.5 bg-white p-3 rounded-xl border border-[#E2E8F0]">
-              <Coffee className="w-4 h-4 text-amber-600 shrink-0" />
-              <span className="font-medium text-[#0F172A]">Snacks & Refreshments</span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3 text-xs text-[#334155]">
+            <div className="flex items-center space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Full entry pass for 2–3 team members</span>
             </div>
-            <div className="flex items-center space-x-2.5 bg-white p-3 rounded-xl border border-[#E2E8F0]">
-              <Award className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span className="font-medium text-[#0F172A]">Certificates for All</span>
+            <div className="flex items-center space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Eligibility for ₹50,000 INR Cash Prize Pool</span>
             </div>
+            <div className="flex items-center space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Free Lunch, Refreshments & High-Speed Lab Wi-Fi</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Verified hard-copy certificates for all members</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <span className="text-xs text-[#64748B]">
+              Secure payments powered by <strong>Cashfree Payments</strong> (UPI, Cards, Net Banking)
+            </span>
+            <button
+              onClick={() => navigate('/pricing')}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-50 text-[#2563EB] hover:bg-blue-100 font-semibold text-xs flex items-center justify-center space-x-1.5 transition-all"
+            >
+              <span>View Full Pricing Details</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>

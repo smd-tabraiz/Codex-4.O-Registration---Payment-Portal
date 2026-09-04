@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Terminal, HelpCircle, FileText, UserPlus, Home, LogOut } from 'lucide-react';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Terminal, HelpCircle, FileText, UserPlus, Home, LogOut, CreditCard, Building2 } from 'lucide-react';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const savedUserData = localStorage.getItem('codex_user_data');
   const user = savedUserData ? JSON.parse(savedUserData) : null;
@@ -14,6 +15,18 @@ const Navbar = () => {
     localStorage.removeItem('codex_user_data');
     localStorage.removeItem('codex_admin_token');
     window.location.reload();
+  };
+
+  const handleAboutClick = (e) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const element = document.getElementById('about');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate('/#about');
+    }
   };
 
   return (
@@ -46,7 +59,7 @@ const Navbar = () => {
             end
             className={({ isActive }) =>
               `px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center space-x-1.5 transition-all ${
-                isActive
+                isActive && !location.hash
                   ? 'bg-[#2563EB] text-white font-semibold shadow-sm'
                   : 'text-[#CBD5E1] hover:text-white hover:bg-slate-800/80'
               }`
@@ -55,6 +68,14 @@ const Navbar = () => {
             <Home className="w-4 h-4" />
             <span className="hidden sm:inline">Home</span>
           </NavLink>
+
+          <button
+            onClick={handleAboutClick}
+            className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center space-x-1.5 transition-all text-[#CBD5E1] hover:text-white hover:bg-slate-800/80 cursor-pointer"
+          >
+            <Building2 className="w-4 h-4" />
+            <span className="hidden sm:inline">About Us</span>
+          </button>
 
           <NavLink
             to="/register"
@@ -96,6 +117,20 @@ const Navbar = () => {
           >
             <HelpCircle className="w-4 h-4" />
             <span className="hidden sm:inline">FAQ</span>
+          </NavLink>
+
+          <NavLink
+            to="/pricing"
+            className={({ isActive }) =>
+              `px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center space-x-1.5 transition-all ${
+                isActive
+                  ? 'bg-[#2563EB] text-white font-semibold shadow-sm'
+                  : 'text-[#CBD5E1] hover:text-white hover:bg-slate-800/80'
+              }`
+            }
+          >
+            <CreditCard className="w-4 h-4" />
+            <span className="hidden sm:inline">Pricing</span>
           </NavLink>
 
           {/* User Profile / Logout Button */}
