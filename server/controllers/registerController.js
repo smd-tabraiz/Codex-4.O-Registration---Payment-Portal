@@ -1,7 +1,7 @@
 const Registration = require('../models/Registration');
 const User = require('../models/User');
 const { getNextSequenceValue } = require('../models/Counter');
-const { createRazorpayOrder, verifyPaymentSignature, getRazorpayKeyId } = require('../utils/razorpay');
+const { createCashfreeOrder, verifyCashfreeOrder, getCashfreeAppId, getCashfreeEnv, isMockMode } = require('../utils/cashfree');
 const { sendConfirmationEmail } = require('../utils/mailer');
 const { syncRegistrationToSheet } = require('../utils/googleSheets');
 
@@ -64,7 +64,7 @@ const checkRollNumbers = async (req, res) => {
 
 /**
  * POST /api/register/create-order
- * Validates team details, enforces 4th year rule & uniqueness, creates Razorpay Order & MongoDB record
+ * Validates team details, enforces 4th year rule & uniqueness, creates Cashfree Order & MongoDB record
  */
 const createOrder = async (req, res) => {
   try {
@@ -103,33 +103,17 @@ const createOrder = async (req, res) => {
       if (!m.name || !m.email || !m.rollNo || !m.year || !m.branch || !m.mobile) {
         return res.status(400).json({
           success: false,
-          message: `All fields are required for Member ${i + 1} (${m.name || 'Unnamed'}).`,
-        });
-      }
-
-      // Mobile 10-digit validation
-      const cleanMobile = String(m.mobile).trim();
-      if (!/^\d{10}$/.test(cleanMobile)) {
-        return res.status(400).json({
-          success: false,
-          message: `Invalid mobile number for ${m.name}. Mobile number must be 10 digits.`,
-        });
-      }
-
-      // Email validation
-      const cleanEmail = String(m.email).trim().toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-        return res.status(400).json({
-          success: false,
-          message: `Invalid email address format for ${m.name}.`,
+          message: `Incomplete data for Member ${i + 1}. All fields are mandatory.`,
         });
       }
 
       const cleanRoll = String(m.rollNo).trim().toUpperCase();
+      const cleanEmail = String(m.email).trim().toLowerCase();
+
       if (rollNumbersInPayload.includes(cleanRoll)) {
         return res.status(400).json({
           success: false,
-          message: `Duplicate roll number '${cleanRoll}' entered within your team.`,
+          message: `Duplicate roll number ${cleanRoll} within the same team submission.`,
         });
       }
       rollNumbersInPayload.push(cleanRoll);
@@ -137,15 +121,17 @@ const createOrder = async (req, res) => {
       if (emailsInPayload.includes(cleanEmail)) {
         return res.status(400).json({
           success: false,
-          message: `Duplicate email '${cleanEmail}' entered within your team.`,
+          message: `Duplicate email ${cleanEmail} within the same team submission.`,
         });
       }
       emailsInPayload.push(cleanEmail);
 
-      if (m.isLeader) leaderFound = true;
+      if (m.isLeader) {
+        leaderFound = true;
+      }
     }
 
-    // Default member 1 as leader if not explicitly specified
+    // Ensure first member is marked as leader if not explicitly specified
     if (!leaderFound && members.length > 0) {
       members[0].isLeader = true;
     }
@@ -170,25 +156,35 @@ const createOrder = async (req, res) => {
       'members.rollNo': { $in: rollNumbersInPayload },
     });
 
+    const leader = members.find((m) => m.isLeader) || members[0];
+    const feeAmount = parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
+
     if (existingRegistrations.length > 0) {
-      const leaderEmail = members[0]?.email?.trim()?.toLowerCase();
+      const leaderEmail = leader?.email?.trim()?.toLowerCase();
       const existingLeaderPending = existingRegistrations.find(
         (reg) => reg.status === 'pending' && reg.members[0]?.email?.toLowerCase() === leaderEmail
       );
 
       if (existingLeaderPending) {
-        const feeAmount = existingLeaderPending.paymentDetails?.amount || parseInt(process.env.EVENT_FEE_PER_TEAM || '150', 10);
-        const razorpayOrder = await createRazorpayOrder(feeAmount, existingLeaderPending.teamId);
+        const clientOrigin = req.headers.origin || req.headers.referer || process.env.CLIENT_URL;
+        const cleanOrigin = clientOrigin ? clientOrigin.replace(/\/+$/, '') : 'https://codex-4-o-registration-portal.onrender.com';
+        const cfOrder = await createCashfreeOrder(feeAmount, existingLeaderPending.teamId, {
+          name: leader.name,
+          email: leader.email,
+          phone: leader.mobile,
+          returnUrl: `${cleanOrigin}/register?order_id={order_id}`,
+        });
 
-        existingLeaderPending.paymentDetails.razorpayOrderId = razorpayOrder.id;
+        existingLeaderPending.paymentDetails.cfOrderId = cfOrder.order_id;
+        existingLeaderPending.paymentDetails.paymentSessionId = cfOrder.payment_session_id;
         await existingLeaderPending.save();
 
         return res.status(200).json({
           success: true,
           message: 'Resumed your existing pending registration.',
           teamId: existingLeaderPending.teamId,
-          order: razorpayOrder,
-          keyId: getRazorpayKeyId(),
+          order: cfOrder,
+          paymentSessionId: cfOrder.payment_session_id,
           registrationId: existingLeaderPending._id,
           amount: feeAmount,
           isExistingPending: true,
@@ -214,14 +210,17 @@ const createOrder = async (req, res) => {
     // 6. Generate Unique Team ID (e.g. CDX4-0001)
     const teamId = await getNextSequenceValue('teamId');
 
-    // 7. Calculate Fee (Configurable per team or default ₹150)
-    const feeAmount = parseInt(process.env.EVENT_FEE_PER_TEAM || '150', 10);
+    // 7. Create Cashfree Order
+    const clientOrigin = req.headers.origin || req.headers.referer || process.env.CLIENT_URL;
+    const cleanOrigin = clientOrigin ? clientOrigin.replace(/\/+$/, '') : 'https://codex-4-o-registration-portal.onrender.com';
+    const cfOrder = await createCashfreeOrder(feeAmount, teamId, {
+      name: leader.name,
+      email: leader.email,
+      phone: leader.mobile,
+      returnUrl: `${cleanOrigin}/register?order_id={order_id}`,
+    });
 
-    // 8. Create Razorpay Order
-    const razorpayOrder = await createRazorpayOrder(feeAmount, teamId);
-
-    // 9. Save Pending Registration in MongoDB
-    // Pending registration holds slots for 10 minutes
+    // 8. Save Pending Registration in MongoDB (holds slot for 10 minutes)
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     const formattedMembers = members.map((m) => ({
@@ -241,7 +240,8 @@ const createOrder = async (req, res) => {
       members: formattedMembers,
       status: 'pending',
       paymentDetails: {
-        razorpayOrderId: razorpayOrder.id,
+        cfOrderId: cfOrder.order_id,
+        paymentSessionId: cfOrder.payment_session_id,
         amount: feeAmount,
         currency: 'INR',
       },
@@ -252,10 +252,10 @@ const createOrder = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: 'Razorpay order created successfully.',
+      message: 'Cashfree order created successfully.',
       teamId,
-      order: razorpayOrder,
-      keyId: getRazorpayKeyId(),
+      order: cfOrder,
+      paymentSessionId: cfOrder.payment_session_id,
       registrationId: newRegistration._id,
       amount: feeAmount,
     });
@@ -270,25 +270,32 @@ const createOrder = async (req, res) => {
 
 /**
  * POST /api/register/verify-payment
- * Verify signature, update status to paid, trigger confirmation email
+ * Verify Cashfree order status, update status to paid, trigger confirmation email
  */
 const verifyPayment = async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, teamId } = req.body;
+    const { orderId, cfOrderId, razorpay_order_id, teamId } = req.body;
+    const targetOrderId = orderId || cfOrderId || razorpay_order_id;
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+    if (!targetOrderId && !teamId) {
       return res.status(400).json({
         success: false,
-        message: 'Missing Razorpay payment verification details.',
+        message: 'Missing payment verification details (orderId or teamId required).',
       });
     }
 
-    // 1. Find registration record by order ID or team ID
+    // 1. Find registration record
     let registration = null;
     if (teamId) {
       registration = await Registration.findOne({ teamId });
-    } else {
-      registration = await Registration.findOne({ 'paymentDetails.razorpayOrderId': razorpay_order_id });
+    }
+    if (!registration && targetOrderId) {
+      registration = await Registration.findOne({
+        $or: [
+          { 'paymentDetails.cfOrderId': targetOrderId },
+          { 'paymentDetails.razorpayOrderId': targetOrderId },
+        ],
+      });
     }
 
     if (!registration) {
@@ -307,26 +314,22 @@ const verifyPayment = async (req, res) => {
       });
     }
 
-    // 2. Verify HMAC SHA256 Signature
-    const isValidSignature = verifyPaymentSignature(
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature
-    );
+    const verifyOrderId = targetOrderId || registration.paymentDetails?.cfOrderId || registration.paymentDetails?.razorpayOrderId;
 
-    if (!isValidSignature) {
-      registration.status = 'failed';
-      await registration.save();
+    // 2. Verify with Cashfree API / Mock logic
+    const verifyResult = await verifyCashfreeOrder(verifyOrderId);
+
+    if (!verifyResult.success || (verifyResult.order_status !== 'PAID' && !verifyResult.isMock)) {
+      console.warn('[verifyPayment] Verification returned non-paid status:', verifyResult);
       return res.status(400).json({
         success: false,
-        message: 'Payment verification failed: Invalid Razorpay signature.',
+        message: verifyResult.message || `Payment verification failed. Order status: ${verifyResult.order_status || 'UNKNOWN'}`,
       });
     }
 
     // 3. Update registration to PAID
     registration.status = 'paid';
-    registration.paymentDetails.razorpayPaymentId = razorpay_payment_id;
-    registration.paymentDetails.razorpaySignature = razorpay_signature;
+    registration.paymentDetails.cfPaymentId = verifyResult.cf_payment_id || `cf_pay_${Date.now()}`;
     registration.paymentDetails.paidAt = new Date();
     registration.expiresAt = undefined; // Remove expiration
 
@@ -360,7 +363,7 @@ const verifyPayment = async (req, res) => {
       }
     }
 
-    // 4. Send Confirmation Email (Async non-blocking)
+    // 5. Send Confirmation Email (Async non-blocking)
     const emailResult = await sendConfirmationEmail(registration);
     if (emailResult) {
       registration.emailSent = true;
@@ -378,7 +381,7 @@ const verifyPayment = async (req, res) => {
     console.error('[verifyPayment] Error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Server error verifying payment signature.',
+      message: 'Server error verifying payment status.',
     });
   }
 };
@@ -416,6 +419,8 @@ const getPendingRegistration = async (req, res) => {
         members: pending.members,
         expiresAt: pending.expiresAt,
         amount: pending.paymentDetails?.amount || 300,
+        paymentSessionId: pending.paymentDetails?.paymentSessionId,
+        orderId: pending.paymentDetails?.cfOrderId,
       },
     });
   } catch (error) {
@@ -450,18 +455,28 @@ const retryPendingOrder = async (req, res) => {
       });
     }
 
-    const feeAmount = registration.paymentDetails?.amount || parseInt(process.env.EVENT_FEE_PER_TEAM || '150', 10);
-    const razorpayOrder = await createRazorpayOrder(feeAmount, teamId);
+    const leader = registration.members.find((m) => m.isLeader) || registration.members[0];
+    const feeAmount = registration.paymentDetails?.amount || parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
 
-    registration.paymentDetails.razorpayOrderId = razorpayOrder.id;
+    const clientOrigin = req.headers.origin || req.headers.referer || process.env.CLIENT_URL;
+    const cleanOrigin = clientOrigin ? clientOrigin.replace(/\/+$/, '') : 'https://codex-4-o-registration-portal.onrender.com';
+    const cfOrder = await createCashfreeOrder(feeAmount, teamId, {
+      name: leader?.name,
+      email: leader?.email,
+      phone: leader?.mobile,
+      returnUrl: `${cleanOrigin}/register?order_id={order_id}`,
+    });
+
+    registration.paymentDetails.cfOrderId = cfOrder.order_id;
+    registration.paymentDetails.paymentSessionId = cfOrder.payment_session_id;
     await registration.save();
 
     return res.json({
       success: true,
       message: 'Pending registration order ready.',
       teamId: registration.teamId,
-      order: razorpayOrder,
-      keyId: getRazorpayKeyId(),
+      order: cfOrder,
+      paymentSessionId: cfOrder.payment_session_id,
       amount: feeAmount,
       registration,
     });

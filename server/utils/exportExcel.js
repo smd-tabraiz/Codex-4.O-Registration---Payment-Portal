@@ -56,7 +56,7 @@ const generateRegistrationsExcel = async (registrations) => {
     { header: 'Mobile', key: 'mobile', width: 16 },
     { header: 'Payment Status', key: 'status', width: 16 },
     { header: 'Amount (₹)', key: 'amount', width: 12 },
-    { header: 'Razorpay Payment ID', key: 'paymentId', width: 24 },
+    { header: 'Payment ID / Ref', key: 'paymentId', width: 24 },
     { header: 'Registration Date', key: 'registeredAt', width: 20 },
   ];
 
@@ -104,7 +104,7 @@ const generateRegistrationsExcel = async (registrations) => {
         mobile: mem.mobile,
         status: reg.status.toUpperCase(),
         amount: reg.paymentDetails?.amount || 300,
-        paymentId: reg.paymentDetails?.razorpayPaymentId || 'N/A',
+        paymentId: reg.paymentDetails?.cfPaymentId || reg.paymentDetails?.razorpayPaymentId || 'N/A',
         registeredAt: reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : 'N/A',
       };
 

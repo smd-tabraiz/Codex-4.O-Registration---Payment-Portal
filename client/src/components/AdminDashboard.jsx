@@ -542,8 +542,8 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
 
                         {/* Payment */}
                         <td className="px-5 py-4">
-                          <div className="font-mono text-[11px] text-[#64748B] max-w-[120px] truncate" title={reg.paymentDetails?.razorpayPaymentId}>
-                            {reg.paymentDetails?.razorpayPaymentId || <span className="text-[#94A3B8] italic">N/A</span>}
+                          <div className="font-mono text-[11px] text-[#64748B] max-w-[120px] truncate" title={reg.paymentDetails?.cfPaymentId || reg.paymentDetails?.razorpayPaymentId}>
+                            {reg.paymentDetails?.cfPaymentId || reg.paymentDetails?.razorpayPaymentId || <span className="text-[#94A3B8] italic">N/A</span>}
                           </div>
                           {reg.paymentDetails?.amount > 0 && (
                             <div className="text-[11px] text-emerald-700 font-bold mt-0.5">₹{reg.paymentDetails.amount}</div>
@@ -607,10 +607,10 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
                                   <Users className="w-3.5 h-3.5" />
                                   {reg.teamName} — {reg.teamId}
                                 </h5>
-                                {reg.status === 'paid' && reg.paymentDetails?.razorpayPaymentId && (
+                                {reg.status === 'paid' && (reg.paymentDetails?.cfPaymentId || reg.paymentDetails?.razorpayPaymentId) && (
                                   <div className="flex items-center gap-2 text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full font-semibold">
                                     <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
-                                    <span className="font-mono">{reg.paymentDetails.razorpayPaymentId}</span>
+                                    <span className="font-mono">{reg.paymentDetails.cfPaymentId || reg.paymentDetails.razorpayPaymentId}</span>
                                   </div>
                                 )}
                               </div>

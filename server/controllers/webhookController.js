@@ -1,41 +1,57 @@
 const Registration = require('../models/Registration');
-const { verifyWebhookSignature } = require('../utils/razorpay');
+const { verifyCashfreeWebhookSignature } = require('../utils/cashfree');
 const { sendConfirmationEmail } = require('../utils/mailer');
+const { syncRegistrationToSheet } = require('../utils/googleSheets');
 
-const handleRazorpayWebhook = async (req, res) => {
+/**
+ * Handles incoming Cashfree Webhooks (e.g. PAYMENT_SUCCESS_WEBHOOK, ORDER_PAID)
+ */
+const handleCashfreeWebhook = async (req, res) => {
   try {
-    const signature = req.headers['x-razorpay-signature'];
-    if (!signature) {
-      return res.status(400).json({ success: false, message: 'Missing Razorpay webhook signature header.' });
-    }
-
-    // req.rawBody must be enabled or buffer parsed
+    const signature = req.headers['x-webhook-signature'];
+    const timestamp = req.headers['x-webhook-timestamp'];
     const rawBody = req.rawBody || JSON.stringify(req.body);
-    const isValid = verifyWebhookSignature(rawBody, signature);
 
-    if (!isValid) {
-      console.warn('[Webhook] Invalid Razorpay webhook signature');
-      return res.status(400).json({ success: false, message: 'Invalid webhook signature' });
+    if (signature && timestamp) {
+      const isValid = verifyCashfreeWebhookSignature(rawBody, signature, timestamp);
+      if (!isValid) {
+        console.warn('[Cashfree Webhook] Invalid webhook signature');
+        return res.status(400).json({ success: false, message: 'Invalid webhook signature' });
+      }
     }
 
-    const eventPayload = req.body;
-    console.log(`[Webhook] Received Razorpay Event: ${eventPayload.event}`);
+    const payload = req.body || {};
+    const eventType = payload.type || payload.event || '';
+    console.log(`[Cashfree Webhook] Received Event: ${eventType}`);
 
-    if (eventPayload.event === 'payment.captured' || eventPayload.event === 'order.paid') {
-      const paymentEntity = eventPayload.payload.payment.entity;
-      const orderId = paymentEntity.order_id;
-      const paymentId = paymentEntity.id;
+    const data = payload.data || {};
+    const orderData = data.order || {};
+    const paymentData = data.payment || {};
 
-      const registration = await Registration.findOne({ 'paymentDetails.razorpayOrderId': orderId });
+    const orderId = orderData.order_id || payload.order_id;
+    const paymentId = String(paymentData.cf_payment_id || paymentData.payment_id || `cf_${Date.now()}`);
+    const paymentStatus = paymentData.payment_status || orderData.order_status;
+
+    if (orderId && (paymentStatus === 'SUCCESS' || paymentStatus === 'PAID' || eventType.includes('SUCCESS') || eventType.includes('PAID'))) {
+      const registration = await Registration.findOne({
+        $or: [
+          { 'paymentDetails.cfOrderId': orderId },
+          { 'paymentDetails.razorpayOrderId': orderId },
+        ],
+      });
 
       if (registration && registration.status !== 'paid') {
         registration.status = 'paid';
-        registration.paymentDetails.razorpayPaymentId = paymentId;
+        registration.paymentDetails.cfPaymentId = paymentId;
         registration.paymentDetails.paidAt = new Date();
         registration.expiresAt = undefined;
         await registration.save();
 
-        console.log(`[Webhook] Marked registration ${registration.teamId} as PAID via Webhook.`);
+        console.log(`[Cashfree Webhook] Marked registration ${registration.teamId} as PAID.`);
+
+        syncRegistrationToSheet(registration).catch((sheetErr) => {
+          console.error('[GoogleSheets Webhook Sync] Error:', sheetErr.message);
+        });
 
         if (!registration.emailSent) {
           const emailSent = await sendConfirmationEmail(registration);
@@ -50,9 +66,9 @@ const handleRazorpayWebhook = async (req, res) => {
 
     return res.status(200).json({ status: 'ok' });
   } catch (error) {
-    console.error('[Webhook] Error handling Razorpay webhook:', error);
-    return res.status(500).json({ success: false, message: 'Server error handling webhook' });
+    console.error('[Cashfree Webhook] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error handling Cashfree webhook' });
   }
 };
 
-module.exports = { handleRazorpayWebhook };
+module.exports = { handleCashfreeWebhook, handleRazorpayWebhook: handleCashfreeWebhook };

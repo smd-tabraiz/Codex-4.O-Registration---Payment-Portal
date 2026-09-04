@@ -74,6 +74,9 @@ const registrationSchema = new mongoose.Schema(
       index: true,
     },
     paymentDetails: {
+      cfOrderId: { type: String, index: true },
+      cfPaymentId: { type: String },
+      paymentSessionId: { type: String },
       razorpayOrderId: { type: String, index: true },
       razorpayPaymentId: { type: String },
       razorpaySignature: { type: String },

@@ -32,7 +32,7 @@ const faqs = [
   },
   {
     q: "How do I know my registration is confirmed?",
-    a: "Once Razorpay payment succeeds, your unique Team ID (e.g. CDX4-0001) will be displayed on screen, and an official confirmation email will be sent to your primary Team Leader."
+    a: "Once Cashfree payment succeeds, your unique Team ID (e.g. CDX4-0001) will be displayed on screen, and an official confirmation email will be sent to your primary Team Leader."
   }
 ];
 

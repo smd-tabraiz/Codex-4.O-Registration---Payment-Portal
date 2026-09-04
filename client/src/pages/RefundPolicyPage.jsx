@@ -28,8 +28,8 @@ const REFUND_SECTIONS = [
     heading: 'Duplicate Transactions & Technical Overcharges',
     paragraphs: [
       'In the rare event of a technical glitch, network timeout, or payment gateway error resulting in duplicate debits for the same team registration, the duplicate/excess amount will be refunded in full.',
-      'To report a duplicate payment, the Team Leader must email codersclubrecuirtment@gmail.com within 48 hours of payment with the transaction details (Razorpay Payment ID, Bank reference number, team name, and date).',
-      'Verified duplicate payments are processed directly through the Razorpay payment gateway back to the original payment source (UPI / Card / Net Banking) within 5 to 7 working days.',
+      'To report a duplicate payment, the Team Leader must email codersclubrecuirtment@gmail.com within 48 hours of payment with the transaction details (Cashfree Payment / Reference ID, Bank reference number, team name, and date).',
+      'Verified duplicate payments are processed directly through the Cashfree payment gateway back to the original payment source (UPI / Card / Net Banking) within 5 to 7 working days.',
     ],
   },
   {

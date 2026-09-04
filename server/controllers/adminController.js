@@ -187,7 +187,10 @@ const updateRegistrationStatus = async (req, res) => {
     if (status === 'paid' && !registration.paymentDetails?.paidAt) {
       if (!registration.paymentDetails) registration.paymentDetails = {};
       registration.paymentDetails.paidAt = new Date();
-      registration.paymentDetails.razorpayPaymentId = registration.paymentDetails.razorpayPaymentId || `MANUAL_${Date.now()}`;
+      registration.paymentDetails.cfPaymentId =
+        registration.paymentDetails.cfPaymentId ||
+        registration.paymentDetails.razorpayPaymentId ||
+        `MANUAL_${Date.now()}`;
       registration.expiresAt = undefined;
     }
 

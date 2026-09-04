@@ -12,8 +12,8 @@ const HEADERS = [
   'Team Name',
   'Payment Date & Time',
   'Amount Paid (₹)',
-  'Razorpay Payment ID',
-  'Razorpay Order ID',
+  'Payment ID / Ref',
+  'Order ID',
   // Leader
   'Leader Name',
   'Leader Email',
@@ -113,8 +113,8 @@ const buildRow = (serialNo, registration, isDeleted = false) => {
     teamName || '',
     paidAt,
     amount,
-    registration.paymentDetails?.razorpayPaymentId || '',
-    registration.paymentDetails?.razorpayOrderId || '',
+    registration.paymentDetails?.cfPaymentId || registration.paymentDetails?.razorpayPaymentId || '',
+    registration.paymentDetails?.cfOrderId || registration.paymentDetails?.razorpayOrderId || '',
     // Leader
     leader.name || '',
     leader.email || '',

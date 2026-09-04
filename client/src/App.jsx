@@ -13,7 +13,7 @@ import FAQPage from './pages/FAQPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
 
-// Legal & Razorpay Policy Pages
+// Legal & Policy Pages (Cashfree Merchant Verification)
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';

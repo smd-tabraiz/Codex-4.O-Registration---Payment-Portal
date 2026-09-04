@@ -19,7 +19,7 @@ const SHIPPING_SECTIONS = [
   {
     heading: 'Digital Delivery of Event Credentials',
     paragraphs: [
-      'Upon successful completion of payment via the Razorpay payment gateway, delivery of your event access credentials is instantaneous and digital:',
+      'Upon successful completion of payment via the Cashfree payment gateway, delivery of your event access credentials is instantaneous and digital:',
     ],
     list: [
       'On-Screen Confirmation: A digital receipt containing your Unique Team ID (e.g. CDX4-XXXX), payment amount, and team breakdown is immediately displayed upon payment verification.',
@@ -36,7 +36,7 @@ const SHIPPING_SECTIONS = [
   {
     heading: 'Non-Delivery / Missing Confirmation Email',
     paragraphs: [
-      'If you have completed your payment but did not receive your confirmation email within 15 minutes (please also check your Spam/Junk folder), please reach out to us at codersclubrecuirtment@gmail.com with your Razorpay payment ID or registered email, and our team will re-issue your Team ID pass immediately.',
+      'If you have completed your payment but did not receive your confirmation email within 15 minutes (please also check your Spam/Junk folder), please reach out to us at codersclubrecuirtment@gmail.com with your Cashfree payment ID or registered email, and our team will re-issue your Team ID pass immediately.',
     ],
   },
 ];

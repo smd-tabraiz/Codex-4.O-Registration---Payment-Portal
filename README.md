@@ -9,10 +9,10 @@ Full-stack MERN application for **Codex 4.0** (Overnight 8-Hour Technical Coding
 - **Team Registration System:** 2 to 3 members per team. Member 1 acts as primary Team Leader.
 - **Strict 4th-Year Student Constraint:** Server-enforced rule permitting **0 or at most 1** 4th-year student per team (2 or 3 4th-year members strictly rejected).
 - **Roll Number Uniqueness:** Database-backed duplicate check prevents registered students from re-registering across teams.
-- **Razorpay Payment Gateway:** Server-side HMAC SHA256 signature verification and Razorpay Webhook fallback handler.
-- **Email Automation:** Nodemailer HTML email notifications with Team ID (`CDX4-XXXX`), date/time (24th Aug, 9:00 AM – 5:00 PM), venue, and member breakdown.
+- **Cashfree Payment Gateway:** Official Cashfree PG API v2023-08-01 with Web Checkout SDK v3 modal integration and Webhook verification.
+- **Email Automation:** Nodemailer HTML email notifications with Team ID (`CDX4-XXXX`), date/time (24th Sept, 9:00 AM – 5:00 PM), venue, and member breakdown.
 - **On-Demand Excel Export:** Generated directly from MongoDB Atlas using `exceljs` via protected admin route `GET /api/admin/export`.
-- **Pending Registration TTL:** Holds slots for 15 minutes during checkout before releasing roll numbers if unpaid.
+- **Pending Registration TTL:** Holds slots for 10 minutes during checkout before releasing roll numbers if unpaid.
 - **Admin Dashboard:** Password/Secret protected portal with live statistics, search/filter capabilities, email resend actions, and manual status updates.
 
 ---
@@ -30,10 +30,10 @@ CC - REG-PAY/
 │   ├── index.html
 │   └── package.json
 ├── server/                 # Express + MongoDB Backend
-│   ├── models/             # Registration, Counter
+│   ├── models/             # Registration, Counter, User
 │   ├── controllers/        # Register, Webhook, Admin Controllers
 │   ├── routes/             # API routes
-│   ├── utils/              # Razorpay, Nodemailer, ExcelJS helper
+│   ├── utils/              # Cashfree, SendGrid Mailer, Google Sheets, ExcelJS helper
 │   ├── middleware/         # AdminAuth, RateLimiter
 │   ├── server.js
 │   └── package.json
@@ -59,7 +59,7 @@ cd client
 npm install
 npm run dev
 ```
-Runs on `http://localhost:3000`.
+Runs on `http://localhost:5173`.
 
 ---
 
@@ -68,15 +68,13 @@ Runs on `http://localhost:3000`.
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/codex40
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+CASHFREE_APP_ID=your_cashfree_app_id
+CASHFREE_SECRET_KEY=your_cashfree_secret_key
+CASHFREE_ENV=SANDBOX
+CASHFREE_API_VERSION=2023-08-01
 ADMIN_SECRET=admin12345
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
-EMAIL_FROM="Coders' Club GPREC <your_email@gmail.com>"
-EVENT_FEE_PER_TEAM=150
+SENDGRID_API_KEY=your_sendgrid_api_key
+EMAIL_FROM_ADDRESS=codersclub@gprec.ac.in
+EVENT_FEE_PER_TEAM=300
 REGISTRATION_CAP=50
 ```

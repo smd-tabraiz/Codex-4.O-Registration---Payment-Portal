@@ -31,7 +31,7 @@ const TERMS_SECTIONS = [
     heading: 'Registration Fees & Payment Confirmation',
     paragraphs: [
       'The registration fee is fixed at ₹300 per team (for 2–3 members).',
-      'Successful payment processed through the authorized payment gateway (Razorpay) confirms the team\'s slot in the competition.',
+      'Successful payment processed through the authorized payment gateway (Cashfree Payments) confirms the team\'s slot in the competition.',
       'Upon successful verification of payment, a Unique Team ID (e.g., CDX4-XXXX) will be generated and issued via on-screen receipt and official confirmation email to the Team Leader.',
     ],
   },

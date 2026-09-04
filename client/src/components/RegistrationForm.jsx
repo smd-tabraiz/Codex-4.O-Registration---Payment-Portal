@@ -300,11 +300,11 @@ const RegistrationForm = ({ onSuccess }) => {
     try {
       const res = await api.post('/register/retry-order', { teamId: teamIdToResume });
       if (res.data.success) {
-        const { order, keyId, teamId, registration } = res.data;
+        const { order, paymentSessionId, teamId, registration } = res.data;
         if (registration) {
           setPendingRegistration(registration);
         }
-        await launchRazorpayModal(order, keyId, teamId);
+        await launchCashfreeModal(order, paymentSessionId, teamId);
       } else {
         setErrorMsg(res.data.message || 'Failed to resume pending registration payment.');
         setLoading(false);
@@ -359,7 +359,7 @@ const RegistrationForm = ({ onSuccess }) => {
       });
 
       if (res.data.success) {
-        const { order, keyId, teamId, registrationId } = res.data;
+        const { order, paymentSessionId, teamId } = res.data;
         setPendingRegistration((prev) => {
           if (prev && prev.teamId === teamId) return prev;
           return {
@@ -368,10 +368,10 @@ const RegistrationForm = ({ onSuccess }) => {
             members,
             status: 'pending',
             expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-            amount: order.amount ? order.amount / 100 : 300,
+            amount: order.order_amount || order.amount || 300,
           };
         });
-        await launchRazorpayModal(order, keyId, teamId);
+        await launchCashfreeModal(order, paymentSessionId, teamId);
       } else {
         setErrorMsg(res.data.message || 'Failed to initialize registration order.');
         setLoading(false);
@@ -383,8 +383,11 @@ const RegistrationForm = ({ onSuccess }) => {
     }
   };
 
-  const launchRazorpayModal = async (order, keyId, teamId) => {
+  const launchCashfreeModal = async (order, paymentSessionId, teamId) => {
     try {
+      const sessionId = paymentSessionId || order?.payment_session_id;
+      const orderId = order?.order_id || order?.id;
+
       setPendingRegistration((prev) => {
         if (prev && prev.teamId === teamId) return prev;
         return {
@@ -393,115 +396,91 @@ const RegistrationForm = ({ onSuccess }) => {
           members,
           status: 'pending',
           expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-          amount: order.amount ? order.amount / 100 : 300,
+          amount: order?.order_amount || order?.amount || 300,
         };
       });
 
-      if (typeof window.Razorpay === 'undefined' || order.id?.startsWith('order_test_') || order.id?.startsWith('order_mock_')) {
-        console.log('[Registration] Mock order or Razorpay SDK not loaded. Using fallback flow.');
-        setMockOrderDetails({ order, keyId, teamId });
-        await handleMockPaymentVerification(order.id, teamId);
+      // If Cashfree credentials are not configured in server/.env
+      if (order?.isMock || orderId?.startsWith('order_mock_')) {
+        setLoading(false);
+        setErrorMsg(
+          'Cashfree API Credentials (CASHFREE_APP_ID and CASHFREE_SECRET_KEY) are missing in server/.env. Please add your Cashfree API keys in server/.env to launch the live Cashfree payment gateway popup.'
+        );
+        return;
+      }
+
+      // Check if Cashfree SDK script is available
+      if (typeof window.Cashfree === 'undefined') {
+        setLoading(false);
+        setErrorMsg('Cashfree Payment Gateway SDK failed to load. Please check your internet connection and refresh.');
         return;
       }
 
       try {
-        const leader = members[0];
-        const options = {
-          key: keyId,
-          amount: order.amount,
-          currency: order.currency || 'INR',
-          name: "Coders' Club, GPREC",
-          description: `Registration Fee for Team ID: ${teamId}`,
-          image: `${window.location.origin}/coders-club-logo.png`,
-          order_id: order.id,
-          prefill: {
-            name: leader.name,
-            email: leader.email,
-            contact: leader.mobile,
-          },
-          theme: {
-            color: '#2563EB',
-          },
-          handler: async function (response) {
-            try {
-              setLoading(true);
-              const verifyRes = await api.post('/register/verify-payment', {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                teamId: teamId,
-              });
+        const cashfreeMode = import.meta.env.VITE_CASHFREE_MODE || 'sandbox';
+        const cashfree = window.Cashfree({
+          mode: cashfreeMode,
+        });
 
-              if (verifyRes.data.success) {
-                setPendingRegistration(null);
-                clearFormDraft();
-                onSuccess(verifyRes.data.registration);
-              } else {
-                setErrorMsg(verifyRes.data.message || 'Payment verification failed.');
-              }
-            } catch (verifyErr) {
-              setErrorMsg(verifyErr.response?.data?.message || 'Server error verifying payment signature.');
-            } finally {
-              setLoading(false);
-            }
-          },
-          modal: {
-            ondismiss: function () {
-              setLoading(false);
-              setErrorMsg('');
-              setTimeout(() => {
-                const bannerEl = document.getElementById('pending-banner-card');
-                if (bannerEl) {
-                  bannerEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                  window.scrollTo({ top: 100, behavior: 'smooth' });
-                }
-              }, 150);
-              if (currentUser?.email) {
-                fetchPendingRegistration(currentUser.email);
-              }
-            },
-          },
+        const checkoutOptions = {
+          paymentSessionId: sessionId,
+          redirectTarget: '_modal',
         };
 
-        const razorpayInstance = new window.Razorpay(options);
-        razorpayInstance.on('payment.failed', function (response) {
-          setLoading(false);
-          setErrorMsg(`Payment failed: ${response.error?.description || 'Unknown payment error'}`);
+        cashfree.checkout(checkoutOptions).then(async (result) => {
+          if (result.error) {
+            console.warn('[Cashfree] Modal closed or error:', result.error);
+            setLoading(false);
+            if (
+              result.error.message &&
+              !result.error.message.toLowerCase().includes('closed') &&
+              !result.error.message.toLowerCase().includes('dismiss')
+            ) {
+              setErrorMsg(`Payment error: ${result.error.message}`);
+            }
+            if (currentUser?.email) {
+              fetchPendingRegistration(currentUser.email);
+            }
+            return;
+          }
+
+          if (result.paymentDetails || result.redirect) {
+            await handlePaymentVerification(orderId, teamId);
+          }
         });
-        razorpayInstance.open();
-      } catch (rzpErr) {
-        console.warn('[Razorpay] Modal error. Falling back to test payment verification.', rzpErr);
-        await handleMockPaymentVerification(order.id, teamId);
+      } catch (cfErr) {
+        console.error('[Cashfree] Checkout error:', cfErr);
+        setLoading(false);
+        setErrorMsg(`Failed to launch Cashfree checkout popup: ${cfErr.message || 'Unknown error'}`);
       }
     } catch (err) {
-      console.error('[Registration] Error creating order:', err);
-      if (!err.response) {
-        setErrorMsg('Cannot connect to backend server. Please make sure the backend server (Node.js) is running on port 5000.');
-      } else {
-        setErrorMsg(err.response?.data?.message || 'Failed to initialize registration order.');
-      }
+      console.error('[Registration] Error launching payment modal:', err);
       setLoading(false);
+      if (!err.response) {
+        setErrorMsg('Cannot connect to backend server. Please make sure the backend server is running on port 5000.');
+      } else {
+        setErrorMsg(err.response?.data?.message || 'Failed to initialize payment.');
+      }
     }
   };
 
-  const handleMockPaymentVerification = async (orderId, teamId) => {
+  const handlePaymentVerification = async (orderId, teamId) => {
     try {
       setLoading(true);
       const verifyRes = await api.post('/register/verify-payment', {
-        razorpay_order_id: orderId,
-        razorpay_payment_id: `pay_mock_${Date.now()}`,
-        razorpay_signature: `sig_mock_${Date.now()}`,
+        orderId: orderId,
         teamId: teamId,
       });
 
       if (verifyRes.data.success) {
+        setPendingRegistration(null);
+        clearFormDraft();
         onSuccess(verifyRes.data.registration);
       } else {
-        setErrorMsg(verifyRes.data.message || 'Mock payment verification failed.');
+        setErrorMsg(verifyRes.data.message || 'Payment verification failed.');
       }
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || 'Error processing mock payment.');
+    } catch (verifyErr) {
+      setErrorMsg(verifyErr.response?.data?.message || 'Server error verifying payment status.');
     } finally {
       setLoading(false);
     }

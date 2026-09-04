@@ -113,7 +113,7 @@ const Footer = () => {
           <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-400">
             <span className="flex items-center space-x-1">
               <span>Secure Payments powered by</span>
-              <strong className="text-blue-400 font-semibold">Razorpay</strong>
+              <strong className="text-blue-400 font-semibold">Cashfree Payments</strong>
             </span>
             <span>•</span>
             <span className="flex items-center space-x-1">

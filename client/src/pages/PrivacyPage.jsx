@@ -43,8 +43,8 @@ const PRIVACY_SECTIONS = [
     heading: 'Information Sharing & Third-Party Disclosure',
     paragraphs: [
       'We do NOT sell, rent, trade, or share your personal information with any third-party marketing companies, advertisers, or outside entities.',
-      'Data is shared only with the authorized payment gateway provider (Razorpay Software Private Limited) solely to the extent necessary to process registration transactions securely and verify payment signatures.',
-      'Payment transaction data (card details, UPI PINs, net banking credentials) is handled directly by Razorpay on PCI-DSS compliant secure infrastructure and is never stored on our servers.',
+      'Data is shared only with the authorized payment gateway provider (Cashfree Payments India Private Limited) solely to the extent necessary to process registration transactions securely and verify payment signatures.',
+      'Payment transaction data (card details, UPI PINs, net banking credentials) is handled directly by Cashfree on PCI-DSS Level 1 compliant secure infrastructure and is never stored on our servers.',
     ],
   },
   {
