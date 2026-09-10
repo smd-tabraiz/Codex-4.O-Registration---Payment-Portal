@@ -40,35 +40,35 @@ const HeroSection = ({ onStartRegister }) => {
         <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4 sm:p-5 shadow-card max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           
           {/* Left: Brand Logo & College/Club Details */}
-          <div className="flex items-center space-x-3.5 text-center md:text-left">
+          <div className="flex items-center space-x-3 text-center md:text-left justify-center md:justify-start">
             <img 
               src="/coders-club-logo.png" 
               alt="Coders' Club Logo" 
-              className="w-12 h-12 sm:w-14 sm:h-14 object-contain bg-white rounded-xl p-1 border border-[#E2E8F0] shadow-xs shrink-0 hidden sm:block" 
+              className="w-10 h-10 sm:w-14 sm:h-14 object-contain bg-white rounded-xl p-1 border border-[#E2E8F0] shadow-xs shrink-0" 
             />
             <div>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5">
-                <h2 className="text-base sm:text-lg lg:text-xl font-extrabold text-[#0F172A] tracking-tight">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-1 sm:gap-1.5">
+                <h2 className="text-sm sm:text-lg lg:text-xl font-extrabold text-[#0F172A] tracking-tight">
                   G. Pulla Reddy Engineering College
                 </h2>
-                <span className="text-xs sm:text-sm font-bold text-[#64748B]">(Autonomous)</span>
+                <span className="text-[11px] sm:text-sm font-bold text-[#64748B]">(Autonomous)</span>
               </div>
-              <p className="text-xs sm:text-sm font-bold text-[#2563EB] flex items-center justify-center md:justify-start space-x-1.5 mt-0.5">
+              <p className="text-[11px] sm:text-sm font-bold text-[#2563EB] flex items-center justify-center md:justify-start space-x-1 sm:space-x-1.5 mt-0.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
-                <span>Department of CSE · Coders' Club Presents</span>
+                <span>Department of CSE · Coders' Club</span>
               </p>
             </div>
           </div>
 
           {/* Right: Accreditations Strip */}
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 text-xs shrink-0">
-            <span className="font-bold px-3 py-1 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200">
-              NAAC 'A+' Grade
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-1.5 sm:gap-2 text-[10px] sm:text-xs shrink-0">
+            <span className="font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200">
+              NAAC 'A+'
             </span>
-            <span className="font-bold px-3 py-1 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200">
+            <span className="font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200">
               NBA Tier-II
             </span>
-            <span className="font-bold px-3 py-1 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200">
+            <span className="font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200">
               Affiliated to JNTUA
             </span>
           </div>
@@ -77,12 +77,12 @@ const HeroSection = ({ onStartRegister }) => {
 
         {/* Grand Event Title Section */}
         <div className="space-y-3 max-w-3xl mx-auto pt-2">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-bold shadow-xs">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-bold shadow-xs">
             <Trophy className="w-4 h-4 text-amber-600" />
             <span>₹50,000 Cash Prize Pool</span>
           </div>
 
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-[#0F172A] leading-none">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[#0F172A] leading-none">
             CODEX <span className="text-[#2563EB]">4.0</span>
           </h1>
           <p className="text-lg sm:text-xl font-bold text-[#0F172A] tracking-tight">

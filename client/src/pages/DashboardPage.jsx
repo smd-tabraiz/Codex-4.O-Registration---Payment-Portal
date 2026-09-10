@@ -99,10 +99,10 @@ const DashboardPage = () => {
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 shrink-0">
+          <div className="flex items-center space-x-2 shrink-0 w-full sm:w-auto">
             <button
               onClick={handlePrintPass}
-              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm transition-all cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print Entry Ticket</span>
@@ -192,7 +192,7 @@ const DashboardPage = () => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-600">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs text-slate-600">
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase font-semibold">Gender</span>
                       <span className="font-medium text-slate-900">{mem.gender || 'Male'}</span>
@@ -209,7 +209,7 @@ const DashboardPage = () => {
                       <span className="text-[10px] text-slate-400 block uppercase font-semibold">Email</span>
                       <span className="font-medium text-slate-900 truncate block">{mem.email}</span>
                     </div>
-                    <div className="col-span-2 sm:col-span-4 pt-1">
+                    <div className="col-span-1 sm:col-span-2 md:col-span-4 pt-1">
                       <span className="text-[10px] text-slate-400 block uppercase font-semibold">College</span>
                       <span className="font-medium text-slate-900">{mem.college}</span>
                     </div>
