@@ -531,6 +531,52 @@ const getSystemSettings = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/register/my-registration
+ * Retrieve confirmed paid registration for a user by email or rollNo
+ */
+const getMyRegistration = async (req, res) => {
+  try {
+    let email = req.query.email ? String(req.query.email).trim().toLowerCase() : '';
+    let rollNo = req.query.rollNo ? String(req.query.rollNo).trim().toUpperCase() : '';
+
+    if (req.user) {
+      if (req.user.email) email = req.user.email.toLowerCase();
+      if (req.user.rollNo) rollNo = req.user.rollNo.toUpperCase();
+    }
+
+    if (!email && !rollNo) {
+      return res.json({ success: true, registered: false, registration: null });
+    }
+
+    const queryConditions = [];
+    if (email) queryConditions.push({ 'members.email': email });
+    if (rollNo) queryConditions.push({ 'members.rollNo': rollNo });
+
+    const registration = await Registration.findOne({
+      status: 'paid',
+      $or: queryConditions,
+    }).sort({ createdAt: -1 });
+
+    if (registration) {
+      return res.json({
+        success: true,
+        registered: true,
+        registration,
+      });
+    }
+
+    return res.json({
+      success: true,
+      registered: false,
+      registration: null,
+    });
+  } catch (error) {
+    console.error('[getMyRegistration] Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error retrieving registration.' });
+  }
+};
+
 module.exports = {
   checkRollNumbers,
   createOrder,
@@ -539,4 +585,5 @@ module.exports = {
   retryPendingOrder,
   cancelPendingRegistration,
   getSystemSettings,
+  getMyRegistration,
 };

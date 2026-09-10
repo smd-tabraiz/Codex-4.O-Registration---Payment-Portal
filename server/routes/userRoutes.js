@@ -25,4 +25,45 @@ router.get('/me', protect, (req, res) => {
   });
 });
 
+/**
+ * GET /api/user/my-registration
+ */
+router.get('/my-registration', protect, async (req, res) => {
+  try {
+    const Registration = require('../models/Registration');
+    const userEmail = req.user.email ? req.user.email.toLowerCase() : '';
+    const userRollNo = req.user.rollNo ? req.user.rollNo.toUpperCase() : '';
+
+    const queryConditions = [];
+    if (userEmail) queryConditions.push({ 'members.email': userEmail });
+    if (userRollNo) queryConditions.push({ 'members.rollNo': userRollNo });
+
+    if (queryConditions.length === 0) {
+      return res.json({ success: true, registered: false, registration: null });
+    }
+
+    const registration = await Registration.findOne({
+      status: 'paid',
+      $or: queryConditions,
+    }).sort({ createdAt: -1 });
+
+    if (registration) {
+      return res.json({
+        success: true,
+        registered: true,
+        registration,
+      });
+    }
+
+    return res.json({
+      success: true,
+      registered: false,
+      registration: null,
+    });
+  } catch (err) {
+    console.error('[my-registration] Error:', err);
+    return res.status(500).json({ success: false, message: 'Server error checking registration.' });
+  }
+});
+
 module.exports = router;

@@ -30,6 +30,41 @@ const LoginPage = ({ onAuthSuccess }) => {
     return clean ? clean.toUpperCase() : prefix.toUpperCase();
   };
 
+  // Auto redirect if user is already logged in and team is registered
+  React.useEffect(() => {
+    const checkExistingSession = async () => {
+      const savedUser = localStorage.getItem('codex_user_data');
+      if (savedUser) {
+        try {
+          const userObj = JSON.parse(savedUser);
+          const checkRes = await api.get('/register/my-registration', {
+            params: { email: userObj.email, rollNo: userObj.rollNo }
+          });
+          if (checkRes.data?.success && checkRes.data?.registered) {
+            navigate('/dashboard');
+          }
+        } catch (e) {}
+      }
+    };
+    checkExistingSession();
+  }, [navigate]);
+
+  const redirectAfterAuth = async (userObj) => {
+    if (onAuthSuccess) onAuthSuccess(userObj);
+    try {
+      const email = userObj?.email || '';
+      const rollNo = userObj?.rollNo || '';
+      const checkRes = await api.get('/register/my-registration', { params: { email, rollNo } });
+      if (checkRes.data?.success && checkRes.data?.registered) {
+        navigate('/dashboard');
+        return;
+      }
+    } catch (e) {
+      console.error('[Registration Check Error]', e);
+    }
+    navigate('/');
+  };
+
   // Direct Google Auth Exchange with Backend
   const handleGoogleBackendExchange = async (credential, fallbackEmail = '', fallbackName = '') => {
     setLoading(true);
@@ -54,11 +89,10 @@ const LoginPage = ({ onAuthSuccess }) => {
         localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
       }
 
-      if (onAuthSuccess) onAuthSuccess(res.data.user);
-      navigate('/');
+      await redirectAfterAuth(res.data.user);
     } catch (err) {
       console.error('[Google Auth Error]', err);
-      setError(err.response?.data?.message || err.message || 'Google Authentication failed. (Server could not verify identity or network error)');
+      setError(err.response?.data?.message || err.message || 'Google Authentication failed.');
     } finally {
       setLoading(false);
     }
@@ -74,7 +108,7 @@ const LoginPage = ({ onAuthSuccess }) => {
   };
 
   const handleGoogleError = () => {
-    setError('Google Sign-In is unavailable right now. Please use Email & Password below to sign in or create an account.');
+    setError('Google Sign-In is unavailable right now. Please use Email & Password below.');
   };
 
   const handleSubmit = async (e) => {
@@ -100,8 +134,7 @@ const LoginPage = ({ onAuthSuccess }) => {
           localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
         }
 
-        if (onAuthSuccess) onAuthSuccess(res.data.user);
-        navigate('/');
+        await redirectAfterAuth(res.data.user);
       } else {
         if (!name || !email || !password) {
           setError('Please fill in Name, Email, and Password.');
@@ -127,8 +160,7 @@ const LoginPage = ({ onAuthSuccess }) => {
           localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
         }
 
-        if (onAuthSuccess) onAuthSuccess(res.data.user);
-        navigate('/');
+        await redirectAfterAuth(res.data.user);
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Authentication failed. Please check your credentials.');

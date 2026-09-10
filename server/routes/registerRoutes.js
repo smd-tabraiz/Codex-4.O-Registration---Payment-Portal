@@ -8,6 +8,7 @@ const {
   retryPendingOrder,
   cancelPendingRegistration,
   getSystemSettings,
+  getMyRegistration,
 } = require('../controllers/registerController');
 const { checkRollLimiter, createOrderLimiter } = require('../middleware/rateLimiter');
 
@@ -18,5 +19,6 @@ router.get('/pending', getPendingRegistration);
 router.post('/retry-order', retryPendingOrder);
 router.post('/cancel-pending', cancelPendingRegistration);
 router.get('/system-settings', getSystemSettings);
+router.get('/my-registration', getMyRegistration);
 
 module.exports = router;

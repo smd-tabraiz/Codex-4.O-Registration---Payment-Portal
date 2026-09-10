@@ -13,6 +13,7 @@ import RulesPage from './pages/RulesPage';
 import FAQPage from './pages/FAQPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
 
 // Legal & Policy Pages (Cashfree Merchant Verification)
 import TermsPage from './pages/TermsPage';
@@ -173,6 +174,8 @@ function App() {
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/rules" element={<RulesPage />} />
                   <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/my-team" element={<DashboardPage />} />
                   <Route path="/admin" element={<AdminPage />} />
 
                   {/* Legal & Merchant Policy Routes for Cashfree Verification */}
