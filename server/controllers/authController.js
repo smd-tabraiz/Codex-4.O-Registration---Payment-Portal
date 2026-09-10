@@ -318,10 +318,6 @@ const getMe = async (req, res) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.id).select('-password');
     
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User profile not found.' });
-    }
-
     return res.json({
       success: true,
       user: {
@@ -343,9 +339,24 @@ const getMe = async (req, res) => {
   }
 };
 
+/**
+ * POST /api/auth/logout
+ * Clear authentication session cookie
+ */
+const logoutUser = (req, res) => {
+  res.cookie('token', '', {
+    httpOnly: true,
+    expires: new Date(0),
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  });
+  return res.json({ success: true, message: 'Logged out successfully.' });
+};
+
 module.exports = {
   registerUser,
   loginUser,
   googleAuth,
   getMe,
+  logoutUser,
 };

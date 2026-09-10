@@ -67,7 +67,12 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (err) {
+      console.warn('[Logout API error]', err.message);
+    }
     localStorage.removeItem('codex_user_token');
     localStorage.removeItem('codex_user_data');
     localStorage.removeItem('codex_admin_token');

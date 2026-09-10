@@ -66,4 +66,17 @@ router.get('/my-registration', protect, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/user/logout
+ */
+router.post('/logout', (req, res) => {
+  res.cookie('token', '', {
+    httpOnly: true,
+    expires: new Date(0),
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  });
+  return res.json({ success: true, message: 'Logged out successfully.' });
+});
+
 module.exports = router;
