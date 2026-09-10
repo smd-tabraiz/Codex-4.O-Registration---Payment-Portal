@@ -7,6 +7,7 @@ import api from './api/axiosInstance';
 
 // Event Pages
 import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
 import RegisterPage from './pages/RegisterPage';
 import RulesPage from './pages/RulesPage';
 import FAQPage from './pages/FAQPage';
@@ -21,22 +22,12 @@ import ContactPage from './pages/ContactPage';
 import ShippingPolicyPage from './pages/ShippingPolicyPage';
 import PricingPage from './pages/PricingPage';
 
-// Scroll to top helper component on route change, with smooth hash anchor support
+// Scroll to top helper component on route change
 function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const { pathname } = useLocation();
   useEffect(() => {
-    if (hash) {
-      const targetId = hash.replace('#', '');
-      const element = document.getElementById(targetId);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-        return;
-      }
-    }
     window.scrollTo(0, 0);
-  }, [pathname, hash]);
+  }, [pathname]);
   return null;
 }
 
@@ -177,6 +168,8 @@ function App() {
                 <Routes>
                   {/* Event Routes */}
                   <Route path="/" element={<HomePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/aboutus" element={<AboutPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/rules" element={<RulesPage />} />
                   <Route path="/faq" element={<FAQPage />} />

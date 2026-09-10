@@ -1,7 +1,65 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Users, User, Plus, Trash2, ShieldAlert, CheckCircle, AlertCircle, CreditCard, Sparkles, Loader2, Lock, LogIn, LogOut, Check } from 'lucide-react';
+import { 
+  Users, 
+  User, 
+  Plus, 
+  Trash2, 
+  ShieldAlert, 
+  CheckCircle, 
+  AlertCircle, 
+  CreditCard, 
+  Sparkles, 
+  Loader2, 
+  Lock, 
+  LogIn, 
+  LogOut, 
+  Check, 
+  ArrowRight, 
+  ArrowLeft, 
+  Edit3, 
+  Building2, 
+  GraduationCap, 
+  Phone, 
+  Mail, 
+  FileText,
+  Clock,
+  ShieldCheck
+} from 'lucide-react';
 import api from '../api/axiosInstance';
 import AuthModal from './AuthModal';
+
+export const BRANCH_OPTIONS = [
+  'CSE',
+  'CSM',
+  'CSD',
+  'CSBS',
+  'CSE-AIML',
+  'CST',
+  'ECE',
+  'EEE',
+  'MECH',
+  'CIVIL',
+  'OTHERS',
+];
+
+export const COLLEGE_OPTIONS = [
+  'G. Pulla Reddy Engineering College',
+  'G. Pullaiah Engineering College',
+  'Dr. K.V. Subba Reddy Engineering College',
+  'Ashoka Engineering College',
+  'BITS',
+  'Rajiv Gandhi Memorial College (RGMCET)',
+  'Ravindra College',
+  'Santhiram Engineering College',
+  'Others',
+];
+
+export const GENDER_OPTIONS = [
+  { label: 'Male', value: 'Male' },
+  { label: 'Female', value: 'Female' },
+];
+
+export const YEAR_OPTIONS = ['1st', '2nd', '3rd', '4th'];
 
 const RegistrationForm = ({ onSuccess }) => {
   const [currentUser, setCurrentUser] = useState(() => {
@@ -10,19 +68,30 @@ const RegistrationForm = ({ onSuccess }) => {
   });
 
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [step, setStep] = useState(1); // 1: Leader Info, 2: Members & Team Size, 3: Preview & Confirm
 
   const [teamName, setTeamName] = useState(() => {
     return localStorage.getItem('codex_form_team_name') || '';
   });
+
+  const [teamSize, setTeamSize] = useState(() => {
+    const saved = localStorage.getItem('codex_form_members');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === 3) return 3;
+      } catch (e) {}
+    }
+    return 2;
+  });
+
   const [members, setMembers] = useState(() => {
     const saved = localStorage.getItem('codex_form_members');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length >= 2) return parsed;
-      } catch (e) {
-        // fallback
-      }
+      } catch (e) {}
     }
     return [
       {
@@ -31,11 +100,26 @@ const RegistrationForm = ({ onSuccess }) => {
         rollNo: currentUser ? currentUser.rollNo || '' : '',
         year: currentUser ? currentUser.year || '2nd' : '2nd',
         branch: currentUser ? currentUser.branch || 'CSE' : 'CSE',
-        college: currentUser ? currentUser.college || 'GPREC' : 'GPREC',
+        customBranch: '',
+        gender: currentUser ? currentUser.gender || 'Male' : 'Male',
+        college: currentUser ? currentUser.college || 'G. Pulla Reddy Engineering College' : 'G. Pulla Reddy Engineering College',
+        customCollege: '',
         mobile: currentUser ? currentUser.mobile || '' : '',
         isLeader: true,
       },
-      { name: '', email: '', rollNo: '', year: '2nd', branch: 'CSE', college: 'GPREC', mobile: '', isLeader: false },
+      {
+        name: '',
+        email: '',
+        rollNo: '',
+        year: '2nd',
+        branch: 'CSE',
+        customBranch: '',
+        gender: 'Male',
+        college: 'G. Pulla Reddy Engineering College',
+        customCollege: '',
+        mobile: '',
+        isLeader: false,
+      },
     ];
   });
 
@@ -43,7 +127,6 @@ const RegistrationForm = ({ onSuccess }) => {
   const [checkingRolls, setCheckingRolls] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [rollCheckStatus, setRollCheckStatus] = useState(null);
-  const [mockOrderDetails, setMockOrderDetails] = useState(null);
   const [pendingRegistration, setPendingRegistration] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
 
@@ -61,7 +144,7 @@ const RegistrationForm = ({ onSuccess }) => {
     localStorage.removeItem('codex_form_members');
   };
 
-  // Save form draft state to localStorage whenever changed
+  // Save form draft state to localStorage
   useEffect(() => {
     if (teamName) {
       localStorage.setItem('codex_form_team_name', teamName);
@@ -74,6 +157,34 @@ const RegistrationForm = ({ onSuccess }) => {
     }
   }, [members]);
 
+  // Adjust members array when team size toggle changes
+  const handleTeamSizeChange = (newSize) => {
+    setTeamSize(newSize);
+    setRollCheckStatus(null);
+    setErrorMsg('');
+
+    if (newSize === 2) {
+      setMembers((prev) => prev.slice(0, 2));
+    } else if (newSize === 3 && members.length < 3) {
+      setMembers((prev) => [
+        ...prev,
+        {
+          name: '',
+          email: '',
+          rollNo: '',
+          year: '2nd',
+          branch: 'CSE',
+          customBranch: '',
+          gender: 'Male',
+          college: 'G. Pulla Reddy Engineering College',
+          customCollege: '',
+          mobile: '',
+          isLeader: false,
+        },
+      ]);
+    }
+  };
+
   // Pre-fill form from active pending registration if available
   useEffect(() => {
     if (pendingRegistration) {
@@ -82,6 +193,7 @@ const RegistrationForm = ({ onSuccess }) => {
       }
       if (pendingRegistration.members && pendingRegistration.members.length >= 2) {
         setMembers(pendingRegistration.members);
+        setTeamSize(pendingRegistration.members.length);
       }
     }
   }, [pendingRegistration]);
@@ -140,7 +252,8 @@ const RegistrationForm = ({ onSuccess }) => {
           rollNo: currentUser.rollNo || updated[0].rollNo,
           year: currentUser.year || updated[0].year || '2nd',
           branch: currentUser.branch || updated[0].branch || 'CSE',
-          college: currentUser.college || updated[0].college || 'GPREC',
+          gender: currentUser.gender || updated[0].gender || 'Male',
+          college: currentUser.college || updated[0].college || 'G. Pulla Reddy Engineering College',
           mobile: currentUser.mobile || updated[0].mobile,
           isLeader: true,
         };
@@ -163,22 +276,6 @@ const RegistrationForm = ({ onSuccess }) => {
     setMembers(updated);
     setRollCheckStatus(null);
     setErrorMsg('');
-  };
-
-  const addMember = () => {
-    if (members.length >= 3) return;
-    setMembers([
-      ...members,
-      { name: '', email: '', rollNo: '', year: '2nd', branch: 'CSE', college: 'GPREC', mobile: '', isLeader: false },
-    ]);
-  };
-
-  const removeMember = (index) => {
-    if (index === 0) return;
-    if (members.length <= 2) return;
-    const updated = members.filter((_, idx) => idx !== index);
-    setMembers(updated);
-    setRollCheckStatus(null);
   };
 
   const fourthYearCount = members.filter((m) => String(m.year).trim() === '4th').length;
@@ -219,78 +316,147 @@ const RegistrationForm = ({ onSuccess }) => {
     }
   };
 
-  const validateForm = () => {
+  // Step 1 Validation (Team Name & Leader Info)
+  const validateStep1 = () => {
     if (!currentUser) {
       setShowAuthModal(true);
       setErrorMsg('Please Sign In / Register as Team Leader before proceeding.');
-      setTimeout(() => {
-        const authBox = document.getElementById('auth-banner-box');
-        if (authBox) authBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
       return false;
     }
 
     if (!teamName.trim()) {
-      setErrorMsg('Please enter your Team Name.');
-      const el = document.getElementById('team-name-input');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setErrorMsg('Please enter a valid Team Name.');
       return false;
     }
 
+    if (teamName.trim().length < 2) {
+      setErrorMsg('Team Name must be at least 2 characters long.');
+      return false;
+    }
+
+    const leader = members[0];
+    if (!leader?.name?.trim()) {
+      setErrorMsg('Please enter Team Leader Name.');
+      return false;
+    }
+    if (!leader?.email?.trim() || !leader.email.includes('@')) {
+      setErrorMsg('Please enter a valid Team Leader Email.');
+      return false;
+    }
+
+    setErrorMsg('');
+    return true;
+  };
+
+  // Step 2 Validation (All Member Details)
+  const validateStep2 = () => {
     if (members.length < 2 || members.length > 3) {
       setErrorMsg('A team must consist of exactly 2 or 3 members.');
       return false;
     }
 
     if (fourthYearCount > 1) {
-      setErrorMsg('A team can include ZERO or ONE 4th-year student. System rejected your team due to 2+ 4th-year students.');
-      const statusCard = document.getElementById('fourth-year-status-card');
-      if (statusCard) statusCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setErrorMsg('Rule Violation: A team can include ZERO or ONE 4th-year student. Your team currently has 2 or more 4th-year students.');
       return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10}$/;
+    const rollNumbers = [];
+    const emails = [];
 
     for (let i = 0; i < members.length; i++) {
       const m = members[i];
-      if (!m.name.trim()) {
-        setErrorMsg(`Member ${i + 1}: Name is required.`);
+      const memberLabel = i === 0 ? 'Team Leader' : `Member ${i + 1}`;
+
+      if (!m.name || !m.name.trim()) {
+        setErrorMsg(`Please enter full name for ${memberLabel}.`);
         return false;
       }
-      if (!m.email.trim() || !emailRegex.test(m.email.trim())) {
-        setErrorMsg(`Member ${i + 1}: Valid email address is required.`);
+
+      if (!m.rollNo || !m.rollNo.trim()) {
+        setErrorMsg(`Please enter student roll number for ${memberLabel}.`);
         return false;
       }
-      if (!m.rollNo.trim()) {
-        setErrorMsg(`Member ${i + 1}: Roll Number is required.`);
+
+      if (!m.email || !m.email.trim() || !m.email.includes('@')) {
+        setErrorMsg(`Please enter a valid email address for ${memberLabel}.`);
         return false;
       }
-      if (!m.branch.trim()) {
-        setErrorMsg(`Member ${i + 1}: Branch is required.`);
+
+      const cleanMobile = String(m.mobile || '').replace(/\D/g, '');
+      if (!cleanMobile || cleanMobile.length !== 10) {
+        setErrorMsg(`Please enter a valid 10-digit mobile number for ${memberLabel}.`);
         return false;
       }
-      if (!m.mobile.trim() || !phoneRegex.test(m.mobile.trim())) {
-        setErrorMsg(`Member ${i + 1}: Valid 10-digit mobile number is required.`);
+
+      if (m.branch === 'OTHERS' && (!m.customBranch || !m.customBranch.trim())) {
+        setErrorMsg(`Please specify the department/branch for ${memberLabel}.`);
         return false;
       }
+
+      if (m.college === 'Others' && (!m.customCollege || !m.customCollege.trim())) {
+        setErrorMsg(`Please specify the college name for ${memberLabel}.`);
+        return false;
+      }
+
+      const cleanRoll = String(m.rollNo).trim().toUpperCase();
+      const cleanEmail = String(m.email).trim().toLowerCase();
+
+      if (rollNumbers.includes(cleanRoll)) {
+        setErrorMsg(`Duplicate roll number "${cleanRoll}" entered for multiple team members.`);
+        return false;
+      }
+      rollNumbers.push(cleanRoll);
+
+      if (emails.includes(cleanEmail)) {
+        setErrorMsg(`Duplicate email "${cleanEmail}" entered for multiple team members.`);
+        return false;
+      }
+      emails.push(cleanEmail);
     }
 
-    const rolls = members.map((m) => m.rollNo.trim().toUpperCase());
-    const uniqueRolls = new Set(rolls);
-    if (uniqueRolls.size !== rolls.length) {
-      setErrorMsg('Duplicate roll numbers detected within your team members list.');
-      return false;
-    }
-
-    const emails = members.map((m) => m.email.trim().toLowerCase());
-    const uniqueEmails = new Set(emails);
-    if (uniqueEmails.size !== emails.length) {
-      setErrorMsg('Duplicate email addresses detected within your team members list.');
-      return false;
-    }
-
+    setErrorMsg('');
     return true;
+  };
+
+  const handleNextToStep2 = () => {
+    if (validateStep1()) {
+      setStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNextToStep3 = () => {
+    if (validateStep2()) {
+      setStep(3);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleBackToStep1 = () => {
+    setErrorMsg('');
+    setStep(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToStep2 = () => {
+    setErrorMsg('');
+    setStep(2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Prepare clean payload with custom branch and college replacements
+  const getPreparedMembers = () => {
+    return members.map((m, idx) => ({
+      name: m.name.trim(),
+      email: m.email.trim().toLowerCase(),
+      rollNo: m.rollNo.trim().toUpperCase(),
+      year: m.year,
+      branch: m.branch === 'OTHERS' && m.customBranch?.trim() ? m.customBranch.trim().toUpperCase() : m.branch,
+      gender: m.gender || 'Male',
+      college: m.college === 'Others' && m.customCollege?.trim() ? m.customCollege.trim() : m.college,
+      mobile: String(m.mobile).replace(/\D/g, ''),
+      isLeader: idx === 0,
+    }));
   };
 
   const handleResumePendingPayment = async (teamIdToResume) => {
@@ -330,12 +496,28 @@ const RegistrationForm = ({ onSuccess }) => {
           rollNo: currentUser ? currentUser.rollNo || '' : '',
           year: currentUser ? currentUser.year || '2nd' : '2nd',
           branch: currentUser ? currentUser.branch || 'CSE' : 'CSE',
-          college: currentUser ? currentUser.college || 'GPREC' : 'GPREC',
+          customBranch: '',
+          gender: currentUser ? currentUser.gender || 'Male' : 'Male',
+          college: currentUser ? currentUser.college || 'G. Pulla Reddy Engineering College' : 'G. Pulla Reddy Engineering College',
+          customCollege: '',
           mobile: currentUser ? currentUser.mobile || '' : '',
           isLeader: true,
         },
-        { name: '', email: '', rollNo: '', year: '2nd', branch: 'CSE', college: 'GPREC', mobile: '', isLeader: false },
+        {
+          name: '',
+          email: '',
+          rollNo: '',
+          year: '2nd',
+          branch: 'CSE',
+          customBranch: '',
+          gender: 'Male',
+          college: 'G. Pulla Reddy Engineering College',
+          customCollege: '',
+          mobile: '',
+          isLeader: false,
+        },
       ]);
+      setStep(1);
     } catch (err) {
       setErrorMsg('Failed to cancel pending registration.');
     } finally {
@@ -344,18 +526,20 @@ const RegistrationForm = ({ onSuccess }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setErrorMsg('');
     setRollCheckStatus(null);
 
-    if (!validateForm()) return;
+    if (!validateStep1() || !validateStep2()) return;
 
     setLoading(true);
 
     try {
+      const preparedMembers = getPreparedMembers();
+
       const res = await api.post('/register/create-order', {
         teamName,
-        members,
+        members: preparedMembers,
       });
 
       if (res.data.success) {
@@ -365,10 +549,10 @@ const RegistrationForm = ({ onSuccess }) => {
           return {
             teamId,
             teamName,
-            members,
+            members: preparedMembers,
             status: 'pending',
             expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-            amount: order.order_amount || order.amount || 300,
+            amount: order?.order_amount || order?.amount || 300,
           };
         });
         await launchCashfreeModal(order, paymentSessionId, teamId);
@@ -388,28 +572,15 @@ const RegistrationForm = ({ onSuccess }) => {
       const sessionId = paymentSessionId || order?.payment_session_id;
       const orderId = order?.order_id || order?.id;
 
-      setPendingRegistration((prev) => {
-        if (prev && prev.teamId === teamId) return prev;
-        return {
-          teamId,
-          teamName,
-          members,
-          status: 'pending',
-          expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-          amount: order?.order_amount || order?.amount || 300,
-        };
-      });
-
-      // If Cashfree credentials are not configured in server/.env
+      // If Cashfree credentials are in mock mode
       if (order?.isMock || orderId?.startsWith('order_mock_')) {
         setLoading(false);
         setErrorMsg(
-          'Cashfree API Credentials (CASHFREE_APP_ID and CASHFREE_SECRET_KEY) are missing in server/.env. Please add your Cashfree API keys in server/.env to launch the live Cashfree payment gateway popup.'
+          'Cashfree API Credentials (CASHFREE_APP_ID and CASHFREE_SECRET_KEY) are missing in server/.env. Please add your live Cashfree keys to process payments.'
         );
         return;
       }
 
-      // Check if Cashfree SDK script is available
       if (typeof window.Cashfree === 'undefined') {
         setLoading(false);
         setErrorMsg('Cashfree Payment Gateway SDK failed to load. Please check your internet connection and refresh.');
@@ -425,8 +596,6 @@ const RegistrationForm = ({ onSuccess }) => {
       try {
         const cashfreeMode =
           (order?.environment || order?.cfEnv || import.meta.env.VITE_CASHFREE_MODE || 'production').toLowerCase();
-        
-        console.log(`[Cashfree] Initializing SDK in [${cashfreeMode}] mode with session ID: ${sessionId.slice(0, 20)}...`);
 
         const cashfree = window.Cashfree({
           mode: cashfreeMode === 'production' ? 'production' : 'sandbox',
@@ -464,490 +633,779 @@ const RegistrationForm = ({ onSuccess }) => {
         setErrorMsg(`Failed to launch Cashfree checkout popup: ${cfErr.message || 'Unknown error'}`);
       }
     } catch (err) {
-      console.error('[Registration] Error launching payment modal:', err);
+      console.error('[Cashfree] Modal error:', err);
       setLoading(false);
-      if (!err.response) {
-        setErrorMsg('Cannot connect to backend server. Please make sure the backend server is running on port 5000.');
-      } else {
-        setErrorMsg(err.response?.data?.message || 'Failed to initialize payment.');
-      }
+      setErrorMsg('Failed to open payment gateway.');
     }
   };
 
   const handlePaymentVerification = async (orderId, teamId) => {
+    setLoading(true);
+    setErrorMsg('');
+
     try {
-      setLoading(true);
-      const verifyRes = await api.post('/register/verify-payment', {
-        orderId: orderId,
-        teamId: teamId,
+      const res = await api.post('/register/verify-payment', {
+        orderId,
+        teamId,
       });
 
-      if (verifyRes.data.success) {
-        setPendingRegistration(null);
+      if (res.data.success) {
         clearFormDraft();
-        onSuccess(verifyRes.data.registration);
+        setPendingRegistration(null);
+        if (onSuccess) {
+          onSuccess(res.data.registration, res.data.teamId, res.data.amount);
+        }
       } else {
-        setErrorMsg(verifyRes.data.message || 'Payment verification failed.');
+        setErrorMsg(res.data.message || 'Payment verification failed.');
       }
-    } catch (verifyErr) {
-      setErrorMsg(verifyErr.response?.data?.message || 'Server error verifying payment status.');
+    } catch (err) {
+      console.error('[Payment Verification Error]', err);
+      setErrorMsg(err.response?.data?.message || 'Payment verification failed.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      
-      {/* Form Title */}
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-extrabold text-[#0F172A] tracking-tight mb-2">
-          Codex 4.0 <span className="text-[#2563EB]">Team Registration</span>
-        </h2>
-        <p className="text-[#475569] text-sm font-normal">
-          Register your team of 2 to 3 members. Entry Fee: <strong className="text-emerald-700 font-semibold">₹300 / Team</strong>
-        </p>
+    <div className="w-full max-w-2xl sm:max-w-3xl mx-auto space-y-4 sm:space-y-5 animate-fade-in-up">
+      {/* Auth Modal popup */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={(user) => {
+          setCurrentUser(user);
+          setShowAuthModal(false);
+        }}
+      />
+
+      {/* Active Pending Registration Banner */}
+      {pendingRegistration && (
+        <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 shadow-sm space-y-2.5">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-2">
+              <Clock className="w-4 h-4 text-amber-600 animate-pulse" />
+              <h4 className="font-bold text-amber-900 text-xs sm:text-sm">
+                Active Slot Held: Team {pendingRegistration.teamId}
+              </h4>
+            </div>
+            <span className="text-[11px] font-bold text-amber-900 bg-amber-200/80 px-2 py-0.5 rounded-full font-mono">
+              {formatTime(timeLeft)}
+            </span>
+          </div>
+          <p className="text-xs text-amber-800 leading-relaxed">
+            Your team slot is reserved. Complete the payment before time expires to finalize your spot in Codex 4.0.
+          </p>
+          <div className="flex items-center space-x-2.5 pt-1">
+            <button
+              onClick={() => handleResumePendingPayment(pendingRegistration.teamId)}
+              disabled={loading}
+              className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center space-x-1.5"
+            >
+              {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <CreditCard className="w-3 h-3" />}
+              <span>Pay ₹300 INR Now</span>
+            </button>
+            <button
+              onClick={handleCancelPending}
+              disabled={loading}
+              className="px-3 py-1.5 bg-white hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold transition-all"
+            >
+              Cancel Reservation
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Multi-Step Wizard Progress Stepper */}
+      <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div className="grid grid-cols-3 gap-2 text-center relative">
+          
+          {/* Step 1 Indicator */}
+          <div
+            onClick={() => {
+              if (step > 1) {
+                setErrorMsg('');
+                setStep(1);
+              }
+            }}
+            className={`flex flex-col items-center space-y-1 cursor-pointer transition-all ${
+              step === 1 ? 'opacity-100' : step > 1 ? 'opacity-90 hover:opacity-100' : 'opacity-40 cursor-not-allowed'
+            }`}
+          >
+            <div
+              className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+                step === 1
+                  ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-100'
+                  : step > 1
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-slate-100 text-slate-400'
+              }`}
+            >
+              {step > 1 ? <Check className="w-3.5 h-3.5" /> : '1'}
+            </div>
+            <span className={`text-[11px] font-bold ${step === 1 ? 'text-blue-600' : 'text-slate-700'}`}>
+              Leader Info
+            </span>
+          </div>
+
+          {/* Step 2 Indicator */}
+          <div
+            onClick={() => {
+              if (step === 3) {
+                setErrorMsg('');
+                setStep(2);
+              }
+            }}
+            className={`flex flex-col items-center space-y-1 transition-all ${
+              step === 2 ? 'opacity-100' : step > 2 ? 'opacity-90 cursor-pointer hover:opacity-100' : 'opacity-40'
+            }`}
+          >
+            <div
+              className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+                step === 2
+                  ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-100'
+                  : step > 2
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-slate-100 text-slate-400'
+              }`}
+            >
+              {step > 2 ? <Check className="w-3.5 h-3.5" /> : '2'}
+            </div>
+            <span className={`text-[11px] font-bold ${step === 2 ? 'text-blue-600' : 'text-slate-700'}`}>
+              Team Members
+            </span>
+          </div>
+
+          {/* Step 3 Indicator */}
+          <div
+            className={`flex flex-col items-center space-y-1 transition-all ${
+              step === 3 ? 'opacity-100' : 'opacity-40'
+            }`}
+          >
+            <div
+              className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+                step === 3
+                  ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-100'
+                  : 'bg-slate-100 text-slate-400'
+              }`}
+            >
+              3
+            </div>
+            <span className={`text-[11px] font-bold ${step === 3 ? 'text-blue-600' : 'text-slate-700'}`}>
+              Preview & Pay
+            </span>
+          </div>
+
+        </div>
       </div>
 
-      {/* User Auth Banner Header */}
-      {!currentUser ? (
-        <div id="auth-banner-box" className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5 mb-6 text-center flex flex-col sm:flex-row items-center justify-between gap-4 shadow-card">
-          <div className="flex items-center space-x-3 text-left">
-            <div className="p-3 bg-blue-100 text-[#2563EB] rounded-xl shrink-0">
-              <Lock className="w-6 h-6" />
+      {/* Error Banner with Auto-scroll Ref */}
+      {errorMsg && (
+        <div
+          ref={errorRef}
+          className="bg-rose-50 border border-rose-200 text-rose-800 p-3.5 rounded-xl flex items-start space-x-2.5 shadow-xs animate-shake"
+        >
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <p className="font-semibold text-xs">{errorMsg}</p>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 1: Leader Details & Team Name */}
+      {step === 1 && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm space-y-5 animate-fade-in-up">
+          
+          <div className="border-b border-slate-100 pb-3">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1.5">
+              <User className="w-3 h-3" />
+              <span>Step 1 of 3 · Team Leadership</span>
             </div>
-            <div>
-              <h4 className="font-bold text-[#0F172A] text-base">Sign In Required to Register</h4>
-              <p className="text-xs text-[#475569] font-normal">
-                Log in via Email or Google to lock yourself as Team Leader & receive entry pass.
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Team Leader & Team Information
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Provide your unique Team Name and the primary Team Leader details.
+            </p>
+          </div>
+
+          {/* Authentication Banner */}
+          {!currentUser ? (
+            <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
+                  <LogIn className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900">Team Leader Sign In Required</h4>
+                  <p className="text-[11px] text-slate-500">Sign in to automatically link your team pass and receipt.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAuthModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center justify-center space-x-1.5 shrink-0"
+              >
+                <span>Sign In / Register</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+          ) : (
+            <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-between">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold shrink-0">
+                  <Check className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <p className="text-[11px] text-emerald-800 font-semibold">Signed in as Team Leader</p>
+                  <p className="text-xs font-bold text-slate-900">{currentUser.name} ({currentUser.email})</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="text-xs font-semibold text-rose-600 hover:underline flex items-center space-x-1"
+              >
+                <LogOut className="w-3 h-3" />
+                <span>Switch</span>
+              </button>
+            </div>
+          )}
+
+          {/* Form Fields */}
+          <div className="space-y-4">
+            
+            {/* Team Name */}
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                Team Name <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={teamName}
+                onChange={(e) => {
+                  setTeamName(e.target.value);
+                  setErrorMsg('');
+                }}
+                placeholder="e.g. Byte Busters, Algorithmic Aces"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
+              />
+              <p className="text-[11px] text-slate-400">
+                This name will appear on official certificates and scoreboards.
               </p>
             </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowAuthModal(true)}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-xs flex items-center justify-center space-x-2 shadow-sm transition-all shrink-0"
-          >
-            <LogIn className="w-4 h-4" />
-            <span>Sign In / Register Leader</span>
-          </button>
-        </div>
-      ) : (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm font-medium text-[#0F172A]">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
-              <Check className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-[#64748B] text-xs block">Logged In Primary Team Leader:</span>
-              <strong className="text-[#0F172A] font-bold text-sm">{currentUser.name}</strong> <span className="text-emerald-700 font-semibold">({currentUser.email})</span>
-            </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="text-xs text-rose-700 hover:text-rose-800 font-semibold flex items-center space-x-1 border border-rose-200 px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 transition-all"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out / Switch Account</span>
-          </button>
-        </div>
-      )}
-
-      {/* Pending Registration Alert Banner */}
-      {pendingRegistration && (
-        <div id="pending-banner-card" className="relative overflow-hidden bg-white border-2 border-blue-400 rounded-xl p-5 sm:p-6 mb-8 text-[#0F172A] shadow-card transition-all">
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#2563EB]" />
-          
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
-            <div className="flex items-start space-x-4">
-              <div className="p-3.5 bg-blue-50 border border-blue-200 text-[#2563EB] rounded-xl mt-0.5 shrink-0 shadow-xs">
-                <CreditCard className="w-6 h-6" />
-              </div>
+            {/* Leader Name & Leader Email */}
+            <div className="grid sm:grid-cols-2 gap-3.5">
               <div className="space-y-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-blue-100 text-blue-900 border border-blue-200">
-                    <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-ping" />
-                    <span>Pending Payment</span>
-                  </span>
-                  {timeLeft > 0 && (
-                    <span className="inline-flex items-center space-x-1.5 text-xs font-mono font-bold text-blue-950 bg-blue-50 px-3 py-1 rounded-lg border border-blue-200">
-                      <span className="text-blue-700">⏳ Data held for:</span>
-                      <strong className="text-[#2563EB] font-extrabold text-sm">{formatTime(timeLeft)}</strong>
-                    </span>
-                  )}
-                </div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Team Leader Name <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={members[0]?.name || ''}
+                  onChange={(e) => handleMemberChange(0, 'name', e.target.value)}
+                  placeholder="Full legal name"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
+                />
+              </div>
 
-                <h4 className="font-bold text-[#0F172A] text-base sm:text-lg tracking-tight pt-0.5">
-                  Incomplete Registration: <span className="text-[#2563EB]">Team "{pendingRegistration.teamName}"</span> <span className="text-[#64748B] text-xs font-mono">({pendingRegistration.teamId})</span>
-                </h4>
-                <p className="text-xs sm:text-sm text-[#475569] leading-relaxed font-normal">
-                  Your registration data will be held for <strong className="text-[#2563EB] font-semibold">10 mins</strong>. Complete payment to finish registration!
-                </p>
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Team Leader Email <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={members[0]?.email || ''}
+                  onChange={(e) => handleMemberChange(0, 'email', e.target.value)}
+                  placeholder="Official student email"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
+                />
+                <p className="text-[10px] text-slate-400">Confirmation pass will be sent here.</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 w-full lg:w-auto shrink-0 pt-2 lg:pt-0">
-              <button
-                type="button"
-                onClick={() => handleResumePendingPayment(pendingRegistration.teamId)}
-                disabled={loading}
-                className="flex-1 lg:flex-none px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-sm transition-all cursor-pointer"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>Complete Pending Registration (₹{pendingRegistration.amount || 300})</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleCancelPending}
-                disabled={loading}
-                className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-[#E2E8F0] hover:border-rose-200 text-xs font-semibold transition-all cursor-pointer"
-                title="Cancel pending registration to start new"
-              >
-                Cancel
-              </button>
+          </div>
+
+          {/* Action Button */}
+          <div className="pt-3 border-t border-slate-100 flex justify-end">
+            <button
+              type="button"
+              onClick={handleNextToStep2}
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition-all"
+            >
+              <span>Next: Team Members</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+        </div>
+      )}
+
+      {/* STEP 2: Team Size Selection & All Member Details */}
+      {step === 2 && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm space-y-5 animate-fade-in-up">
+          
+          <div className="border-b border-slate-100 pb-3">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1.5">
+              <Users className="w-3 h-3" />
+              <span>Step 2 of 3 · Team Composition</span>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 4th Year Constraint Live Counter Badge */}
-      <div id="fourth-year-status-card" className={`p-4 rounded-xl mb-6 border transition-all ${
-        fourthYearCount > 1
-          ? 'bg-rose-50 border-rose-300 text-rose-900'
-          : fourthYearCount === 1
-          ? 'bg-blue-50 border-blue-200 text-blue-900'
-          : 'bg-white border-[#E2E8F0] text-[#0F172A]'
-      }`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <ShieldAlert className={`w-5 h-5 ${fourthYearCount > 1 ? 'text-rose-600' : 'text-[#2563EB]'}`} />
-            <div>
-              <span className="font-semibold text-sm text-[#0F172A]">4th-Year Student Status:</span>
-              <span className="text-xs text-[#475569] ml-2">
-                {fourthYearCount === 0 && '0 of 1 fourth-year student selected (Allowed)'}
-                {fourthYearCount === 1 && '✓ 1 fourth-year student selected (Max Limit Reached)'}
-                {fourthYearCount > 1 && `❌ ${fourthYearCount} fourth-year students selected! (EXCEEDED RULE LIMIT - MAX 1 ALLOWED)`}
-              </span>
-            </div>
-          </div>
-          <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-            fourthYearCount > 1 ? 'bg-rose-600 text-white' : 'bg-blue-100 text-[#2563EB]'
-          }`}>
-            {fourthYearCount} / 1 Max
-          </span>
-        </div>
-      </div>
-
-      {/* Error Alert Message */}
-      {errorMsg && (
-        <div ref={errorRef} className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl mb-6 flex items-start space-x-3">
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-600" />
-          <div className="text-sm font-medium">{errorMsg}</div>
-        </div>
-      )}
-
-      {/* Roll Check Status Alert */}
-      {rollCheckStatus && (
-        <div className={`p-4 rounded-xl mb-6 border text-sm font-medium flex items-center space-x-3 ${
-          rollCheckStatus.available
-            ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-            : 'bg-amber-50 border-amber-200 text-amber-900'
-        }`}>
-          {rollCheckStatus.available ? <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" /> : <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />}
-          <div>{rollCheckStatus.message}</div>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-8" noValidate>
-        
-        {/* Team Details Section */}
-        <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-card">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-[#0F172A] flex items-center space-x-2">
-              <Users className="w-5 h-5 text-[#2563EB]" />
-              <span>Team Information</span>
-            </h3>
-            <span className="text-xs text-[#64748B] font-medium">Team Size: {members.length} Members</span>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Select Team Size & Member Details
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Choose 2 or 3 members and fill their academic details.
+            </p>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#0F172A] mb-2">
-              Team Name <span className="text-rose-500">*</span>
+          {/* Team Size Selector Toggle */}
+          <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl space-y-2">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              Select Team Size:
             </label>
-            <input
-              id="team-name-input"
-              type="text"
-              required
-              placeholder="e.g. Byte Busters / Algo Knights"
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white border border-[#CBD5E1] text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 text-sm font-normal transition-all"
-            />
-          </div>
-        </div>
-
-        {/* Member Form Fields */}
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h3 className="text-xl font-bold text-[#0F172A]">Team Members</h3>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={handleCheckRollNumbers}
-                disabled={checkingRolls}
-                className="px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 text-[#0F172A] text-xs font-medium border border-[#CBD5E1] flex items-center space-x-1.5 transition-all shadow-xs"
-              >
-                {checkingRolls ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                <span>Check Roll Numbers Availability</span>
-              </button>
-
-              {members.length < 3 && (
-                <button
-                  type="button"
-                  onClick={addMember}
-                  className="px-3.5 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#2563EB] border border-blue-200 text-xs font-semibold flex items-center space-x-1 transition-all"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Member 3</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {members.map((member, index) => {
-            const isLockedLeader = index === 0 && currentUser;
-
-            return (
-              <div
-                key={index}
-                className={`bg-white p-6 rounded-xl border shadow-card transition-all relative ${
-                  member.isLeader
-                    ? 'border-blue-300 ring-2 ring-blue-50'
-                    : 'border-[#E2E8F0]'
+                onClick={() => handleTeamSizeChange(2)}
+                className={`p-3 rounded-xl border text-center transition-all flex flex-col items-center justify-center space-y-0.5 ${
+                  teamSize === 2
+                    ? 'border-blue-600 bg-blue-50/80 text-blue-600 ring-2 ring-blue-100 font-bold'
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                {/* Header inside Member Card */}
-                <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E2E8F0]">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
-                      member.isLeader ? 'bg-[#2563EB] text-white' : 'bg-slate-100 text-[#0F172A]'
-                    }`}>
-                      {index + 1}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#0F172A] text-base flex items-center space-x-2">
-                        <span>Member {index + 1} {member.name ? `— ${member.name}` : ''}</span>
-                        {isLockedLeader && (
-                          <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] px-2 py-0.5 rounded-full font-semibold flex items-center space-x-1">
-                            <Lock className="w-3 h-3" />
-                            <span>Verified Leader</span>
-                          </span>
-                        )}
-                      </h4>
-                      {member.isLeader && (
-                        <span className="text-[11px] font-medium text-[#2563EB]">
-                          Primary Team Leader (Handles Payment & Receives Pass)
+                <span className="text-sm sm:text-base font-extrabold">2 Members</span>
+                <span className="text-[11px] font-medium text-slate-500">₹300 INR Flat Fee</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleTeamSizeChange(3)}
+                className={`p-3 rounded-xl border text-center transition-all flex flex-col items-center justify-center space-y-0.5 ${
+                  teamSize === 3
+                    ? 'border-blue-600 bg-blue-50/80 text-blue-600 ring-2 ring-blue-100 font-bold'
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <span className="text-sm sm:text-base font-extrabold">3 Members</span>
+                <span className="text-[11px] font-medium text-slate-500">₹300 INR Flat Fee</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 4th-Year Rule Status Indicator */}
+          <div
+            className={`p-3 rounded-xl border flex items-center justify-between text-xs transition-all ${
+              fourthYearCount > 1
+                ? 'bg-rose-50 border-rose-200 text-rose-800'
+                : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+              <span>
+                <strong>4th-Year Rule:</strong> Max 1 allowed per team. (Current: {fourthYearCount})
+              </span>
+            </div>
+            <span className="font-bold uppercase tracking-wider text-[10px]">
+              {fourthYearCount > 1 ? 'Violation (2+)' : 'Valid (≤ 1)'}
+            </span>
+          </div>
+
+          {/* Member Cards */}
+          <div className="space-y-4">
+            {members.slice(0, teamSize).map((member, index) => {
+              const isLeader = index === 0;
+
+              return (
+                <div
+                  key={index}
+                  className="bg-slate-50/70 border border-slate-200 rounded-xl p-4 sm:p-5 space-y-3.5 relative shadow-xs"
+                >
+                  {/* Header of Member Card */}
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
+                        {index + 1}
+                      </div>
+                      <h3 className="font-bold text-xs sm:text-sm text-slate-900">
+                        {isLeader ? 'Team Leader (Member 1)' : `Member ${index + 1}`}
+                      </h3>
+                      {isLeader && (
+                        <span className="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-0.2 rounded-full uppercase">
+                          Leader
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Remove button (Only available for member 3) */}
-                  {index > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeMember(index)}
-                      className="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 text-xs flex items-center space-x-1 transition-colors"
-                      title="Remove Member"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      <span>Remove</span>
-                    </button>
-                  )}
+                  {/* Fields Grid */}
+                  <div className="grid sm:grid-cols-2 gap-3 text-xs">
+                    
+                    {/* Name */}
+                    <div className="space-y-1">
+                      <label className="font-semibold text-slate-700">
+                        Full Name <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={member.name}
+                        onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
+                        placeholder="Student name"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
+                      />
+                    </div>
+
+                    {/* Roll No */}
+                    <div className="space-y-1">
+                      <label className="font-semibold text-slate-700">
+                        Roll Number <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={member.rollNo}
+                        onChange={(e) => handleMemberChange(index, 'rollNo', e.target.value.toUpperCase())}
+                        placeholder="e.g. 229X1A05XX"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none uppercase font-mono text-xs sm:text-sm"
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div className="space-y-1">
+                      <label className="font-semibold text-slate-700">
+                        Email Address <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        value={member.email}
+                        onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
+                        placeholder="student@example.com"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm"
+                      />
+                    </div>
+
+                    {/* Mobile Number */}
+                    <div className="space-y-1">
+                      <label className="font-semibold text-slate-700">
+                        Mobile Number <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        maxLength="10"
+                        value={member.mobile}
+                        onChange={(e) => handleMemberChange(index, 'mobile', e.target.value.replace(/\D/g, ''))}
+                        placeholder="10-digit mobile"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none font-mono text-xs sm:text-sm"
+                      />
+                    </div>
+
+                    {/* Gender */}
+                    <div className="space-y-1">
+                      <label className="font-semibold text-slate-700">
+                        Gender <span className="text-rose-500">*</span>
+                      </label>
+                      <select
+                        value={member.gender || 'Male'}
+                        onChange={(e) => handleMemberChange(index, 'gender', e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                      >
+                        {GENDER_OPTIONS.map((g) => (
+                          <option key={g.value} value={g.value}>
+                            {g.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Year of Study */}
+                    <div className="space-y-1">
+                      <label className="font-semibold text-slate-700">
+                        Year of Study <span className="text-rose-500">*</span>
+                      </label>
+                      <select
+                        value={member.year}
+                        onChange={(e) => handleMemberChange(index, 'year', e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                      >
+                        {YEAR_OPTIONS.map((yr) => (
+                          <option key={yr} value={yr}>
+                            {yr} Year
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Branch Dropdown */}
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="font-semibold text-slate-700">
+                        Branch / Department <span className="text-rose-500">*</span>
+                      </label>
+                      <select
+                        value={member.branch}
+                        onChange={(e) => handleMemberChange(index, 'branch', e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                      >
+                        {BRANCH_OPTIONS.map((br) => (
+                          <option key={br} value={br}>
+                            {br}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Custom Branch Input (if OTHERS) */}
+                    {member.branch === 'OTHERS' && (
+                      <div className="space-y-1 sm:col-span-2">
+                        <label className="font-semibold text-slate-700">
+                          Specify Other Branch/Department <span className="text-rose-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={member.customBranch || ''}
+                          onChange={(e) => handleMemberChange(index, 'customBranch', e.target.value)}
+                          placeholder="Enter your exact department name"
+                          className="w-full px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
+                        />
+                      </div>
+                    )}
+
+                    {/* College Dropdown */}
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="font-semibold text-slate-700">
+                        College / Institution <span className="text-rose-500">*</span>
+                      </label>
+                      <select
+                        value={member.college}
+                        onChange={(e) => handleMemberChange(index, 'college', e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                      >
+                        {COLLEGE_OPTIONS.map((col) => (
+                          <option key={col} value={col}>
+                            {col}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Custom College Input (if Others) */}
+                    {member.college === 'Others' && (
+                      <div className="space-y-1 sm:col-span-2">
+                        <label className="font-semibold text-slate-700">
+                          Specify College / Institution Name <span className="text-rose-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={member.customCollege || ''}
+                          onChange={(e) => handleMemberChange(index, 'customCollege', e.target.value)}
+                          placeholder="Enter your full college name"
+                          className="w-full px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
+                        />
+                      </div>
+                    )}
+
+                  </div>
+
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Input Fields Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  
-                  {/* Full Name */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Full Name <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      id={`member-${index}-name`}
-                      type="text"
-                      required
-                      readOnly={isLockedLeader}
-                      placeholder="Full Student Name"
-                      value={member.name}
-                      onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-[#0F172A] text-sm focus:outline-none transition-all ${
-                        isLockedLeader
-                          ? 'bg-[#F8FAFC] border-[#E2E8F0] text-[#475569] cursor-not-allowed font-medium'
-                          : 'bg-white border-[#CBD5E1] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 placeholder-[#94A3B8]'
-                      }`}
-                    />
-                  </div>
+          {/* Roll Numbers Availability Check Button */}
+          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5">
+              <span className="text-xs text-slate-500">
+                Check if your team's roll numbers are already registered.
+              </span>
+              <button
+                type="button"
+                onClick={handleCheckRollNumbers}
+                disabled={checkingRolls}
+                className="w-full sm:w-auto px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-xs"
+              >
+                {checkingRolls ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3 text-blue-600" />}
+                <span>Verify Roll Numbers</span>
+              </button>
+            </div>
 
-                  {/* Email Address */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Email Address <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      id={`member-${index}-email`}
-                      type="email"
-                      required
-                      readOnly={isLockedLeader}
-                      placeholder="student@example.com"
-                      value={member.email}
-                      onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-[#0F172A] text-sm focus:outline-none transition-all ${
-                        isLockedLeader
-                          ? 'bg-[#F8FAFC] border-[#E2E8F0] text-[#475569] cursor-not-allowed font-medium'
-                          : 'bg-white border-[#CBD5E1] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 placeholder-[#94A3B8]'
-                      }`}
-                    />
-                  </div>
+            {rollCheckStatus && (
+              <p
+                className={`text-xs font-semibold pt-0.5 ${
+                  rollCheckStatus.available ? 'text-emerald-600' : 'text-rose-600'
+                }`}
+              >
+                {rollCheckStatus.message}
+              </p>
+            )}
+          </div>
 
-                  {/* Roll Number */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Roll Number <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      id={`member-${index}-rollNo`}
-                      type="text"
-                      required
-                      placeholder="e.g. 219X1A05XX"
-                      value={member.rollNo}
-                      onChange={(e) => handleMemberChange(index, 'rollNo', e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#CBD5E1] text-[#0F172A] text-sm uppercase font-mono tracking-wider focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 placeholder-[#94A3B8] focus:outline-none transition-all"
-                    />
-                  </div>
+          {/* Navigation Action Buttons */}
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={handleBackToStep1}
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm flex items-center space-x-1.5 transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
+            </button>
 
-                  {/* Year of Study */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Year of Study <span className="text-rose-500">*</span>
-                    </label>
-                    <select
-                      id={`member-${index}-year`}
-                      value={member.year}
-                      onChange={(e) => handleMemberChange(index, 'year', e.target.value)}
-                      className={`w-full px-3.5 py-2.5 rounded-xl bg-white border text-[#0F172A] text-sm font-medium focus:outline-none transition-all ${
-                        member.year === '4th' ? 'border-amber-400 text-amber-900 bg-amber-50/30' : 'border-[#CBD5E1] focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100'
-                      }`}
-                    >
-                      <option value="1st">1st Year</option>
-                      <option value="2nd">2nd Year</option>
-                      <option value="3rd">3rd Year</option>
-                      <option value="4th">4th Year (Max 1 student per team)</option>
-                    </select>
-                  </div>
+            <button
+              type="button"
+              onClick={handleNextToStep3}
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition-all"
+            >
+              <span>Next: Review & Confirm</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-                  {/* Branch */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Branch <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      id={`member-${index}-branch`}
-                      type="text"
-                      required
-                      placeholder="e.g. CSE / ECE / EEE / Mechanical"
-                      value={member.branch}
-                      onChange={(e) => handleMemberChange(index, 'branch', e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#CBD5E1] text-[#0F172A] text-sm focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 placeholder-[#94A3B8] focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  {/* Mobile Number */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Mobile Number (10 Digits) <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      id={`member-${index}-mobile`}
-                      type="tel"
-                      required
-                      maxLength={10}
-                      placeholder="9876543210"
-                      value={member.mobile}
-                      onChange={(e) => handleMemberChange(index, 'mobile', e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#CBD5E1] text-[#0F172A] text-sm font-mono focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 placeholder-[#94A3B8] focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  {/* College */}
-                  <div className="sm:col-span-2 lg:col-span-3">
-                    <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      College Name <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      id={`member-${index}-college`}
-                      type="text"
-                      required
-                      placeholder="GPREC (G. Pulla Reddy Engineering College)"
-                      value={member.college}
-                      onChange={(e) => handleMemberChange(index, 'college', e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#CBD5E1] text-[#0F172A] text-sm focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 placeholder-[#94A3B8] focus:outline-none transition-all"
-                    />
-                  </div>
-
-                </div>
-              </div>
-            );
-          })}
         </div>
+      )}
 
-        {/* Submit Section */}
-        <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-card flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <span className="text-xs uppercase font-bold tracking-wider text-[#64748B] block">Total Team Fee</span>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-extrabold text-[#0F172A]">₹300</span>
-              <span className="text-xs text-emerald-600 font-semibold">Per Team ({members.length} Members)</span>
+      {/* STEP 3: Preview & Confirmation Screen */}
+      {step === 3 && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm space-y-5 animate-fade-in-up">
+          
+          <div className="border-b border-slate-100 pb-3">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-1.5 border border-emerald-200">
+              <ShieldCheck className="w-3 h-3" />
+              <span>Step 3 of 3 · Final Review</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Review & Confirm Registration Details
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Please verify all entered details carefully before proceeding to payment.
+            </p>
+          </div>
+
+          {/* Team Summary Overview Card */}
+          <div className="bg-slate-50/80 border border-slate-200 rounded-xl p-4 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Team Name
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">
+                  {teamName}
+                </h3>
+              </div>
+
+              <div className="bg-white px-3.5 py-1.5 rounded-lg border border-slate-200 text-right shrink-0">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                  Registration Fee
+                </span>
+                <span className="text-base font-extrabold text-blue-600">
+                  ₹300 INR <span className="text-xs text-slate-500 font-normal">({teamSize} Members)</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Badge Details */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+              <div className="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Team Leader</span>
+                <span className="font-bold text-slate-900 truncate block">{members[0]?.name}</span>
+              </div>
+              <div className="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Leader Email</span>
+                <span className="font-bold text-slate-900 truncate block">{members[0]?.email}</span>
+              </div>
+              <div className="bg-white p-2.5 rounded-lg border border-slate-200 col-span-2 sm:col-span-1">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">4th-Year Students</span>
+                <span className="font-bold text-emerald-700">{fourthYearCount} of 1 allowed</span>
+              </div>
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading || fourthYearCount > 1}
-            className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold text-base flex items-center justify-center space-x-3 transition-all ${
-              fourthYearCount > 1
-                ? 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
-                : 'bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-sm hover:shadow'
-            }`}
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Processing Order & Checkout...</span>
-              </>
-            ) : (
-              <>
-                <CreditCard className="w-5 h-5" />
-                <span>Pay ₹300 & Complete Registration</span>
-              </>
-            )}
-          </button>
+          {/* Full Members Details Preview Cards */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+              Member Breakdown ({teamSize} Members):
+            </h4>
+
+            <div className="grid gap-3">
+              {getPreparedMembers().map((mem, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs space-y-2.5"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
+                        {idx + 1}
+                      </span>
+                      <span className="font-bold text-xs sm:text-sm text-slate-900">{mem.name}</span>
+                      {mem.isLeader && (
+                        <span className="text-[10px] bg-blue-100 text-blue-600 font-bold px-2 py-0.2 rounded-full uppercase">
+                          Leader
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                      {mem.rollNo}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-600">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block uppercase font-semibold">Gender</span>
+                      <span className="font-medium text-slate-900">{mem.gender}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block uppercase font-semibold">Year & Branch</span>
+                      <span className="font-medium text-slate-900">{mem.year} Yr · {mem.branch}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block uppercase font-semibold">Mobile</span>
+                      <span className="font-medium text-slate-900 font-mono">{mem.mobile}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block uppercase font-semibold">Email</span>
+                      <span className="font-medium text-slate-900 truncate block">{mem.email}</span>
+                    </div>
+                    <div className="col-span-2 sm:col-span-4 pt-0.5">
+                      <span className="text-[10px] text-slate-400 block uppercase font-semibold">College</span>
+                      <span className="font-medium text-slate-900">{mem.college}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons: Edit or Confirm & Pay */}
+          <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={handleBackToStep2}
+              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>Edit Details</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition-all"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Connecting to Cashfree...</span>
+                </>
+              ) : (
+                <>
+                  <CreditCard className="w-3.5 h-3.5" />
+                  <span>Confirm & Proceed to Payment (₹300 INR)</span>
+                </>
+              )}
+            </button>
+          </div>
+
         </div>
-
-      </form>
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onAuthSuccess={(user) => {
-          setCurrentUser(user);
-          setErrorMsg('');
-        }}
-      />
+      )}
 
     </div>
   );

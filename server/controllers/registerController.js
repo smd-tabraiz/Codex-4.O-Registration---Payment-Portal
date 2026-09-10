@@ -229,7 +229,8 @@ const createOrder = async (req, res) => {
       rollNo: String(m.rollNo).trim().toUpperCase(),
       year: String(m.year).trim(),
       branch: String(m.branch).trim(),
-      college: m.college ? String(m.college).trim() : 'GPREC',
+      gender: m.gender ? String(m.gender).trim() : 'Male',
+      college: m.college ? String(m.college).trim() : 'G. Pulla Reddy Engineering College',
       mobile: String(m.mobile).trim(),
       isLeader: Boolean(m.isLeader),
     }));

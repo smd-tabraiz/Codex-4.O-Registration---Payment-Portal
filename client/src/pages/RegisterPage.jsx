@@ -13,8 +13,10 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="py-8 min-h-[calc(100vh-4rem)]">
-      <RegistrationForm onSuccess={handleSuccess} />
+    <div className="py-6 sm:py-10 min-h-[calc(100vh-4rem)] px-4 sm:px-6 flex flex-col justify-center">
+      <div className="w-full max-w-3xl mx-auto">
+        <RegistrationForm onSuccess={handleSuccess} />
+      </div>
 
       {completedRegistration && (
         <PaymentSuccessModal

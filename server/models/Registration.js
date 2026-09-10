@@ -39,6 +39,12 @@ const memberSchema = new mongoose.Schema({
     required: [true, 'Member mobile number is required'],
     trim: true,
   },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'M', 'F', 'Other'],
+    default: 'Male',
+    trim: true,
+  },
   isLeader: {
     type: Boolean,
     default: false,
