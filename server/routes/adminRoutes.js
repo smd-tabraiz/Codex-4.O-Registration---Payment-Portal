@@ -9,6 +9,7 @@ const {
   updateRegistrationStatus,
   deleteRegistration,
   updateSystemSettings,
+  syncGoogleSheets,
 } = require('../controllers/adminController');
 
 // Public route for admin login
@@ -22,6 +23,7 @@ router.post('/resend-email/:id', resendEmail);
 router.patch('/registration-status/:id', updateRegistrationStatus);
 router.delete('/registration/:id', deleteRegistration);
 router.post('/system-settings', updateSystemSettings);
+router.post('/sync-sheets', syncGoogleSheets);
 
 module.exports = router;
 

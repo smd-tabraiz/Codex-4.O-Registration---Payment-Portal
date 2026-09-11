@@ -56,6 +56,7 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
   const [feeInput, setFeeInput]               = useState('300');
   const [savingFee, setSavingFee]             = useState(false);
   const [feeSuccess, setFeeSuccess]           = useState('');
+  const [syncingSheets, setSyncingSheets]     = useState(false);
   const [error, setError]             = useState('');
   const [lastRefresh, setLastRefresh] = useState(null);
   const searchRef = useRef(null);
@@ -228,6 +229,18 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
     }
   };
 
+  const handleSyncGoogleSheets = async () => {
+    setSyncingSheets(true);
+    try {
+      const res = await api.post('/admin/sync-sheets', {}, { headers: getHeaders() });
+      alert(res.data.message || 'Google Sheet synchronized successfully!');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to sync Google Sheet.');
+    } finally {
+      setSyncingSheets(false);
+    }
+  };
+
   const { stats, registrations } = data;
   const fillPct   = stats ? Math.min((stats.paidTeamsCount / stats.registrationCap) * 100, 100) : 0;
   const spotsLeft = stats ? stats.registrationCap - stats.paidTeamsCount : 0;
@@ -281,12 +294,22 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
             href={GOOGLE_SHEET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 rounded-lg bg-blue-600/30 hover:bg-blue-600/40 text-blue-200 border border-blue-400/40 text-xs font-semibold flex items-center gap-2 transition-all"
+            className="px-3 py-2 rounded-lg bg-blue-600/30 hover:bg-blue-600/40 text-blue-200 border border-blue-400/40 text-xs font-semibold flex items-center gap-1.5 transition-all"
           >
             <FileSpreadsheet className="w-4 h-4 text-blue-300" />
-            Google Sheet
+            Open Sheet
             <ExternalLink className="w-3 h-3" />
           </a>
+
+          <button
+            onClick={handleSyncGoogleSheets}
+            disabled={syncingSheets}
+            className="px-3 py-2 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-200 border border-indigo-400/40 text-xs font-semibold flex items-center gap-1.5 transition-all disabled:opacity-50"
+            title="Force re-sync all registrations directly to Google Sheet"
+          >
+            {syncingSheets ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            Sync Sheet
+          </button>
 
           <button
             onClick={handleExportExcel}

@@ -3,7 +3,7 @@ const SystemSetting = require('../models/SystemSetting');
 const { generateRegistrationsExcel } = require('../utils/exportExcel');
 const { sendConfirmationEmail } = require('../utils/mailer');
 const jwt = require('jsonwebtoken');
-const { syncRegistrationToSheet } = require('../utils/googleSheets');
+const { syncRegistrationToSheet, syncAllToSheet } = require('../utils/googleSheets');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'codex4_jwt_secret_key_2026';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'SMD-TABRAIZ';
@@ -293,6 +293,28 @@ const updateSystemSettings = async (req, res) => {
   }
 };
 
+/**
+ * POST /api/admin/sync-sheets
+ * Sync all paid registrations to Google Sheets in real-time
+ */
+const syncGoogleSheets = async (req, res) => {
+  try {
+    const registrations = await Registration.find({ status: 'paid' }).sort({ createdAt: 1 });
+    const result = await syncAllToSheet(registrations);
+    return res.json({
+      success: true,
+      message: `Successfully synchronized ${result.count} registrations directly to Google Sheets in real-time!`,
+      count: result.count,
+    });
+  } catch (error) {
+    console.error('[Admin] Error syncing to Google Sheets:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to sync to Google Sheets: ' + error.message,
+    });
+  }
+};
+
 module.exports = {
   adminLogin,
   getAllRegistrations,
@@ -301,4 +323,5 @@ module.exports = {
   updateRegistrationStatus,
   deleteRegistration,
   updateSystemSettings,
+  syncGoogleSheets,
 };
