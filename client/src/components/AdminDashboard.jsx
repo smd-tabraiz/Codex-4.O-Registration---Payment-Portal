@@ -52,6 +52,10 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
   const [savingStatusId, setSavingStatusId]   = useState(null);
   const [underConstruction, setUnderConstruction] = useState(false);
   const [togglingConstruction, setTogglingConstruction] = useState(false);
+  const [registrationFee, setRegistrationFee] = useState(300);
+  const [feeInput, setFeeInput]               = useState('300');
+  const [savingFee, setSavingFee]             = useState(false);
+  const [feeSuccess, setFeeSuccess]           = useState('');
   const [error, setError]             = useState('');
   const [lastRefresh, setLastRefresh] = useState(null);
   const searchRef = useRef(null);
@@ -76,6 +80,15 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
       const settingsRes = await api.get('/register/system-settings');
       if (settingsRes.data?.settings) {
         setUnderConstruction(settingsRes.data.settings.underConstruction === true);
+        if (settingsRes.data.settings.registrationFee !== undefined) {
+          const feeVal = Number(settingsRes.data.settings.registrationFee);
+          setRegistrationFee(feeVal);
+          setFeeInput(String(feeVal));
+        }
+      } else if (res.data?.stats?.registrationFee !== undefined) {
+        const feeVal = Number(res.data.stats.registrationFee);
+        setRegistrationFee(feeVal);
+        setFeeInput(String(feeVal));
       }
 
       setLastRefresh(new Date());
@@ -189,6 +202,32 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
     }
   };
 
+  const handleUpdateFee = async (overrideValue) => {
+    const targetFee = overrideValue !== undefined ? Number(overrideValue) : Number(feeInput);
+    if (isNaN(targetFee) || targetFee < 0) {
+      alert('Please enter a valid non-negative number for the registration fee.');
+      return;
+    }
+
+    setSavingFee(true);
+    setFeeSuccess('');
+    try {
+      const res = await api.post('/admin/system-settings', { registrationFee: targetFee }, {
+        headers: getHeaders(),
+      });
+      const savedFee = res.data.registrationFee !== undefined ? res.data.registrationFee : targetFee;
+      setRegistrationFee(savedFee);
+      setFeeInput(String(savedFee));
+      setFeeSuccess(`Registration fee updated to ₹${savedFee}! This now applies live to all user registrations.`);
+      setTimeout(() => setFeeSuccess(''), 5000);
+      fetchAdminData();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update registration fee.');
+    } finally {
+      setSavingFee(false);
+    }
+  };
+
   const { stats, registrations } = data;
   const fillPct   = stats ? Math.min((stats.paidTeamsCount / stats.registrationCap) * 100, 100) : 0;
   const spotsLeft = stats ? stats.registrationCap - stats.paidTeamsCount : 0;
@@ -285,6 +324,102 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
         </div>
       )}
 
+      {/* ── REGISTRATION FEE CONFIGURATION PANEL ──────────────── */}
+      <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-card p-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+                <IndianRupee className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-[#0F172A]">Event Registration Fee Control</h2>
+                <p className="text-xs text-[#64748B]">
+                  Change the registration fee anytime. Updated fee immediately reflects on user registration pages and Cashfree checkout.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Current Active Fee Badge */}
+          <div className="flex items-center gap-2 self-start md:self-auto bg-slate-50 border border-slate-200 px-3.5 py-1.5 rounded-lg">
+            <span className="text-xs text-slate-500 font-medium">Active Fee:</span>
+            <span className="text-sm font-extrabold text-emerald-600 font-mono">₹{registrationFee} INR</span>
+          </div>
+        </div>
+
+        {/* Input & Action Controls */}
+        <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-slate-600 shrink-0">Enter Amount (₹):</span>
+            <div className="relative rounded-lg shadow-xs max-w-[140px]">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 font-bold text-sm">
+                ₹
+              </div>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value={feeInput}
+                onChange={(e) => setFeeInput(e.target.value)}
+                placeholder="300"
+                className="block w-full pl-7 pr-3 py-1.5 text-sm font-bold text-slate-900 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleUpdateFee()}
+              disabled={savingFee || !feeInput}
+              className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
+            >
+              {savingFee ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save & Apply</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Quick Presets */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[11px] font-semibold text-slate-400">Presets:</span>
+            {[200, 250, 300, 350, 400, 500].map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => {
+                  setFeeInput(String(preset));
+                  handleUpdateFee(preset);
+                }}
+                disabled={savingFee}
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all ${
+                  registrationFee === preset
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold shadow-xs'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                }`}
+              >
+                ₹{preset}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Success Feedback */}
+        {feeSuccess && (
+          <div className="mt-3 flex items-center gap-2 p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs font-semibold animate-fade-in-up">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>{feeSuccess}</span>
+          </div>
+        )}
+      </div>
+
       {/* ── STAT CARDS ────────────────────────────────── */}
       {stats && (
         <>
@@ -327,7 +462,7 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
               </div>
               <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-normal">
                 <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                ₹300 per team · {stats.paidTeamsCount} teams paid
+                ₹{registrationFee} per team · {stats.paidTeamsCount} teams paid
               </div>
             </div>
 

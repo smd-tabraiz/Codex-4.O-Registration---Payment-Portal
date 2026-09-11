@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../api/axiosInstance';
 import { 
   CheckCircle2, 
   Sparkles, 
@@ -30,27 +31,42 @@ const PRICING_FEATURES = [
   'Access to curated algorithm problem sets and post-event solution repository',
 ];
 
-const FAQS = [
-  {
-    q: 'What currency is the registration fee charged in?',
-    a: 'All transactions on this portal are processed in Indian Rupees (INR - ₹). The fee is fixed at exactly ₹300.00 INR per team.',
-  },
-  {
-    q: 'Does the ₹300 INR fee cover the entire team or per person?',
-    a: 'The ₹300 INR fee is a flat fee per team and covers all 2 or 3 members of your team. There are no additional individual fees.',
-  },
-  {
-    q: 'How will I receive the event entry pass after payment?',
-    a: 'Delivery is 100% digital and instantaneous. Upon successful payment verification via Cashfree Payments, your unique Team ID is displayed on screen and a formal confirmation pass is emailed to your Team Leader.',
-  },
-  {
-    q: 'What payment methods are supported?',
-    a: 'We accept all major Indian payment methods through Cashfree Payments, including UPI (Google Pay, PhonePe, Paytm, BHIM, CRED), Debit & Credit Cards (Visa, Mastercard, RuPay), and Net Banking across all major banks.',
-  },
-];
-
 const PricingPage = () => {
   const navigate = useNavigate();
+  const [registrationFee, setRegistrationFee] = useState(300);
+
+  useEffect(() => {
+    const fetchFee = async () => {
+      try {
+        const res = await api.get('/register/system-settings');
+        if (res.data?.settings?.registrationFee !== undefined) {
+          setRegistrationFee(Number(res.data.settings.registrationFee));
+        }
+      } catch (err) {
+        // Fallback default 300
+      }
+    };
+    fetchFee();
+  }, []);
+
+  const FAQS = [
+    {
+      q: 'What currency is the registration fee charged in?',
+      a: `All transactions on this portal are processed in Indian Rupees (INR - ₹). The fee is fixed at exactly ₹${registrationFee}.00 INR per team.`,
+    },
+    {
+      q: `Does the ₹${registrationFee} INR fee cover the entire team or per person?`,
+      a: `The ₹${registrationFee} INR fee is a flat fee per team and covers all 2 or 3 members of your team. There are no additional individual fees.`,
+    },
+    {
+      q: 'How will I receive the event entry pass after payment?',
+      a: 'Delivery is 100% digital and instantaneous. Upon successful payment verification via Cashfree Payments, your unique Team ID is displayed on screen and a formal confirmation pass is emailed to your Team Leader.',
+    },
+    {
+      q: 'What payment methods are supported?',
+      a: 'We accept all major Indian payment methods through Cashfree Payments, including UPI (Google Pay, PhonePe, Paytm, BHIM, CRED), Debit & Credit Cards (Visa, Mastercard, RuPay), and Net Banking across all major banks.',
+    },
+  ];
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
@@ -111,13 +127,13 @@ const PricingPage = () => {
                   Total Fee (Inclusive of All Taxes)
                 </span>
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-4xl font-extrabold text-[#0F172A] tracking-tight">₹300</span>
+                  <span className="text-4xl font-extrabold text-[#0F172A] tracking-tight">₹{registrationFee}</span>
                   <span className="text-xs font-bold text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
                     INR
                   </span>
                 </div>
                 <p className="text-[11px] text-[#64748B] pt-1">
-                  Flat ₹300 INR per team · covers 2 to 3 members
+                  Flat ₹{registrationFee} INR per team · covers 2 to 3 members
                 </p>
               </div>
 

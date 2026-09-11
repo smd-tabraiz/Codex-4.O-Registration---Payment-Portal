@@ -129,8 +129,24 @@ const RegistrationForm = ({ onSuccess }) => {
   const [rollCheckStatus, setRollCheckStatus] = useState(null);
   const [pendingRegistration, setPendingRegistration] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [registrationFee, setRegistrationFee] = useState(300);
 
   const errorRef = useRef(null);
+
+  // Fetch dynamic registration fee configured by Admin
+  useEffect(() => {
+    const fetchFee = async () => {
+      try {
+        const res = await api.get('/register/system-settings');
+        if (res.data?.settings?.registrationFee !== undefined) {
+          setRegistrationFee(Number(res.data.settings.registrationFee));
+        }
+      } catch (err) {
+        // Fallback default 300
+      }
+    };
+    fetchFee();
+  }, []);
 
   // Auto-scroll to error message whenever it is set
   useEffect(() => {
@@ -1440,7 +1456,7 @@ const RegistrationForm = ({ onSuccess }) => {
               ) : (
                 <>
                   <CreditCard className="w-3.5 h-3.5" />
-                  <span>Confirm & Proceed to Payment (₹300 INR)</span>
+                  <span>Confirm & Proceed to Payment (₹{registrationFee} INR)</span>
                 </>
               )}
             </button>

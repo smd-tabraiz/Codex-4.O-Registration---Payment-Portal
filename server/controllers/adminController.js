@@ -1,4 +1,5 @@
 const Registration = require('../models/Registration');
+const SystemSetting = require('../models/SystemSetting');
 const { generateRegistrationsExcel } = require('../utils/exportExcel');
 const { sendConfirmationEmail } = require('../utils/mailer');
 const jwt = require('jsonwebtoken');
@@ -88,6 +89,11 @@ const getAllRegistrations = async (req, res) => {
       });
     });
 
+    const feeSetting = await SystemSetting.findOne({ key: 'registrationFee' });
+    const currentFee = (feeSetting && feeSetting.value !== undefined && feeSetting.value !== null)
+      ? parseInt(feeSetting.value, 10)
+      : parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
+
     return res.json({
       success: true,
       stats: {
@@ -100,6 +106,7 @@ const getAllRegistrations = async (req, res) => {
         yearBreakdown,
         collegeBreakdown,
         registrationCap: parseInt(process.env.REGISTRATION_CAP || '50', 10),
+        registrationFee: currentFee,
       },
       registrations,
     });
@@ -239,27 +246,47 @@ const deleteRegistration = async (req, res) => {
 
 /**
  * POST /api/admin/system-settings
- * Update system settings (e.g. underConstruction toggle)
+ * Update system settings (e.g. underConstruction toggle, registrationFee)
  */
 const updateSystemSettings = async (req, res) => {
   try {
-    const { underConstruction } = req.body;
-    if (underConstruction === undefined) {
-      return res.status(400).json({ success: false, message: 'underConstruction value is required.' });
+    const { underConstruction, registrationFee } = req.body;
+    if (underConstruction === undefined && registrationFee === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one setting parameter (underConstruction or registrationFee) is required.',
+      });
     }
 
-    const SystemSetting = require('../models/SystemSetting');
-    await SystemSetting.findOneAndUpdate(
-      { key: 'underConstruction' },
-      { value: underConstruction === true },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    const response = { success: true, message: 'Settings updated successfully.' };
 
-    return res.json({
-      success: true,
-      message: `System underConstruction toggle updated to ${underConstruction === true}`,
-      underConstruction: underConstruction === true,
-    });
+    if (underConstruction !== undefined) {
+      await SystemSetting.findOneAndUpdate(
+        { key: 'underConstruction' },
+        { value: underConstruction === true },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+      response.underConstruction = underConstruction === true;
+    }
+
+    if (registrationFee !== undefined) {
+      const parsedFee = parseInt(registrationFee, 10);
+      if (isNaN(parsedFee) || parsedFee < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Registration fee must be a valid non-negative number.',
+        });
+      }
+      await SystemSetting.findOneAndUpdate(
+        { key: 'registrationFee' },
+        { value: parsedFee },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+      response.registrationFee = parsedFee;
+      response.message = `Registration fee successfully updated to ₹${parsedFee}`;
+    }
+
+    return res.json(response);
   } catch (error) {
     console.error('[updateSystemSettings] Error:', error);
     return res.status(500).json({ success: false, message: 'Server error updating system settings.' });

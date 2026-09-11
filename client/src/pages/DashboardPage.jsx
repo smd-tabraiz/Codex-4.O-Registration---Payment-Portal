@@ -26,6 +26,7 @@ const DashboardPage = () => {
   const [userData, setUserData] = useState(null);
   const [registration, setRegistration] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [registrationFee, setRegistrationFee] = useState(300);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -37,6 +38,14 @@ const DashboardPage = () => {
         const savedUser = localStorage.getItem('codex_user_data');
         const userObj = savedUser ? JSON.parse(savedUser) : null;
         setUserData(userObj);
+
+        // Fetch system settings for fee
+        try {
+          const settingsRes = await api.get('/register/system-settings');
+          if (settingsRes.data?.settings?.registrationFee !== undefined) {
+            setRegistrationFee(Number(settingsRes.data.settings.registrationFee));
+          }
+        } catch {}
 
         // Fetch registration details from backend
         let userEmail = userObj?.email || '';
@@ -283,7 +292,7 @@ const DashboardPage = () => {
             onClick={() => navigate('/register')}
             className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm flex items-center justify-center space-x-2 transition-all"
           >
-            <span>Register Team Now (₹300)</span>
+            <span>Register Team Now (₹{registrationFee})</span>
             <ArrowRight className="w-4 h-4" />
           </button>
           <button

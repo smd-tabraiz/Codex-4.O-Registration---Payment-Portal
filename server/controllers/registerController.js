@@ -1,9 +1,26 @@
 const Registration = require('../models/Registration');
 const User = require('../models/User');
+const SystemSetting = require('../models/SystemSetting');
 const { getNextSequenceValue } = require('../models/Counter');
 const { createCashfreeOrder, verifyCashfreeOrder, getCashfreeAppId, getCashfreeEnv, isMockMode } = require('../utils/cashfree');
 const { sendConfirmationEmail } = require('../utils/mailer');
 const { syncRegistrationToSheet } = require('../utils/googleSheets');
+
+/**
+ * Helper to fetch the dynamic registration fee configured by Admin (Default: 300)
+ */
+const getRegistrationFee = async () => {
+  try {
+    const feeSetting = await SystemSetting.findOne({ key: 'registrationFee' });
+    if (feeSetting && feeSetting.value !== undefined && feeSetting.value !== null) {
+      const parsed = parseInt(feeSetting.value, 10);
+      if (!isNaN(parsed) && parsed >= 0) return parsed;
+    }
+  } catch (err) {
+    console.error('[getRegistrationFee] Error reading fee:', err);
+  }
+  return parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
+};
 
 /**
  * Clean up expired pending registrations helper
@@ -157,7 +174,7 @@ const createOrder = async (req, res) => {
     });
 
     const leader = members.find((m) => m.isLeader) || members[0];
-    const feeAmount = parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
+    const feeAmount = await getRegistrationFee();
 
     if (existingRegistrations.length > 0) {
       const leaderEmail = leader?.email?.trim()?.toLowerCase();
@@ -457,7 +474,7 @@ const retryPendingOrder = async (req, res) => {
     }
 
     const leader = registration.members.find((m) => m.isLeader) || registration.members[0];
-    const feeAmount = registration.paymentDetails?.amount || parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
+    const feeAmount = registration.paymentDetails?.amount || await getRegistrationFee();
 
     const clientOrigin = req.headers.origin || req.headers.referer || process.env.CLIENT_URL;
     const cleanOrigin = clientOrigin ? clientOrigin.replace(/\/+$/, '') : 'https://codex-4-o-registration-portal.onrender.com';
@@ -516,13 +533,14 @@ const cancelPendingRegistration = async (req, res) => {
  */
 const getSystemSettings = async (req, res) => {
   try {
-    const SystemSetting = require('../models/SystemSetting');
     const underConstructionSetting = await SystemSetting.findOne({ key: 'underConstruction' });
     const underConstruction = underConstructionSetting ? underConstructionSetting.value === true : false;
+    const registrationFee = await getRegistrationFee();
     return res.json({
       success: true,
       settings: {
         underConstruction,
+        registrationFee,
       },
     });
   } catch (error) {
