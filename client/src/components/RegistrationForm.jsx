@@ -205,6 +205,33 @@ const RegistrationForm = ({ onSuccess }) => {
     }
   }, [currentUser]);
 
+  // Auto-verify when user returns from UPI app (Visibility Change / Window Focus on Mobile)
+  useEffect(() => {
+    const handleAppReturn = async () => {
+      if (document.visibilityState === 'visible') {
+        const rawPayment = localStorage.getItem('codex_active_payment');
+        if (rawPayment) {
+          try {
+            const { orderId, teamId, timestamp } = JSON.parse(rawPayment);
+            // Check if initiated within last 15 minutes
+            if (Date.now() - timestamp < 15 * 60 * 1000) {
+              await handlePaymentVerification(orderId, teamId);
+            }
+          } catch (e) {
+            console.error('[App Return Verification Error]', e);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleAppReturn);
+    window.addEventListener('focus', handleAppReturn);
+    return () => {
+      document.removeEventListener('visibilitychange', handleAppReturn);
+      window.removeEventListener('focus', handleAppReturn);
+    };
+  }, []);
+
   const fetchPendingRegistration = async (email) => {
     try {
       const res = await api.get(`/register/pending?email=${encodeURIComponent(email)}`);
@@ -606,6 +633,12 @@ const RegistrationForm = ({ onSuccess }) => {
           redirectTarget: '_modal',
         };
 
+        // Save active payment session to localStorage for mobile app-return recovery
+        localStorage.setItem(
+          'codex_active_payment',
+          JSON.stringify({ orderId, teamId, timestamp: Date.now() })
+        );
+
         cashfree.checkout(checkoutOptions).then(async (result) => {
           if (result.error) {
             console.warn('[Cashfree] Modal closed or error:', result.error);
@@ -650,6 +683,7 @@ const RegistrationForm = ({ onSuccess }) => {
       });
 
       if (res.data.success) {
+        localStorage.removeItem('codex_active_payment');
         clearFormDraft();
         setPendingRegistration(null);
         if (onSuccess) {
@@ -693,21 +727,29 @@ const RegistrationForm = ({ onSuccess }) => {
             </span>
           </div>
           <p className="text-xs text-amber-800 leading-relaxed">
-            Your team slot is reserved. Complete the payment before time expires to finalize your spot in Codex 4.0.
+            Your team slot is reserved. If you have already paid via UPI / NetBanking, click <strong>Verify Payment</strong> below to receive your pass immediately.
           </p>
-          <div className="flex items-center space-x-2.5 pt-1">
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <button
+              onClick={() => handlePaymentVerification(pendingRegistration.paymentDetails?.cfOrderId, pendingRegistration.teamId)}
+              disabled={loading}
+              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+            >
+              {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3 text-white" />}
+              <span>Verify Payment Status</span>
+            </button>
             <button
               onClick={() => handleResumePendingPayment(pendingRegistration.teamId)}
               disabled={loading}
-              className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center space-x-1.5"
+              className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
             >
               {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <CreditCard className="w-3 h-3" />}
-              <span>Pay ₹300 INR Now</span>
+              <span>Pay ₹300 INR</span>
             </button>
             <button
               onClick={handleCancelPending}
               disabled={loading}
-              className="px-3 py-1.5 bg-white hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold transition-all"
+              className="px-3 py-1.5 bg-white hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold transition-all cursor-pointer"
             >
               Cancel Reservation
             </button>
