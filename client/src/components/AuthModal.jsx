@@ -1,5 +1,5 @@
-﻿import React, { useState } from 'react';
-import { X, LogIn, UserPlus, Terminal } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, LogIn, UserPlus, Terminal, Eye, EyeOff } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import api from '../api/axiosInstance';
 
@@ -14,6 +14,7 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [rollNo, setRollNo] = useState('');
   const [year, setYear] = useState('2nd');
   const [branch, setBranch] = useState('CSE');
@@ -219,14 +220,24 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
             <label className="block text-xs font-semibold text-[#0D0D0D] uppercase tracking-wider mb-1">
               Password <span className="text-rose-500">*</span>
             </label>
-            <input
-              type="password"
-              required
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl bg-white border border-[#D6D3CF] text-[#0D0D0D] text-xs placeholder-[#94A3B8] focus:border-[#E64B2E] focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2.5 pr-10 rounded-xl bg-white border border-[#D6D3CF] text-[#0D0D0D] text-xs placeholder-[#94A3B8] focus:border-[#E64B2E] focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9A9A9A] hover:text-[#0D0D0D] p-1 transition-colors cursor-pointer"
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
           {!isLogin && (

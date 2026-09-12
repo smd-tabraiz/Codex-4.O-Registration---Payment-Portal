@@ -1,12 +1,13 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import AdminDashboard from '../components/AdminDashboard';
-import { Lock, ShieldCheck, User } from 'lucide-react';
+import { Lock, ShieldCheck, User, Eye, EyeOff } from 'lucide-react';
 import api from '../api/axiosInstance';
 
 const AdminPage = () => {
   const [adminToken, setAdminToken] = useState(localStorage.getItem('codex_admin_token') || '');
   const [username, setUsername] = useState('SMD-TABRAIZ');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -87,14 +88,24 @@ const AdminPage = () => {
               <label className="block text-xs font-semibold text-[#0D0D0D] uppercase tracking-wider mb-2">
                 Admin Password <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="password"
-                required
-                placeholder="Enter password (Shamstabraiz@100251)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#D6D3CF] text-[#0D0D0D] text-sm focus:border-[#E64B2E] focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="Enter password (Shamstabraiz@100251)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 pr-11 rounded-xl bg-white border border-[#D6D3CF] text-[#0D0D0D] text-sm focus:border-[#E64B2E] focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9A9A9A] hover:text-[#0D0D0D] p-1 transition-colors cursor-pointer"
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
 
             <button
