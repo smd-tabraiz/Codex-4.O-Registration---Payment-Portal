@@ -108,16 +108,16 @@ const sendConfirmationEmail = async (registration) => {
               </tr>
             </table>
 
-            <!-- Team Members Table -->
+            <!-- Team Members Table (Scrollable on Mobile) -->
             <h3 style="color: #0F172A; font-size: 15px; font-weight: 700; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px; margin: 0 0 16px 0;">&#128101; Registered Team Members</h3>
-            <div style="border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; margin-bottom: 24px;">
-              <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <div style="border-radius: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #E2E8F0; margin-bottom: 24px; width: 100%;">
+              <table style="width: 100%; min-width: 520px; border-collapse: collapse; font-size: 12px;">
                 <thead>
                   <tr style="background-color: #F1F5F9;">
-                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;">Member</th>
-                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;">Roll No</th>
-                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;">Year &amp; Branch</th>
-                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;">College</th>
+                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; min-width: 140px;">Member</th>
+                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; min-width: 90px;">Roll No</th>
+                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; min-width: 110px;">Year &amp; Branch</th>
+                    <th style="padding: 10px 12px; color: #64748B; text-align: left; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; min-width: 140px;">College</th>
                   </tr>
                 </thead>
                 <tbody>
