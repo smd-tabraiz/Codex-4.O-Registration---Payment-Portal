@@ -46,13 +46,13 @@ const TERMS_SECTIONS = [
       'The organizers reserve the right to modify round schedules, rules, or platform settings if deemed necessary for fair and smooth execution of the competition.',
     ],
   },
-  {
-    heading: 'Event Conduct & Venue Guidelines',
-    paragraphs: [
-      'Participants must bring their own functional laptops, chargers, and required accessories to the venue (GPREC Campus, Kurnool).',
-      'Teams are expected to maintain academic honesty, integrity, and discipline throughout the competition.',
-    ],
-  },
+  // {
+  //   heading: 'Event Conduct & Venue Guidelines',
+  //   paragraphs: [
+  //     'Participants must bring their own functional laptops, chargers, and required accessories to the venue (GPREC Campus, Kurnool).',
+  //     'Teams are expected to maintain academic honesty, integrity, and discipline throughout the competition.',
+  //   ],
+  // },
 ];
 
 const TermsPage = () => {

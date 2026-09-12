@@ -20,15 +20,15 @@ const faqs = [
   },
   {
     q: "Can students from other engineering colleges register?",
-    a: "Yes! While GPREC is the default college, students from all engineering colleges are welcome to participate. Select your college name in the registration form."
+    a: "Yes! Students from all other engineering colleges are welcome to participate. Select your college name in the registration form. Students of different years can form a team based on constraints. Each team should be of same college."
   },
-  {
+  { 
     q: "What are the event timings?",
     a: "Codex 4.0 starts at 9:00 AM on 24th September and concludes at 5:00 PM. Participants must report by 8:30 AM."
   },
   {
     q: "What should we bring to the event?",
-    a: "Each team must bring at least 1 laptop with chargers and extension boards. Physical College ID cards are mandatory for entry."
+    a: "Each team should bring Physical College ID cards which are mandatory for entry."
   },
   {
     q: "How do I know my registration is confirmed?",
