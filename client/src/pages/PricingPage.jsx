@@ -34,19 +34,23 @@ const PRICING_FEATURES = [
 const PricingPage = () => {
   const navigate = useNavigate();
   const [registrationFee, setRegistrationFee] = useState(300);
+  const [registrationsClosed, setRegistrationsClosed] = useState(false);
 
   useEffect(() => {
-    const fetchFee = async () => {
+    const fetchSettings = async () => {
       try {
         const res = await api.get('/register/system-settings');
         if (res.data?.settings?.registrationFee !== undefined) {
           setRegistrationFee(Number(res.data.settings.registrationFee));
         }
+        if (res.data?.settings?.registrationsClosed !== undefined) {
+          setRegistrationsClosed(res.data.settings.registrationsClosed === true);
+        }
       } catch (err) {
         // Fallback default 300
       }
     };
-    fetchFee();
+    fetchSettings();
   }, []);
 
   const FAQS = [
@@ -156,13 +160,17 @@ const PricingPage = () => {
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/register')}
-                className="w-full py-3.5 px-6 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-sm flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transition-all"
+                className={`w-full py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition-all ${
+                  registrationsClosed
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                    : 'bg-[#2563EB] hover:bg-blue-700 text-white'
+                }`}
               >
-                <span>Register Your Team Now</span>
+                <span>{registrationsClosed ? 'Registrations Are Closed 🚀' : 'Register Your Team Now'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <p className="text-[11px] text-center text-[#64748B]">
-                Seats capped at 50 teams. Registration closes once full.
+                {registrationsClosed ? 'Team requirements have been satisfied.' : 'Team capacity limit applies.'}
               </p>
             </div>
 

@@ -23,7 +23,9 @@ import {
   Mail, 
   FileText,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  XCircle,
+  Trophy
 } from 'lucide-react';
 import api from '../api/axiosInstance';
 import AuthModal from './AuthModal';
@@ -130,22 +132,26 @@ const RegistrationForm = ({ onSuccess }) => {
   const [pendingRegistration, setPendingRegistration] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [registrationFee, setRegistrationFee] = useState(300);
+  const [registrationsClosed, setRegistrationsClosed] = useState(false);
 
   const errorRef = useRef(null);
 
-  // Fetch dynamic registration fee configured by Admin
+  // Fetch dynamic registration fee and closed status configured by Admin
   useEffect(() => {
-    const fetchFee = async () => {
+    const fetchSettings = async () => {
       try {
         const res = await api.get('/register/system-settings');
         if (res.data?.settings?.registrationFee !== undefined) {
           setRegistrationFee(Number(res.data.settings.registrationFee));
         }
+        if (res.data?.settings?.registrationsClosed !== undefined) {
+          setRegistrationsClosed(res.data.settings.registrationsClosed === true);
+        }
       } catch (err) {
-        // Fallback default 300
+        // Fallback
       }
     };
-    fetchFee();
+    fetchSettings();
   }, []);
 
   // Auto-scroll to error message whenever it is set
@@ -715,6 +721,71 @@ const RegistrationForm = ({ onSuccess }) => {
       setLoading(false);
     }
   };
+
+  if (registrationsClosed) {
+    return (
+      <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden animate-fade-in-up my-6">
+        {/* Header Banner */}
+        <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-8 sm:p-10 text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+          
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-black uppercase tracking-wider mb-4 shadow-xs">
+            <XCircle className="w-4 h-4 text-rose-400 animate-pulse" />
+            Registrations Are Officially Closed
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
+            Codex 4.0 Registration Cap Reached! 🚀
+          </h2>
+          <p className="text-xs sm:text-sm text-blue-200 font-medium">
+            Thank you for the overwhelming response and incredible enthusiasm!
+          </p>
+        </div>
+
+        {/* Motivational Content */}
+        <div className="p-6 sm:p-8 space-y-6 text-center">
+          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center gap-3">
+            <div className="w-14 h-14 rounded-2xl bg-blue-600/10 text-blue-600 border border-blue-200 flex items-center justify-center font-extrabold text-2xl shadow-xs">
+              🏆
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900">
+                Team Requirement Satisfied!
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed font-normal">
+                We have officially satisfied our complete team capacity requirement for <span className="font-bold text-slate-900">Codex 4.0</span>. All available team slots have been successfully filled!
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto bg-blue-50/50 p-4 rounded-xl border border-blue-100/60">
+            <p>
+              🌟 <strong className="text-slate-900">To All Registered Teams:</strong> Get ready for an action-packed, high-energy competitive coding challenge! Keep an eye on your registered email address for complete event schedule details.
+            </p>
+            <p>
+              💡 <strong className="text-slate-900">Missed Out This Time?</strong> Stay connected with <strong className="text-blue-700">Coders' Club GPREC</strong>! We organize exciting hackathons, tech workshops, and coding challenges throughout the year.
+            </p>
+          </div>
+
+          {/* Navigation Action Buttons */}
+          <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="/"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg"
+            >
+              Return to Home
+            </a>
+            <a
+              href="/pricing"
+              className="px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all border border-slate-200"
+            >
+              View Event Guidelines
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-2xl sm:max-w-3xl mx-auto space-y-4 sm:space-y-5 animate-fade-in-up">

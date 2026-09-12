@@ -23,6 +23,22 @@ const getRegistrationFee = async () => {
 };
 
 /**
+ * Helper to fetch the registration capacity cap (Default: 200)
+ */
+const getRegistrationCap = async () => {
+  try {
+    const capSetting = await SystemSetting.findOne({ key: 'registrationCap' });
+    if (capSetting && capSetting.value !== undefined && capSetting.value !== null) {
+      const parsed = parseInt(capSetting.value, 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+  } catch (err) {
+    console.error('[getRegistrationCap] Error reading cap:', err);
+  }
+  return parseInt(process.env.REGISTRATION_CAP || '200', 10);
+};
+
+/**
  * Clean up expired pending registrations helper
  */
 const cleanupExpiredPending = async () => {
@@ -153,8 +169,17 @@ const createOrder = async (req, res) => {
       members[0].isLeader = true;
     }
 
+    // 3.5. Registrations Closed Check
+    const closedSetting = await SystemSetting.findOne({ key: 'registrationsClosed' });
+    if (closedSetting && closedSetting.value === true) {
+      return res.status(400).json({
+        success: false,
+        message: 'Registrations Closed: Team requirements have been satisfied and registrations are officially closed.',
+      });
+    }
+
     // 4. Registration Cap Check
-    const registrationCap = parseInt(process.env.REGISTRATION_CAP || '50', 10);
+    const registrationCap = await getRegistrationCap();
     const paidTeamsCount = await Registration.countDocuments({ status: 'paid' });
     if (paidTeamsCount >= registrationCap) {
       return res.status(400).json({
@@ -535,12 +560,17 @@ const getSystemSettings = async (req, res) => {
   try {
     const underConstructionSetting = await SystemSetting.findOne({ key: 'underConstruction' });
     const underConstruction = underConstructionSetting ? underConstructionSetting.value === true : false;
+    const closedSetting = await SystemSetting.findOne({ key: 'registrationsClosed' });
+    const registrationsClosed = closedSetting ? closedSetting.value === true : false;
     const registrationFee = await getRegistrationFee();
+    const registrationCap = await getRegistrationCap();
     return res.json({
       success: true,
       settings: {
         underConstruction,
+        registrationsClosed,
         registrationFee,
+        registrationCap,
       },
     });
   } catch (error) {

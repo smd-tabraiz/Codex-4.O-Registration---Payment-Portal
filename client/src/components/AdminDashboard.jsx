@@ -43,7 +43,7 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
   const [loading, setLoading]         = useState(true);
   const [exporting, setExporting]     = useState(false);
   const [search, setSearch]           = useState('');
-  const [statusFilter, setFilter]     = useState('all');
+  const [statusFilter, setFilter]     = useState([]);
   const [expandedId, setExpanded]     = useState(null);
   const [resendingId, setResending]   = useState(null);
   const [deletingId, setDeletingId]   = useState(null);
@@ -52,10 +52,16 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
   const [savingStatusId, setSavingStatusId]   = useState(null);
   const [underConstruction, setUnderConstruction] = useState(false);
   const [togglingConstruction, setTogglingConstruction] = useState(false);
+  const [registrationsClosed, setRegistrationsClosed] = useState(false);
+  const [togglingClosed, setTogglingClosed]           = useState(false);
   const [registrationFee, setRegistrationFee] = useState(300);
   const [feeInput, setFeeInput]               = useState('300');
   const [savingFee, setSavingFee]             = useState(false);
   const [feeSuccess, setFeeSuccess]           = useState('');
+  const [registrationCap, setRegistrationCap] = useState(200);
+  const [capInput, setCapInput]               = useState('200');
+  const [savingCap, setSavingCap]             = useState(false);
+  const [capSuccess, setCapSuccess]           = useState('');
   const [syncingSheets, setSyncingSheets]     = useState(false);
   const [error, setError]             = useState('');
   const [lastRefresh, setLastRefresh] = useState(null);
@@ -74,22 +80,35 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
     try {
       const res = await api.get('/admin/registrations', {
         headers: getHeaders(),
-        params: { search: search.trim(), status: statusFilter === 'all' ? '' : statusFilter },
+        params: { search: search.trim(), status: statusFilter.join(',') },
       });
       setData(res.data);
 
       const settingsRes = await api.get('/register/system-settings');
       if (settingsRes.data?.settings) {
         setUnderConstruction(settingsRes.data.settings.underConstruction === true);
+        setRegistrationsClosed(settingsRes.data.settings.registrationsClosed === true);
         if (settingsRes.data.settings.registrationFee !== undefined) {
           const feeVal = Number(settingsRes.data.settings.registrationFee);
           setRegistrationFee(feeVal);
           setFeeInput(String(feeVal));
         }
-      } else if (res.data?.stats?.registrationFee !== undefined) {
-        const feeVal = Number(res.data.stats.registrationFee);
-        setRegistrationFee(feeVal);
-        setFeeInput(String(feeVal));
+        if (settingsRes.data.settings.registrationCap !== undefined) {
+          const capVal = Number(settingsRes.data.settings.registrationCap);
+          setRegistrationCap(capVal);
+          setCapInput(String(capVal));
+        }
+      } else if (res.data?.stats) {
+        if (res.data.stats.registrationFee !== undefined) {
+          const feeVal = Number(res.data.stats.registrationFee);
+          setRegistrationFee(feeVal);
+          setFeeInput(String(feeVal));
+        }
+        if (res.data.stats.registrationCap !== undefined) {
+          const capVal = Number(res.data.stats.registrationCap);
+          setRegistrationCap(capVal);
+          setCapInput(String(capVal));
+        }
       }
 
       setLastRefresh(new Date());
@@ -108,12 +127,13 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
 
   const handleSearchSubmit = (e) => { e.preventDefault(); fetchAdminData(); };
 
-  const handleExportExcel = async () => {
+  const handleExportExcel = async (overrideFilters) => {
+    const filters = overrideFilters !== undefined ? overrideFilters : statusFilter;
     setExporting(true);
     try {
       const response = await api.get('/admin/export', {
         headers: getHeaders(),
-        params: { status: statusFilter === 'all' ? '' : statusFilter },
+        params: { status: filters.join(',') },
         responseType: 'blob',
       });
       const blob = new Blob([response.data], {
@@ -122,7 +142,8 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
       const url  = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href  = url;
-      link.setAttribute('download', `Codex4_Registrations_${new Date().toISOString().split('T')[0]}.xlsx`);
+      const label = filters.length > 0 ? `_${filters.join('-')}` : '_all';
+      link.setAttribute('download', `Codex4_Registrations${label}_${new Date().toISOString().split('T')[0]}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -203,6 +224,23 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
     }
   };
 
+  const handleToggleRegistrationsClosed = async () => {
+    setTogglingClosed(true);
+    const newValue = !registrationsClosed;
+    try {
+      const res = await api.post('/admin/system-settings', { registrationsClosed: newValue }, {
+        headers: getHeaders(),
+      });
+      setRegistrationsClosed(res.data.registrationsClosed === true);
+      alert(`Registration Status is now: ${newValue ? 'CLOSED' : 'OPEN'}`);
+      fetchAdminData();
+    } catch (err) {
+      alert('Failed to toggle registration status.');
+    } finally {
+      setTogglingClosed(false);
+    }
+  };
+
   const handleUpdateFee = async (overrideValue) => {
     const targetFee = overrideValue !== undefined ? Number(overrideValue) : Number(feeInput);
     if (isNaN(targetFee) || targetFee < 0) {
@@ -229,6 +267,32 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
     }
   };
 
+  const handleUpdateCap = async (overrideValue) => {
+    const targetCap = overrideValue !== undefined ? Number(overrideValue) : Number(capInput);
+    if (isNaN(targetCap) || targetCap <= 0) {
+      alert('Please enter a valid positive number for team registration capacity.');
+      return;
+    }
+
+    setSavingCap(true);
+    setCapSuccess('');
+    try {
+      const res = await api.post('/admin/system-settings', { registrationCap: targetCap }, {
+        headers: getHeaders(),
+      });
+      const savedCap = res.data.registrationCap !== undefined ? res.data.registrationCap : targetCap;
+      setRegistrationCap(savedCap);
+      setCapInput(String(savedCap));
+      setCapSuccess(`Team capacity cap updated to ${savedCap} teams!`);
+      setTimeout(() => setCapSuccess(''), 5000);
+      fetchAdminData();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update registration capacity.');
+    } finally {
+      setSavingCap(false);
+    }
+  };
+
   const handleSyncGoogleSheets = async () => {
     setSyncingSheets(true);
     try {
@@ -244,7 +308,13 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
   const { stats, registrations } = data;
   const fillPct   = stats ? Math.min((stats.paidTeamsCount / stats.registrationCap) * 100, 100) : 0;
   const spotsLeft = stats ? stats.registrationCap - stats.paidTeamsCount : 0;
-  const FILTERS   = ['all', 'paid', 'pending', 'failed'];
+  const STATUS_OPTIONS = ['paid', 'pending', 'failed'];
+
+  const toggleFilter = (s) => {
+    setFilter(prev =>
+      prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]
+    );
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -288,6 +358,24 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
               <AlertTriangle className={`w-4 h-4 ${underConstruction ? 'text-amber-400 animate-pulse' : 'text-slate-400'}`} />
             )}
             <span>Under Construction: {underConstruction ? 'ON' : 'OFF'}</span>
+          </button>
+
+          <button
+            onClick={handleToggleRegistrationsClosed}
+            disabled={togglingClosed}
+            className={`px-3.5 py-2 rounded-lg border text-xs font-semibold flex items-center gap-2 transition-all disabled:opacity-50 ${
+              registrationsClosed
+                ? 'bg-rose-500/30 text-rose-200 border-rose-400/50 hover:bg-rose-500/40 shadow-xs'
+                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+            }`}
+            title="Toggle Registration Open/Closed Status"
+          >
+            {togglingClosed ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <XCircle className={`w-4 h-4 ${registrationsClosed ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`} />
+            )}
+            <span>Registrations: {registrationsClosed ? 'CLOSED' : 'OPEN'}</span>
           </button>
 
           <a
@@ -443,6 +531,99 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
         )}
       </div>
 
+      {/* ── REGISTRATION CAPACITY CONFIGURATION PANEL ─────────── */}
+      <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-card p-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
+                <Trophy className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-[#0F172A]">Event Team Capacity Control</h2>
+                <p className="text-xs text-[#64748B]">
+                  Set the total registration limit (maximum teams allowed). Controls live spot counters and registration cap.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Current Active Cap Badge */}
+          <div className="flex items-center gap-2 self-start md:self-auto bg-slate-50 border border-slate-200 px-3.5 py-1.5 rounded-lg">
+            <span className="text-xs text-slate-500 font-medium">Active Capacity:</span>
+            <span className="text-sm font-extrabold text-blue-600 font-mono">{registrationCap} Teams</span>
+          </div>
+        </div>
+
+        {/* Input & Action Controls */}
+        <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-slate-600 shrink-0">Enter Capacity:</span>
+            <div className="relative rounded-lg shadow-xs max-w-[140px]">
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={capInput}
+                onChange={(e) => setCapInput(e.target.value)}
+                placeholder="200"
+                className="block w-full px-3 py-1.5 text-sm font-bold text-slate-900 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleUpdateCap()}
+              disabled={savingCap || !capInput}
+              className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
+            >
+              {savingCap ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save & Apply</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Quick Presets */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[11px] font-semibold text-slate-400">Presets:</span>
+            {[50, 100, 150, 200, 250, 300, 500].map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => {
+                  setCapInput(String(preset));
+                  handleUpdateCap(preset);
+                }}
+                disabled={savingCap}
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all ${
+                  registrationCap === preset
+                    ? 'bg-blue-50 text-blue-700 border-blue-300 font-bold shadow-xs'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                }`}
+              >
+                {preset} Teams
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Success Feedback */}
+        {capSuccess && (
+          <div className="mt-3 flex items-center gap-2 p-2.5 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg text-xs font-semibold animate-fade-in-up">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>{capSuccess}</span>
+          </div>
+        )}
+      </div>
+
       {/* ── STAT CARDS ────────────────────────────────── */}
       {stats && (
         <>
@@ -560,19 +741,56 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
         </form>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${
-                statusFilter === f
-                  ? 'bg-[#2563EB] text-white shadow-xs'
-                  : 'bg-white text-[#64748B] hover:text-[#0F172A] border border-[#CBD5E1]'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {/* ALL option */}
+          <button
+            onClick={() => setFilter([])}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border ${
+              statusFilter.length === 0
+                ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-xs'
+                : 'bg-white text-[#64748B] hover:text-[#0F172A] border-[#CBD5E1]'
+            }`}
+          >
+            All
+          </button>
+
+          {/* Multi-select filter chips */}
+          {STATUS_OPTIONS.map((f) => {
+            const isSelected = statusFilter.includes(f);
+            return (
+              <button
+                key={f}
+                onClick={() => toggleFilter(f)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-1.5 border ${
+                  isSelected
+                    ? f === 'paid'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                      : f === 'pending'
+                      ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
+                      : 'bg-rose-600 text-white border-rose-600 shadow-xs'
+                    : 'bg-white text-[#64748B] hover:text-[#0F172A] border-[#CBD5E1]'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => {}} // Handled by button onClick
+                  className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-0 cursor-pointer pointer-events-none"
+                />
+                {f}
+              </button>
+            );
+          })}
+
+          {/* Contextual Download Excel button based on active filters */}
+          <button
+            onClick={() => handleExportExcel()}
+            disabled={exporting}
+            className="px-3.5 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs disabled:opacity-50 ml-1"
+            title="Download Excel spreadsheet matching the selected filters"
+          >
+            {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+            Download Excel {statusFilter.length > 0 ? `(${statusFilter.join(', ')})` : '(All)'}
+          </button>
         </div>
       </div>
 
@@ -580,14 +798,20 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
       <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-card">
         {/* Table Header */}
         <div className="px-5 py-4 border-b border-[#E2E8F0] flex items-center justify-between bg-[#F8FAFC]">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Users className="w-4 h-4 text-[#64748B]" />
             <span className="text-sm font-bold text-[#0F172A]">
               {registrations.length} Registration{registrations.length !== 1 ? 's' : ''}
             </span>
-            {statusFilter !== 'all' && (
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border uppercase ${statusColor(statusFilter)}`}>
-                {statusFilter}
+            {statusFilter.length > 0 ? (
+              statusFilter.map((sf) => (
+                <span key={sf} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border uppercase ${statusColor(sf)}`}>
+                  {sf}
+                </span>
+              ))
+            ) : (
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-slate-200 bg-slate-100 text-slate-600 uppercase">
+                ALL
               </span>
             )}
           </div>

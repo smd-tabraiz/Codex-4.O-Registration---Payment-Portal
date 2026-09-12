@@ -27,6 +27,7 @@ const DashboardPage = () => {
   const [registration, setRegistration] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [registrationFee, setRegistrationFee] = useState(300);
+  const [registrationsClosed, setRegistrationsClosed] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -39,11 +40,14 @@ const DashboardPage = () => {
         const userObj = savedUser ? JSON.parse(savedUser) : null;
         setUserData(userObj);
 
-        // Fetch system settings for fee
+        // Fetch system settings for fee & closed status
         try {
           const settingsRes = await api.get('/register/system-settings');
           if (settingsRes.data?.settings?.registrationFee !== undefined) {
             setRegistrationFee(Number(settingsRes.data.settings.registrationFee));
+          }
+          if (settingsRes.data?.settings?.registrationsClosed !== undefined) {
+            setRegistrationsClosed(settingsRes.data.settings.registrationsClosed === true);
           }
         } catch {}
 
@@ -290,9 +294,14 @@ const DashboardPage = () => {
         <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => navigate('/register')}
-            className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm flex items-center justify-center space-x-2 transition-all"
+            disabled={registrationsClosed}
+            className={`w-full sm:w-auto px-6 py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm flex items-center justify-center space-x-2 transition-all ${
+              registrationsClosed
+                ? 'bg-rose-600 text-white cursor-pointer hover:bg-rose-700'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
           >
-            <span>Register Team Now (₹{registrationFee})</span>
+            <span>{registrationsClosed ? 'Registrations Closed 🚀' : `Register Team Now (₹${registrationFee})`}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
           <button

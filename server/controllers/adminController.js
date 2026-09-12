@@ -46,8 +46,10 @@ const getAllRegistrations = async (req, res) => {
     const { status, search } = req.query;
 
     const query = {};
-    if (status && ['paid', 'pending', 'failed', 'expired'].includes(status)) {
-      query.status = status;
+    if (status && status.trim()) {
+      const statusList = status.split(',').map(s => s.trim()).filter(s => ['paid', 'pending', 'failed', 'expired'].includes(s));
+      if (statusList.length === 1) query.status = statusList[0];
+      else if (statusList.length > 1) query.status = { $in: statusList };
     }
 
     if (search && search.trim()) {
@@ -94,6 +96,11 @@ const getAllRegistrations = async (req, res) => {
       ? parseInt(feeSetting.value, 10)
       : parseInt(process.env.EVENT_FEE_PER_TEAM || '300', 10);
 
+    const capSetting = await SystemSetting.findOne({ key: 'registrationCap' });
+    const currentCap = (capSetting && capSetting.value !== undefined && capSetting.value !== null)
+      ? parseInt(capSetting.value, 10)
+      : parseInt(process.env.REGISTRATION_CAP || '200', 10);
+
     return res.json({
       success: true,
       stats: {
@@ -105,7 +112,7 @@ const getAllRegistrations = async (req, res) => {
         totalParticipants,
         yearBreakdown,
         collegeBreakdown,
-        registrationCap: parseInt(process.env.REGISTRATION_CAP || '50', 10),
+        registrationCap: currentCap,
         registrationFee: currentFee,
       },
       registrations,
@@ -124,8 +131,10 @@ const exportExcel = async (req, res) => {
   try {
     const { status } = req.query;
     const query = {};
-    if (status && ['paid', 'pending', 'failed', 'expired'].includes(status)) {
-      query.status = status;
+    if (status && status.trim()) {
+      const statusList = status.split(',').map(s => s.trim()).filter(s => ['paid', 'pending', 'failed', 'expired'].includes(s));
+      if (statusList.length === 1) query.status = statusList[0];
+      else if (statusList.length > 1) query.status = { $in: statusList };
     }
 
     const registrations = await Registration.find(query).sort({ createdAt: -1 });
@@ -250,11 +259,16 @@ const deleteRegistration = async (req, res) => {
  */
 const updateSystemSettings = async (req, res) => {
   try {
-    const { underConstruction, registrationFee } = req.body;
-    if (underConstruction === undefined && registrationFee === undefined) {
+    const { underConstruction, registrationFee, registrationCap, registrationsClosed } = req.body;
+    if (
+      underConstruction === undefined &&
+      registrationFee === undefined &&
+      registrationCap === undefined &&
+      registrationsClosed === undefined
+    ) {
       return res.status(400).json({
         success: false,
-        message: 'At least one setting parameter (underConstruction or registrationFee) is required.',
+        message: 'At least one setting parameter (underConstruction, registrationFee, registrationCap, or registrationsClosed) is required.',
       });
     }
 
@@ -284,6 +298,33 @@ const updateSystemSettings = async (req, res) => {
       );
       response.registrationFee = parsedFee;
       response.message = `Registration fee successfully updated to ₹${parsedFee}`;
+    }
+
+    if (registrationCap !== undefined) {
+      const parsedCap = parseInt(registrationCap, 10);
+      if (isNaN(parsedCap) || parsedCap <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Registration capacity cap must be a positive integer.',
+        });
+      }
+      await SystemSetting.findOneAndUpdate(
+        { key: 'registrationCap' },
+        { value: parsedCap },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+      response.registrationCap = parsedCap;
+      response.message = `Registration capacity updated to ${parsedCap} teams.`;
+    }
+
+    if (registrationsClosed !== undefined) {
+      await SystemSetting.findOneAndUpdate(
+        { key: 'registrationsClosed' },
+        { value: registrationsClosed === true },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+      response.registrationsClosed = registrationsClosed === true;
+      response.message = `Registrations are now ${registrationsClosed ? 'CLOSED' : 'OPEN'}`;
     }
 
     return res.json(response);
