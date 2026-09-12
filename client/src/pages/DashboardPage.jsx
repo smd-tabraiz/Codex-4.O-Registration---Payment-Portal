@@ -158,7 +158,7 @@ const DashboardPage = () => {
           </div>
 
           {/* Quick Badges Overview */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
               <span className="text-slate-400 block text-[10px] uppercase font-bold">Team Leader</span>
               <span className="font-bold text-slate-900 truncate block">{leader?.name}</span>
@@ -170,10 +170,6 @@ const DashboardPage = () => {
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
               <span className="text-slate-400 block text-[10px] uppercase font-bold">Team Size</span>
               <span className="font-bold text-slate-900">{registration.members?.length || 2} Members</span>
-            </div>
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">Pass Benefits</span>
-              <span className="font-bold text-emerald-700">Lunch, Wi-Fi & Certs</span>
             </div>
           </div>
 

@@ -24,7 +24,6 @@ const PRICING_FEATURES = [
   'Full eligibility to compete for ₹50,000 Cash Prize Pool',
   'Access to Round 1 (3-Hr Preliminary Challenge) & Round 2 (Grand Finale)',
   'High-speed Wi-Fi and designated workstation in GPREC CSE Labs',
-  'Complimentary Lunch, Tea, Coffee & Refreshments on event day',
   'Official hard-copy Participation Certificates for all registered team members',
   'Direct mentorship and project review from faculty and senior tech leads',
   'Instant digital confirmation pass with Unique Team ID (e.g. CDX4-0001)',

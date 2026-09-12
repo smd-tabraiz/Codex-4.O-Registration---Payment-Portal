@@ -55,7 +55,7 @@ const HeroSection = ({ onStartRegister }) => {
               </div>
               <p className="text-[11px] sm:text-sm font-bold text-[#2563EB] flex items-center justify-center md:justify-start space-x-1 sm:space-x-1.5 mt-0.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
-                <span>Department of CSE · Coders' Club</span>
+                <span>Department of CSE (AI & ML) · Coders' Club</span>
               </p>
             </div>
           </div>

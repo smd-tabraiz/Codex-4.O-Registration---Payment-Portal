@@ -32,7 +32,7 @@ const TERMS_SECTIONS = [
     paragraphs: [
       'The service offered on this portal is the "Codex 4.0 Hackathon & Coding Competition Team Entry Pass".',
       'The pricing is fixed at exactly ₹300.00 INR (Indian Rupees) per team. This is an all-inclusive flat fee covering all 2 or 3 registered student team members.',
-      'The service includes: Full round participation access (Round 1 & Round 2), eligibility for the ₹50,000 INR prize pool, laboratory workstation and Wi-Fi access, event-day lunch and refreshments, mentorship, and official hard-copy Participation Certificates for all registered members.',
+      'The service includes: Full round participation access (Round 1 & Round 2), eligibility for the ₹50,000 INR prize pool, laboratory workstation and Wi-Fi access, mentorship, and official hard-copy Participation Certificates for all registered members.',
       'All payments are processed securely in Indian Rupees (INR) via our authorized payment gateway partner, Cashfree Payments India Private Limited.',
       'Upon successful payment verification, a Unique Team ID (e.g., CDX4-0001) will be generated and issued instantaneously via on-screen receipt and official confirmation email to the Team Leader.',
     ],
