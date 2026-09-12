@@ -1,12 +1,12 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
     font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #F2F2F2;
+    color: #0D0D0D;
   }
 }
 
@@ -19,7 +19,7 @@
   background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #D6D3CF;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -29,7 +29,7 @@
 /* SaaS Card Surface helper */
 .glass-panel {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6D3CF;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
@@ -84,6 +84,15 @@
   animation: pulseGlow 4s ease-in-out infinite;
 }
 
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
 /* Print Styles */
 @page {
   margin: 0;
@@ -101,7 +110,7 @@
     height: 100% !important;
     overflow: hidden !important;
     background-color: #FFFFFF !important;
-    color: #0F172A !important;
+    color: #0D0D0D !important;
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -126,7 +135,7 @@
   }
 
   .print-card {
-    border: 2px solid #2563EB !important;
+    border: 2px solid #E64B2E !important;
     box-shadow: none !important;
     margin: 0 auto !important;
     width: 100% !important;

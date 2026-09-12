@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import RegistrationForm from '../components/RegistrationForm';
 import PaymentSuccessModal from '../components/PaymentSuccessModal';
@@ -73,8 +73,8 @@ const RegisterPage = () => {
       
       {/* Verifying Payment Banner (Shown when returning from UPI/Cashfree) */}
       {verifyingPayment && !completedRegistration && (
-        <div className="w-full max-w-xl mx-auto mb-6 bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center shadow-sm space-y-3 animate-fade-in-up">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto" />
+        <div className="w-full max-w-xl mx-auto mb-6 bg-[#fdf1ee] border border-[#E64B2E]/30 rounded-2xl p-6 text-center shadow-sm space-y-3 animate-fade-in-up">
+          <Loader2 className="w-8 h-8 text-[#E64B2E] animate-spin mx-auto" />
           <h3 className="text-base font-bold text-slate-900">
             Verifying Your UPI / Card Payment...
           </h3>

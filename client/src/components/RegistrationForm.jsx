@@ -727,7 +727,7 @@ const RegistrationForm = ({ onSuccess }) => {
       <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden animate-fade-in-up my-6">
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-8 sm:p-10 text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-[#E64B2E]/10 rounded-full blur-2xl pointer-events-none" />
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-black uppercase tracking-wider mb-4 shadow-xs">
             <XCircle className="w-4 h-4 text-rose-400 animate-pulse" />
@@ -737,7 +737,7 @@ const RegistrationForm = ({ onSuccess }) => {
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
             Codex 4.0 Registration Cap Reached! 🚀
           </h2>
-          <p className="text-xs sm:text-sm text-blue-200 font-medium">
+          <p className="text-xs sm:text-sm text-[#E64B2E]/50 font-medium">
             Thank you for the overwhelming response and incredible enthusiasm!
           </p>
         </div>
@@ -745,7 +745,7 @@ const RegistrationForm = ({ onSuccess }) => {
         {/* Motivational Content */}
         <div className="p-6 sm:p-8 space-y-6 text-center">
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-blue-600/10 text-blue-600 border border-blue-200 flex items-center justify-center font-extrabold text-2xl shadow-xs">
+            <div className="w-14 h-14 rounded-2xl bg-[#E64B2E]/10 text-[#E64B2E] border border-[#E64B2E]/30 flex items-center justify-center font-extrabold text-2xl shadow-xs">
               🏆
             </div>
             <div className="space-y-1.5">
@@ -758,12 +758,12 @@ const RegistrationForm = ({ onSuccess }) => {
             </div>
           </div>
 
-          <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto bg-blue-50/50 p-4 rounded-xl border border-blue-100/60">
+          <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto bg-[#fdf1ee]/50 p-4 rounded-xl border border-[#E64B2E]/20/60">
             <p>
               🌟 <strong className="text-slate-900">To All Registered Teams:</strong> Get ready for an action-packed, high-energy competitive coding challenge! Keep an eye on your registered email address for complete event schedule details.
             </p>
             <p>
-              💡 <strong className="text-slate-900">Missed Out This Time?</strong> Stay connected with <strong className="text-blue-700">Coders' Club GPREC</strong>! We organize exciting hackathons, tech workshops, and coding challenges throughout the year.
+              💡 <strong className="text-slate-900">Missed Out This Time?</strong> Stay connected with <strong className="text-[#E64B2E]">Coders' Club GPREC</strong>! We organize exciting hackathons, tech workshops, and coding challenges throughout the year.
             </p>
           </div>
 
@@ -771,7 +771,7 @@ const RegistrationForm = ({ onSuccess }) => {
           <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-3">
             <a
               href="/"
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg"
+              className="px-6 py-2.5 rounded-xl bg-[#E64B2E] hover:bg-[#c73d21] text-white text-xs font-bold transition-all shadow-md hover:shadow-lg"
             >
               Return to Home
             </a>
@@ -863,7 +863,7 @@ const RegistrationForm = ({ onSuccess }) => {
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
                 step === 1
-                  ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-100'
+                  ? 'bg-[#E64B2E] text-white shadow-sm ring-2 ring-blue-100'
                   : step > 1
                   ? 'bg-emerald-600 text-white'
                   : 'bg-slate-100 text-slate-400'
@@ -871,7 +871,7 @@ const RegistrationForm = ({ onSuccess }) => {
             >
               {step > 1 ? <Check className="w-3.5 h-3.5" /> : '1'}
             </div>
-            <span className={`text-[11px] font-bold ${step === 1 ? 'text-blue-600' : 'text-slate-700'}`}>
+            <span className={`text-[11px] font-bold ${step === 1 ? 'text-[#E64B2E]' : 'text-slate-700'}`}>
               Leader Info
             </span>
           </div>
@@ -891,7 +891,7 @@ const RegistrationForm = ({ onSuccess }) => {
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
                 step === 2
-                  ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-100'
+                  ? 'bg-[#E64B2E] text-white shadow-sm ring-2 ring-blue-100'
                   : step > 2
                   ? 'bg-emerald-600 text-white'
                   : 'bg-slate-100 text-slate-400'
@@ -899,7 +899,7 @@ const RegistrationForm = ({ onSuccess }) => {
             >
               {step > 2 ? <Check className="w-3.5 h-3.5" /> : '2'}
             </div>
-            <span className={`text-[11px] font-bold ${step === 2 ? 'text-blue-600' : 'text-slate-700'}`}>
+            <span className={`text-[11px] font-bold ${step === 2 ? 'text-[#E64B2E]' : 'text-slate-700'}`}>
               Team Members
             </span>
           </div>
@@ -913,13 +913,13 @@ const RegistrationForm = ({ onSuccess }) => {
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
                 step === 3
-                  ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-100'
+                  ? 'bg-[#E64B2E] text-white shadow-sm ring-2 ring-blue-100'
                   : 'bg-slate-100 text-slate-400'
               }`}
             >
               3
             </div>
-            <span className={`text-[11px] font-bold ${step === 3 ? 'text-blue-600' : 'text-slate-700'}`}>
+            <span className={`text-[11px] font-bold ${step === 3 ? 'text-[#E64B2E]' : 'text-slate-700'}`}>
               Preview & Pay
             </span>
           </div>
@@ -945,7 +945,7 @@ const RegistrationForm = ({ onSuccess }) => {
         <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm space-y-5 animate-fade-in-up">
           
           <div className="border-b border-slate-100 pb-3">
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1.5">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#fdf1ee] text-[#E64B2E] text-[10px] font-bold uppercase tracking-wider mb-1.5">
               <User className="w-3 h-3" />
               <span>Step 1 of 3 · Team Leadership</span>
             </div>
@@ -959,9 +959,9 @@ const RegistrationForm = ({ onSuccess }) => {
 
           {/* Authentication Banner */}
           {!currentUser ? (
-            <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="bg-[#fdf1ee]/70 border border-[#E64B2E]/30 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[#fbe4de] text-[#E64B2E] flex items-center justify-center font-bold shrink-0">
                   <LogIn className="w-4 h-4" />
                 </div>
                 <div>
@@ -972,7 +972,7 @@ const RegistrationForm = ({ onSuccess }) => {
               <button
                 type="button"
                 onClick={() => setShowAuthModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center justify-center space-x-1.5 shrink-0"
+                className="w-full sm:w-auto px-4 py-2 bg-[#E64B2E] hover:bg-[#c73d21] text-white rounded-lg text-xs font-bold shadow-xs transition-all flex items-center justify-center space-x-1.5 shrink-0"
               >
                 <span>Sign In / Register</span>
                 <ArrowRight className="w-3 h-3" />
@@ -1016,7 +1016,7 @@ const RegistrationForm = ({ onSuccess }) => {
                   setErrorMsg('');
                 }}
                 placeholder="e.g. Byte Busters, Algorithmic Aces"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
               />
               <p className="text-[11px] text-slate-400">
                 This name will appear on official certificates and scoreboards.
@@ -1034,7 +1034,7 @@ const RegistrationForm = ({ onSuccess }) => {
                   value={members[0]?.name || ''}
                   onChange={(e) => handleMemberChange(0, 'name', e.target.value)}
                   placeholder="Full legal name"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
                 />
               </div>
 
@@ -1047,7 +1047,7 @@ const RegistrationForm = ({ onSuccess }) => {
                   value={members[0]?.email || ''}
                   onChange={(e) => handleMemberChange(0, 'email', e.target.value)}
                   placeholder="Official student email"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] text-xs sm:text-sm bg-white text-slate-900 outline-none transition-all placeholder:text-slate-400 font-medium"
                 />
                 <p className="text-[10px] text-slate-400">Confirmation pass will be sent here.</p>
               </div>
@@ -1060,7 +1060,7 @@ const RegistrationForm = ({ onSuccess }) => {
             <button
               type="button"
               onClick={handleNextToStep2}
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition-all"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#E64B2E] hover:bg-[#c73d21] text-white font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition-all"
             >
               <span>Next: Team Members</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -1075,7 +1075,7 @@ const RegistrationForm = ({ onSuccess }) => {
         <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm space-y-5 animate-fade-in-up">
           
           <div className="border-b border-slate-100 pb-3">
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1.5">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#fdf1ee] text-[#E64B2E] text-[10px] font-bold uppercase tracking-wider mb-1.5">
               <Users className="w-3 h-3" />
               <span>Step 2 of 3 · Team Composition</span>
             </div>
@@ -1098,7 +1098,7 @@ const RegistrationForm = ({ onSuccess }) => {
                 onClick={() => handleTeamSizeChange(2)}
                 className={`p-3 rounded-xl border text-center transition-all flex flex-col items-center justify-center space-y-0.5 ${
                   teamSize === 2
-                    ? 'border-blue-600 bg-blue-50/80 text-blue-600 ring-2 ring-blue-100 font-bold'
+                    ? 'border-[#E64B2E] bg-[#fdf1ee]/80 text-[#E64B2E] ring-2 ring-blue-100 font-bold'
                     : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                 }`}
               >
@@ -1111,7 +1111,7 @@ const RegistrationForm = ({ onSuccess }) => {
                 onClick={() => handleTeamSizeChange(3)}
                 className={`p-3 rounded-xl border text-center transition-all flex flex-col items-center justify-center space-y-0.5 ${
                   teamSize === 3
-                    ? 'border-blue-600 bg-blue-50/80 text-blue-600 ring-2 ring-blue-100 font-bold'
+                    ? 'border-[#E64B2E] bg-[#fdf1ee]/80 text-[#E64B2E] ring-2 ring-blue-100 font-bold'
                     : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                 }`}
               >
@@ -1153,14 +1153,14 @@ const RegistrationForm = ({ onSuccess }) => {
                   {/* Header of Member Card */}
                   <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                     <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
+                      <div className="w-6 h-6 rounded-md bg-[#fbe4de] text-[#E64B2E] flex items-center justify-center font-bold text-xs">
                         {index + 1}
                       </div>
                       <h3 className="font-bold text-xs sm:text-sm text-slate-900">
                         {isLeader ? 'Team Leader (Member 1)' : `Member ${index + 1}`}
                       </h3>
                       {isLeader && (
-                        <span className="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-0.2 rounded-full uppercase">
+                        <span className="bg-[#fbe4de] text-[#E64B2E] text-[10px] font-bold px-2 py-0.2 rounded-full uppercase">
                           Leader
                         </span>
                       )}
@@ -1180,7 +1180,7 @@ const RegistrationForm = ({ onSuccess }) => {
                         value={member.name}
                         onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
                         placeholder="Student name"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
                       />
                     </div>
 
@@ -1194,7 +1194,7 @@ const RegistrationForm = ({ onSuccess }) => {
                         value={member.rollNo}
                         onChange={(e) => handleMemberChange(index, 'rollNo', e.target.value.toUpperCase())}
                         placeholder="e.g. 229X1A05XX"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none uppercase font-mono text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none uppercase font-mono text-xs sm:text-sm"
                       />
                     </div>
 
@@ -1208,7 +1208,7 @@ const RegistrationForm = ({ onSuccess }) => {
                         value={member.email}
                         onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
                         placeholder="student@example.com"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none text-xs sm:text-sm"
                       />
                     </div>
 
@@ -1223,7 +1223,7 @@ const RegistrationForm = ({ onSuccess }) => {
                         value={member.mobile}
                         onChange={(e) => handleMemberChange(index, 'mobile', e.target.value.replace(/\D/g, ''))}
                         placeholder="10-digit mobile"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none font-mono text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none font-mono text-xs sm:text-sm"
                       />
                     </div>
 
@@ -1235,7 +1235,7 @@ const RegistrationForm = ({ onSuccess }) => {
                       <select
                         value={member.gender || 'Male'}
                         onChange={(e) => handleMemberChange(index, 'gender', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
                       >
                         {GENDER_OPTIONS.map((g) => (
                           <option key={g.value} value={g.value}>
@@ -1253,7 +1253,7 @@ const RegistrationForm = ({ onSuccess }) => {
                       <select
                         value={member.year}
                         onChange={(e) => handleMemberChange(index, 'year', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
                       >
                         {YEAR_OPTIONS.map((yr) => (
                           <option key={yr} value={yr}>
@@ -1271,7 +1271,7 @@ const RegistrationForm = ({ onSuccess }) => {
                       <select
                         value={member.branch}
                         onChange={(e) => handleMemberChange(index, 'branch', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
                       >
                         {BRANCH_OPTIONS.map((br) => (
                           <option key={br} value={br}>
@@ -1292,7 +1292,7 @@ const RegistrationForm = ({ onSuccess }) => {
                           value={member.customBranch || ''}
                           onChange={(e) => handleMemberChange(index, 'customBranch', e.target.value)}
                           placeholder="Enter your exact department name"
-                          className="w-full px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
+                          className="w-full px-3 py-2 rounded-lg border border-[#D6D3CF] focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
                         />
                       </div>
                     )}
@@ -1305,7 +1305,7 @@ const RegistrationForm = ({ onSuccess }) => {
                       <select
                         value={member.college}
                         onChange={(e) => handleMemberChange(index, 'college', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none cursor-pointer text-xs sm:text-sm"
                       >
                         {COLLEGE_OPTIONS.map((col) => (
                           <option key={col} value={col}>
@@ -1326,7 +1326,7 @@ const RegistrationForm = ({ onSuccess }) => {
                           value={member.customCollege || ''}
                           onChange={(e) => handleMemberChange(index, 'customCollege', e.target.value)}
                           placeholder="Enter your full college name"
-                          className="w-full px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
+                          className="w-full px-3 py-2 rounded-lg border border-[#D6D3CF] focus:ring-2 focus:ring-[#E64B2E]/20 focus:border-[#E64B2E] bg-white text-slate-900 outline-none text-xs sm:text-sm font-medium"
                         />
                       </div>
                     )}
@@ -1350,7 +1350,7 @@ const RegistrationForm = ({ onSuccess }) => {
                 disabled={checkingRolls}
                 className="w-full sm:w-auto px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-xs"
               >
-                {checkingRolls ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3 text-blue-600" />}
+                {checkingRolls ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3 text-[#E64B2E]" />}
                 <span>Verify Roll Numbers</span>
               </button>
             </div>
@@ -1380,7 +1380,7 @@ const RegistrationForm = ({ onSuccess }) => {
             <button
               type="button"
               onClick={handleNextToStep3}
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition-all"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#E64B2E] hover:bg-[#c73d21] text-white font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition-all"
             >
               <span>Next: Review & Confirm</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -1423,7 +1423,7 @@ const RegistrationForm = ({ onSuccess }) => {
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                   Registration Fee
                 </span>
-                <span className="text-base font-extrabold text-blue-600">
+                <span className="text-base font-extrabold text-[#E64B2E]">
                   ₹300 INR <span className="text-xs text-slate-500 font-normal">({teamSize} Members)</span>
                 </span>
               </div>
@@ -1460,12 +1460,12 @@ const RegistrationForm = ({ onSuccess }) => {
                 >
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                     <div className="flex items-center space-x-2">
-                      <span className="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
+                      <span className="w-5 h-5 rounded-md bg-[#fdf1ee] text-[#E64B2E] flex items-center justify-center font-bold text-xs">
                         {idx + 1}
                       </span>
                       <span className="font-bold text-xs sm:text-sm text-slate-900">{mem.name}</span>
                       {mem.isLeader && (
-                        <span className="text-[10px] bg-blue-100 text-blue-600 font-bold px-2 py-0.2 rounded-full uppercase">
+                        <span className="text-[10px] bg-[#fbe4de] text-[#E64B2E] font-bold px-2 py-0.2 rounded-full uppercase">
                           Leader
                         </span>
                       )}

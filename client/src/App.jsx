@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Wrench, Loader2 } from 'lucide-react';
 import Navbar from './components/Navbar';
@@ -37,7 +37,7 @@ function UnderConstructionPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#F8FAFC] text-[#0F172A] relative overflow-hidden text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#F2F2F2] text-[#0D0D0D] relative overflow-hidden text-center">
       <div className="relative z-10 max-w-lg bg-white p-8 sm:p-10 rounded-2xl border border-amber-200 shadow-card-hover space-y-6">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 mx-auto shadow-xs">
           <Wrench className="w-8 h-8 animate-bounce" />
@@ -47,19 +47,19 @@ function UnderConstructionPage() {
           <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
             System Maintenance
           </span>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#0F172A] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#0D0D0D] tracking-tight">
             Application is under service
           </h1>
-          <p className="text-sm text-[#475569] font-normal">
+          <p className="text-sm text-[#9A9A9A] font-normal">
             it will get back soon pls wait
           </p>
         </div>
 
-        <div className="pt-4 border-t border-[#E2E8F0] flex flex-col sm:flex-row items-center justify-center gap-3">
-          <span className="text-xs text-[#64748B]">Codex 4.0 · Coders' Club GPREC</span>
+        <div className="pt-4 border-t border-[#D6D3CF] flex flex-col sm:flex-row items-center justify-center gap-3">
+          <span className="text-xs text-[#9A9A9A]">Codex 4.0 · Coders' Club GPREC</span>
           <button
             onClick={() => navigate('/login')}
-            className="text-xs font-semibold text-[#2563EB] hover:underline transition-all"
+            className="text-xs font-semibold text-[#E64B2E] hover:underline transition-all"
           >
             Login
           </button>
@@ -140,8 +140,8 @@ function App() {
 
   if (checkingSettings) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center text-[#0F172A]">
-        <Loader2 className="w-6 h-6 text-[#2563EB] animate-spin" />
+      <div className="min-h-screen bg-[#F2F2F2] flex items-center justify-center text-[#0D0D0D]">
+        <Loader2 className="w-6 h-6 text-[#E64B2E] animate-spin" />
       </div>
     );
   }
@@ -152,7 +152,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A] font-sans">
+    <div className="min-h-screen flex flex-col bg-[#F2F2F2] text-[#0D0D0D] font-sans">
       <ScrollToTop />
       
       <Routes>

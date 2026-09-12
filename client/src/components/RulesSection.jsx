@@ -7,10 +7,10 @@ const RulesSection = ({ onRegisterClick }) => {
       
       {/* Section Header */}
       <div className="text-center mb-10">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight mb-3">
-          Event Guidelines & <span className="text-[#2563EB]">Rules</span>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D] tracking-tight mb-3">
+          Event Guidelines & <span className="text-[#E64B2E]">Rules</span>
         </h2>
-        <p className="text-[#475569] text-sm sm:text-base max-w-xl mx-auto font-normal">
+        <p className="text-[#9A9A9A] text-sm sm:text-base max-w-xl mx-auto font-normal">
           Please review the official competition structure, rounds, and 4th-year team constraints.
         </p>
       </div>
@@ -43,30 +43,30 @@ const RulesSection = ({ onRegisterClick }) => {
       </div>
 
       {/* 2-Round Structure & Qualification Highlight Banner */}
-      <div className="bg-blue-50/80 border-2 border-blue-200 rounded-xl p-6 mb-10 shadow-card">
+      <div className="bg-[#fdf1ee]/80 border-2 border-[#E64B2E]/30 rounded-xl p-6 mb-10 shadow-card">
         <div className="flex items-start space-x-4">
-          <div className="p-3 bg-blue-100 rounded-xl text-[#2563EB] shrink-0">
+          <div className="p-3 bg-[#fbe4de] rounded-xl text-[#E64B2E] shrink-0">
             <Trophy className="w-7 h-7" />
           </div>
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <span className="bg-blue-200/80 text-blue-900 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">
+              <span className="bg-[#E64B2E]/20 text-[#0D0D0D] text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">
                 COMPETITION ROUNDS & SELECTION
               </span>
               <span className="text-xs font-semibold text-emerald-700 font-medium">₹50,000 Prize Pool</span>
             </div>
 
-            <h3 className="text-xl font-bold text-[#0F172A]">
+            <h3 className="text-xl font-bold text-[#0D0D0D]">
               Two Competition Rounds (Round 1 & Round 2)
             </h3>
 
             <div className="grid sm:grid-cols-2 gap-4 pt-1">
-              <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
-                <div className="flex items-center space-x-2 text-[#2563EB] font-bold text-sm mb-1">
+              <div className="bg-white p-4 rounded-xl border border-[#E64B2E]/20 shadow-sm">
+                <div className="flex items-center space-x-2 text-[#E64B2E] font-bold text-sm mb-1">
                   <Zap className="w-4 h-4" />
                   <span>ROUND 1: Preliminary Round (3 Hours)</span>
                 </div>
-                <p className="text-xs text-[#475569] leading-relaxed font-normal">
+                <p className="text-xs text-[#9A9A9A] leading-relaxed font-normal">
                   All registered teams battle through an intensive 3-hour algorithmic coding challenge testing speed and problem-solving.
                 </p>
               </div>
@@ -76,13 +76,13 @@ const RulesSection = ({ onRegisterClick }) => {
                   <Trophy className="w-4 h-4" />
                   <span>ROUND 2: Grand Finale (1 Hour 30 Mins)</span>
                 </div>
-                <p className="text-xs text-[#475569] leading-relaxed font-normal">
+                <p className="text-xs text-[#9A9A9A] leading-relaxed font-normal">
                   Top performing teams selected from Round 1 performance advance to the 90-minute Grand Finale to claim the ₹50K prize pool!
                 </p>
               </div>
             </div>
 
-            <p className="text-xs text-blue-900 font-medium">
+            <p className="text-xs text-[#0D0D0D] font-medium">
               * Selection for Round 2 is strictly based on high performance and score in Round 1.
             </p>
           </div>
@@ -93,21 +93,21 @@ const RulesSection = ({ onRegisterClick }) => {
       <div className="grid md:grid-cols-2 gap-6 mb-10">
         
         {/* Card 1: Team Composition */}
-        <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
+        <div className="bg-white p-6 rounded-xl border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2.5 bg-blue-50 rounded-lg text-[#2563EB]">
+            <div className="p-2.5 bg-[#fdf1ee] rounded-lg text-[#E64B2E]">
               <Users className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-[#0F172A]">Team Size & Leadership</h3>
+            <h3 className="text-lg font-bold text-[#0D0D0D]">Team Size & Leadership</h3>
           </div>
-          <ul className="space-y-3 text-[#475569] text-sm">
+          <ul className="space-y-3 text-[#9A9A9A] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>Each team must contain exactly <strong className="text-[#0F172A]">2 to 3 members</strong>. Single participant or 4+ member teams are not permitted.</span>
+              <span>Each team must contain exactly <strong className="text-[#0D0D0D]">2 to 3 members</strong>. Single participant or 4+ member teams are not permitted.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span><strong className="text-[#0F172A]">Team Leader:</strong> Member 1 is designated as the primary leader responsible for registering, completing payment, and receiving updates.</span>
+              <span><strong className="text-[#0D0D0D]">Team Leader:</strong> Member 1 is designated as the primary leader responsible for registering, completing payment, and receiving updates.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -117,17 +117,17 @@ const RulesSection = ({ onRegisterClick }) => {
         </div>
 
         {/* Card 2: Roll Number & Registration Uniqueness */}
-        <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
+        <div className="bg-white p-6 rounded-xl border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
           <div className="flex items-center space-x-3 mb-4">
             <div className="p-2.5 bg-purple-50 rounded-lg text-purple-600">
               <FileText className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-[#0F172A]">Registration & Roll Numbers</h3>
+            <h3 className="text-lg font-bold text-[#0D0D0D]">Registration & Roll Numbers</h3>
           </div>
-          <ul className="space-y-3 text-[#475569] text-sm">
+          <ul className="space-y-3 text-[#9A9A9A] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>Each student roll number can be registered in <strong className="text-[#0F172A]">only one team</strong>. Duplicate roll numbers will trigger automatic rejection.</span>
+              <span>Each student roll number can be registered in <strong className="text-[#0D0D0D]">only one team</strong>. Duplicate roll numbers will trigger automatic rejection.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -141,21 +141,21 @@ const RulesSection = ({ onRegisterClick }) => {
         </div>
 
         {/* Card 3: Event Timings & Check-In */}
-        <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
+        <div className="bg-white p-6 rounded-xl border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
           <div className="flex items-center space-x-3 mb-4">
             <div className="p-2.5 bg-amber-50 rounded-lg text-amber-600">
               <Clock className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-[#0F172A]">Event Timings & Check-in</h3>
+            <h3 className="text-lg font-bold text-[#0D0D0D]">Event Timings & Check-in</h3>
           </div>
-          <ul className="space-y-3 text-[#475569] text-sm">
+          <ul className="space-y-3 text-[#9A9A9A] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span><strong className="text-[#0F172A]">Event Duration:</strong> Starts at <strong className="text-[#0F172A]">9:00 AM on 24th September</strong> and concludes at <strong className="text-[#0F172A]">5:00 PM</strong>.</span>
+              <span><strong className="text-[#0D0D0D]">Event Duration:</strong> Starts at <strong className="text-[#0D0D0D]">9:00 AM on 24th September</strong> and concludes at <strong className="text-[#0D0D0D]">5:00 PM</strong>.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>Reporting time is <strong className="text-[#0F172A]">8:30 AM</strong> at GPREC Campus. Present your Team ID email for physical check-in.</span>
+              <span>Reporting time is <strong className="text-[#0D0D0D]">8:30 AM</strong> at GPREC Campus. Present your Team ID email for physical check-in.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -165,14 +165,14 @@ const RulesSection = ({ onRegisterClick }) => {
         </div>
 
         {/* Card 4: Equipment & Requirements */}
-        <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
+        <div className="bg-white p-6 rounded-xl border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
           <div className="flex items-center space-x-3 mb-4">
             <div className="p-2.5 bg-cyan-50 rounded-lg text-cyan-600">
               <Laptop className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-[#0F172A]">Tips for Participants</h3>
+            <h3 className="text-lg font-bold text-[#0D0D0D]">Tips for Participants</h3>
           </div>
-          <ul className="space-y-3 text-[#475569] text-sm">
+          <ul className="space-y-3 text-[#9A9A9A] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>Read the complete problem statement carefully.</span>
@@ -195,14 +195,14 @@ const RulesSection = ({ onRegisterClick }) => {
       </div>
 
       {/* CTA Bottom Banner */}
-      <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#E2E8F0] text-center shadow-card">
-        <h3 className="text-2xl font-bold text-[#0F172A] mb-2">Ready to Register Your Team?</h3>
-        <p className="text-[#475569] text-sm mb-6 max-w-lg mx-auto font-normal">
+      <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#D6D3CF] text-center shadow-card">
+        <h3 className="text-2xl font-bold text-[#0D0D0D] mb-2">Ready to Register Your Team?</h3>
+        <p className="text-[#9A9A9A] text-sm mb-6 max-w-lg mx-auto font-normal">
           Ensure your team complies with all guidelines and proceed to fill out member details.
         </p>
         <button
           onClick={onRegisterClick}
-          className="px-8 py-3.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold shadow-sm transition-all"
+          className="px-8 py-3.5 rounded-xl bg-[#E64B2E] hover:bg-[#c73d21] text-white font-semibold shadow-sm transition-all"
         >
           Proceed to Team Registration
         </button>

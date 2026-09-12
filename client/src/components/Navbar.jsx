@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 
   HelpCircle, 
@@ -102,19 +102,19 @@ const Navbar = () => {
   const navLinkClass = ({ isActive }) =>
     `px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center space-x-1.5 transition-all ${
       isActive
-        ? 'bg-[#2563EB] text-white font-semibold shadow-sm'
-        : 'text-[#CBD5E1] hover:text-white hover:bg-slate-800/80'
+        ? 'bg-[#E64B2E] text-white font-semibold shadow-sm'
+        : 'text-[#D6D3CF] hover:text-white hover:bg-[#1a1a1a]/80'
     }`;
 
   const mobileNavLinkClass = ({ isActive }) =>
     `px-4 py-3 rounded-xl text-sm font-medium flex items-center space-x-3 transition-all ${
       isActive
-        ? 'bg-[#2563EB] text-white font-bold shadow-sm'
-        : 'text-[#CBD5E1] hover:text-white hover:bg-slate-800'
+        ? 'bg-[#E64B2E] text-white font-bold shadow-sm'
+        : 'text-[#D6D3CF] hover:text-white hover:bg-[#1a1a1a]'
     }`;
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#0F172A] border-b border-slate-800 shadow-md">
+    <header className="sticky top-0 z-40 w-full bg-[#0D0D0D] border-b border-slate-800 shadow-md">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Brand Logo - Left */}
@@ -127,12 +127,14 @@ const Navbar = () => {
             />
             <div>
               <div className="flex items-center space-x-1 sm:space-x-2">
-                <span className="font-extrabold text-sm sm:text-base tracking-wide text-white whitespace-nowrap">CODEX 4.0</span>
-                <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded-full uppercase">
+                <span className="font-black text-sm sm:text-base tracking-wide text-white whitespace-nowrap">
+                  Code<span className="text-[#E64B2E]">X</span><sup className="text-[#E64B2E] font-extrabold text-[10px] sm:text-xs ml-0.5">4.0</sup>
+                </span>
+                <span className="bg-[#E64B2E]/20 text-[#E64B2E]/70 border border-[#E64B2E]/50/30 text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded-full uppercase">
                   GPREC
                 </span>
               </div>
-              <p className="text-[10px] sm:text-[11px] text-[#CBD5E1] font-normal hidden sm:block">Coders' Club Flagship Event</p>
+              <p className="text-[10px] sm:text-[11px] text-[#D6D3CF] font-normal hidden sm:block">Coders' Club Flagship Event</p>
             </div>
           </Link>
         </div>
@@ -177,9 +179,9 @@ const Navbar = () => {
                 {/* User Name Profile Button */}
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm text-slate-200 bg-slate-800/90 hover:bg-slate-700/90 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-slate-700 transition-all shadow-sm cursor-pointer"
+                  className="flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm text-slate-200 bg-[#1a1a1a]/90 hover:bg-slate-700/90 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-slate-700 transition-all shadow-sm cursor-pointer"
                 >
-                  <div className="w-6 h-6 rounded-full bg-blue-600/30 border border-blue-400/40 text-blue-300 flex items-center justify-center shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-[#E64B2E]/30 border border-[#E64B2E]/50/40 text-[#E64B2E]/70 flex items-center justify-center shrink-0">
                     <User className="w-3.5 h-3.5" />
                   </div>
                   <span className="max-w-[80px] sm:max-w-[130px] truncate font-semibold">
@@ -223,7 +225,7 @@ const Navbar = () => {
                           }}
                           className="w-full px-4 py-2.5 text-left text-xs font-semibold text-slate-200 hover:bg-slate-700/70 hover:text-white flex items-center space-x-2 transition-colors cursor-pointer"
                         >
-                          <LayoutDashboard className="w-4 h-4 text-blue-400" />
+                          <LayoutDashboard className="w-4 h-4 text-[#E64B2E]/70" />
                           <span>{adminToken ? 'Tabraiz Admin Dashboard' : 'My Team Dashboard'}</span>
                         </button>
                       )}
@@ -262,8 +264,8 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   `px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center space-x-1.5 transition-all shadow-sm ${
                     isActive
-                      ? 'bg-blue-700 text-white ring-2 ring-blue-400'
-                      : 'bg-[#2563EB] hover:bg-blue-700 text-white hover:shadow-md'
+                      ? 'bg-[#c73d21] text-white ring-2 ring-blue-400'
+                      : 'bg-[#E64B2E] hover:bg-[#c73d21] text-white hover:shadow-md'
                   }`
                 }
               >
@@ -276,7 +278,7 @@ const Navbar = () => {
           {/* Mobile Hamburger Menu Toggle Button (Visible only on mobile/tablet < md) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors focus:outline-none"
+            className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-[#1a1a1a] transition-colors focus:outline-none"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -288,10 +290,10 @@ const Navbar = () => {
 
       {/* Mobile Navigation Drawer (Slide-down menu on mobile) */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0F172A] border-t border-slate-800 px-4 py-4 space-y-2 shadow-2xl animate-fade-in-up">
+        <div className="md:hidden bg-[#0D0D0D] border-t border-slate-800 px-4 py-4 space-y-2 shadow-2xl animate-fade-in-up">
           
           <NavLink to="/" end className={mobileNavLinkClass} onClick={() => setMobileMenuOpen(false)}>
-            <Home className="w-4 h-4 text-blue-400" />
+            <Home className="w-4 h-4 text-[#E64B2E]/70" />
             <span>Home</span>
           </NavLink>
 
@@ -323,9 +325,9 @@ const Navbar = () => {
                   setMobileMenuOpen(false);
                   navigate('/dashboard');
                 }}
-                className="w-full px-4 py-3 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded-xl text-sm font-semibold flex items-center space-x-3 transition-all"
+                className="w-full px-4 py-3 bg-[#E64B2E]/20 hover:bg-[#c73d21]/30 text-[#E64B2E]/70 border border-[#E64B2E]/30 rounded-xl text-sm font-semibold flex items-center space-x-3 transition-all"
               >
-                <LayoutDashboard className="w-4 h-4 text-blue-400" />
+                <LayoutDashboard className="w-4 h-4 text-[#E64B2E]/70" />
                 <span>My Team Dashboard</span>
               </button>
             </div>

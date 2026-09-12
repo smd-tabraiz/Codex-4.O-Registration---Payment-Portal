@@ -86,7 +86,7 @@ const DashboardPage = () => {
   if (loading) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-slate-600 space-y-3">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#E64B2E] animate-spin" />
         <p className="text-xs font-semibold">Loading your team dashboard...</p>
       </div>
     );
@@ -106,18 +106,22 @@ const DashboardPage = () => {
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Registration Confirmed</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              My Team Dashboard
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-baseline gap-2">
+              <span>My Team Dashboard</span>
+              <span className="text-slate-300 font-light">|</span>
+              <span className="font-black text-slate-900">
+                Code<span className="text-[#E64B2E]">X</span><sup className="text-[#E64B2E] font-black text-xs ml-0.5">4.0</sup>
+              </span>
             </h1>
             <p className="text-xs text-slate-500 mt-1">
-              Official Entry Pass & Registered Squad Details for Codex 4.0
+              Official Entry Pass & Registered Squad Details for Code<span className="text-[#E64B2E] font-bold">X</span><sup className="text-[#E64B2E] font-bold">4.0</sup>
             </p>
           </div>
 
           <div className="flex items-center space-x-2 shrink-0 w-full sm:w-auto">
             <button
               onClick={handlePrintPass}
-              className="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm transition-all cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 bg-[#0D0D0D] hover:bg-[#1a1a1a] text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm transition-all cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print Entry Ticket</span>
@@ -138,7 +142,7 @@ const DashboardPage = () => {
                 <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   {registration.teamName}
                 </span>
-                <span className="bg-blue-100 text-blue-700 font-mono font-bold text-xs px-2.5 py-1 rounded-lg border border-blue-200">
+                <span className="bg-[#fbe4de] text-[#E64B2E] font-mono font-bold text-xs px-2.5 py-1 rounded-lg border border-[#E64B2E]/30">
                   ID: {registration.teamId}
                 </span>
               </div>
@@ -176,7 +180,7 @@ const DashboardPage = () => {
           {/* Team Members Breakdown */}
           <div className="space-y-3 pt-2">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-              <Users className="w-4 h-4 text-blue-600" />
+              <Users className="w-4 h-4 text-[#E64B2E]" />
               <span>Registered Squad Members ({registration.members?.length} Students)</span>
             </h3>
 
@@ -188,12 +192,12 @@ const DashboardPage = () => {
                 >
                   <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
                     <div className="flex items-center space-x-2">
-                      <span className="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                      <span className="w-6 h-6 rounded-md bg-[#E64B2E] text-white flex items-center justify-center font-bold text-xs">
                         {idx + 1}
                       </span>
                       <span className="font-bold text-sm text-slate-900">{mem.name}</span>
                       {mem.isLeader && (
-                        <span className="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full uppercase">
+                        <span className="text-[10px] bg-[#fbe4de] text-[#E64B2E] font-bold px-2 py-0.5 rounded-full uppercase">
                           Team Leader
                         </span>
                       )}
@@ -253,36 +257,36 @@ const DashboardPage = () => {
           </a>
 
           {/* Event Schedule & Reporting Venue Box */}
-          <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-4 sm:p-5 space-y-3">
-            <h4 className="text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center space-x-1.5">
-              <Calendar className="w-4 h-4 text-blue-600" />
+          <div className="bg-[#fdf1ee]/60 border border-[#E64B2E]/30 rounded-xl p-4 sm:p-5 space-y-3">
+            <h4 className="text-xs font-bold text-[#0D0D0D] uppercase tracking-wider flex items-center space-x-1.5">
+              <Calendar className="w-4 h-4 text-[#E64B2E]" />
               <span>Event Reporting & Venue Details</span>
             </h4>
 
-            <div className="grid sm:grid-cols-3 gap-3 text-xs text-blue-950">
+            <div className="grid sm:grid-cols-3 gap-3 text-xs text-[#0D0D0D]">
               <div className="flex items-start space-x-2">
-                <Calendar className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <Calendar className="w-4 h-4 text-[#E64B2E] shrink-0 mt-0.5" />
                 <div>
                   <strong className="block text-slate-900">Event Date:</strong>
                   <span>24th September 2026</span>
                 </div>
               </div>
               <div className="flex items-start space-x-2">
-                <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-[#E64B2E] shrink-0 mt-0.5" />
                 <div>
                   <strong className="block text-slate-900">Reporting Time:</strong>
                   <span>08:30 AM Sharp</span>
                 </div>
               </div>
               <div className="flex items-start space-x-2">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-[#E64B2E] shrink-0 mt-0.5" />
                 <div>
                   <strong className="block text-slate-900">Venue:</strong>
                   <span>Main Seminar Hall & Labs, GPREC</span>
                 </div>
               </div>
             </div>
-            <p className="text-[11px] text-blue-800 leading-relaxed border-t border-blue-200/60 pt-2 font-medium">
+            <p className="text-[11px] text-[#0D0D0D] leading-relaxed border-t border-[#E64B2E]/30/60 pt-2 font-medium">
               * Note: All squad members must bring their original College ID Card and digital or printed entry ticket at the check-in counter.
             </p>
           </div>
@@ -307,7 +311,7 @@ const DashboardPage = () => {
           </h2>
           <p className="text-xs sm:text-sm text-slate-500">
             Logged in as <strong className="text-slate-900">{userData?.name || userData?.email || 'User'}</strong>.
-            You haven't completed team registration for Codex 4.0 yet.
+            You haven't completed team registration for Code<span className="text-[#E64B2E] font-bold">X</span><sup className="text-[#E64B2E] font-bold">4.0</sup> yet.
           </p>
         </div>
 
@@ -318,7 +322,7 @@ const DashboardPage = () => {
             className={`w-full sm:w-auto px-6 py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm flex items-center justify-center space-x-2 transition-all ${
               registrationsClosed
                 ? 'bg-rose-600 text-white cursor-pointer hover:bg-rose-700'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                : 'bg-[#E64B2E] hover:bg-[#c73d21] text-white'
             }`}
           >
             <span>{registrationsClosed ? 'Registrations Closed 🚀' : `Register Team Now (₹${registrationFee})`}</span>

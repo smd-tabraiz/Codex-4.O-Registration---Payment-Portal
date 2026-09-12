@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import api from '../api/axiosInstance';
@@ -45,7 +45,7 @@ const ProtectedRoute = ({ children, onUserLoaded }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#090d16] flex items-center justify-center text-white">
-        <div className="flex items-center space-x-3 bg-slate-900 border border-slate-800 px-6 py-4 rounded-2xl shadow-xl">
+        <div className="flex items-center space-x-3 bg-[#0D0D0D] border border-slate-800 px-6 py-4 rounded-2xl shadow-xl">
           <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
           <span className="text-sm font-semibold">Verifying session...</span>
         </div>

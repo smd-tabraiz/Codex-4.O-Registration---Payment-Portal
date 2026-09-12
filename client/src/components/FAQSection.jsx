@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle, Mail, Phone, MessageSquare } from 'lucide-react';
 
 const faqs = [
@@ -46,13 +46,13 @@ const FAQSection = () => {
   return (
     <div className="py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center p-2.5 bg-blue-50 text-[#2563EB] rounded-xl mb-3">
+        <div className="inline-flex items-center justify-center p-2.5 bg-[#fdf1ee] text-[#E64B2E] rounded-xl mb-3">
           <HelpCircle className="w-6 h-6" />
         </div>
-        <h2 className="text-3xl font-extrabold text-[#0F172A] tracking-tight mb-2">
-          Frequently Asked <span className="text-[#2563EB]">Questions</span>
+        <h2 className="text-3xl font-extrabold text-[#0D0D0D] tracking-tight mb-2">
+          Frequently Asked <span className="text-[#E64B2E]">Questions</span>
         </h2>
-        <p className="text-[#475569] text-sm font-normal">
+        <p className="text-[#9A9A9A] text-sm font-normal">
           Everything you need to know about Codex 4.0 registration and guidelines.
         </p>
       </div>
@@ -64,18 +64,18 @@ const FAQSection = () => {
             <div
               key={idx}
               className={`bg-white rounded-xl border transition-all duration-200 shadow-card ${
-                isOpen ? 'border-[#2563EB] ring-2 ring-blue-100' : 'border-[#E2E8F0] hover:border-slate-300'
+                isOpen ? 'border-[#E64B2E] ring-2 ring-blue-100' : 'border-[#D6D3CF] hover:border-slate-300'
               }`}
             >
               <button
                 onClick={() => toggle(idx)}
-                className="w-full p-5 text-left font-semibold text-[#0F172A] flex items-center justify-between transition-colors"
+                className="w-full p-5 text-left font-semibold text-[#0D0D0D] flex items-center justify-between transition-colors"
               >
                 <span className="text-sm sm:text-base">{faq.q}</span>
-                {isOpen ? <ChevronUp className="w-5 h-5 text-[#2563EB] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#64748B] shrink-0" />}
+                {isOpen ? <ChevronUp className="w-5 h-5 text-[#E64B2E] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#9A9A9A] shrink-0" />}
               </button>
               {isOpen && (
-                <div className="px-5 pb-5 text-xs sm:text-sm text-[#475569] border-t border-[#E2E8F0] pt-3 leading-relaxed font-normal">
+                <div className="px-5 pb-5 text-xs sm:text-sm text-[#9A9A9A] border-t border-[#D6D3CF] pt-3 leading-relaxed font-normal">
                   {faq.a}
                 </div>
               )}
@@ -85,13 +85,13 @@ const FAQSection = () => {
       </div>
 
       {/* Direct Contact Queries Box */}
-      <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#E2E8F0] text-center space-y-4 shadow-card">
-        <div className="inline-flex p-3 bg-blue-50 text-[#2563EB] rounded-xl">
+      <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#D6D3CF] text-center space-y-4 shadow-card">
+        <div className="inline-flex p-3 bg-[#fdf1ee] text-[#E64B2E] rounded-xl">
           <MessageSquare className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-[#0F172A]">Have More Questions or Need Help?</h3>
-          <p className="text-xs sm:text-sm text-[#475569] mt-1 font-normal">
+          <h3 className="text-xl font-bold text-[#0D0D0D]">Have More Questions or Need Help?</h3>
+          <p className="text-xs sm:text-sm text-[#9A9A9A] mt-1 font-normal">
             Reach out directly to the Coders' Club organizing team for any event or payment queries.
           </p>
         </div>
@@ -99,9 +99,9 @@ const FAQSection = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <a
             href="mailto:codersclubrecruitment@gmail.com"
-            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#2563EB] text-xs font-semibold flex items-center justify-center space-x-2 border border-[#E2E8F0] transition-all"
+            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#E64B2E] text-xs font-semibold flex items-center justify-center space-x-2 border border-[#D6D3CF] transition-all"
           >
-            <Mail className="w-4 h-4 text-[#2563EB]" />
+            <Mail className="w-4 h-4 text-[#E64B2E]" />
             <span>codersclubrecruitment@gmail.com</span>
           </a>
 

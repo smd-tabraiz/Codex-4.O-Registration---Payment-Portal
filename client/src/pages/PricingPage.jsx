@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axiosInstance';
 import { 
@@ -21,13 +21,11 @@ import {
 
 const PRICING_FEATURES = [
   'Team Entry Pass for 2 or 3 student members',
-  'Full eligibility to compete for ₹50,000 Cash Prize Pool',
+  'Full eligibility to compete for up to ₹50,000 Cash Prize Pool',
   'Access to Round 1 (3-Hr Preliminary Challenge) & Round 2 (Grand Finale)',
-  'High-speed Wi-Fi and designated workstation in GPREC CSE Labs',
+  'High-speed Wi-Fi and designated workstation in GPREC CSE (AI & ML) Labs',
   'Official hard-copy Participation Certificates for all registered team members',
-  'Direct mentorship and project review from faculty and senior tech leads',
   'Instant digital confirmation pass with Unique Team ID (e.g. CDX4-0001)',
-  'Access to curated algorithm problem sets and post-event solution repository',
 ];
 
 const PricingPage = () => {
@@ -76,20 +74,20 @@ const PricingPage = () => {
       
       {/* Header Banner */}
       <div className="text-center space-y-3 max-w-3xl mx-auto">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-[#2563EB] text-xs font-semibold uppercase tracking-wider">
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#fdf1ee] text-[#E64B2E] text-xs font-semibold uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Products & Services · Official Pricing</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">
-          Event Passes & <span className="text-[#2563EB]">Pricing Details</span>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D] tracking-tight">
+          Event Passes & <span className="text-[#E64B2E]">Pricing Details</span>
         </h1>
-        <p className="text-[#475569] text-sm sm:text-base font-normal">
+        <p className="text-[#9A9A9A] text-sm sm:text-base font-normal">
           Transparent, all-inclusive pricing in INR (Indian Rupees) for Codex 4.0 technical coding competition.
         </p>
       </div>
 
       {/* Main Pricing & Product Card */}
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-[#E2E8F0] shadow-card-hover overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-[#D6D3CF] shadow-card-hover overflow-hidden">
         <div className="grid md:grid-cols-5">
           
           {/* Left / Top Details */}
@@ -99,16 +97,16 @@ const PricingPage = () => {
                 <FileCheck className="w-3.5 h-3.5" />
                 <span>Service Category: Technical Competition Pass</span>
               </div>
-              <h2 className="text-2xl font-bold text-[#0F172A]">
+              <h2 className="text-2xl font-bold text-[#0D0D0D]">
                 Codex 4.0 Team Registration Pass
               </h2>
-              <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#9A9A9A] mt-1.5 leading-relaxed">
                 All-access registration pass for a team of 2 to 3 engineering students for the flagship Codex 4.0 on-campus coding battle at GPREC Kurnool.
               </p>
             </div>
 
             <div className="space-y-3 pt-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#0D0D0D]">
                 What's Included in this Service:
               </h3>
               <ul className="space-y-2.5">
@@ -123,26 +121,26 @@ const PricingPage = () => {
           </div>
 
           {/* Right / Pricing Box */}
-          <div className="md:col-span-2 bg-[#F8FAFC] border-t md:border-t-0 md:border-l border-[#E2E8F0] p-6 sm:p-10 flex flex-col justify-between space-y-6">
+          <div className="md:col-span-2 bg-[#F2F2F2] border-t md:border-t-0 md:border-l border-[#D6D3CF] p-6 sm:p-10 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-1">
-                <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider block">
+              <div className="bg-white p-5 rounded-2xl border border-[#D6D3CF] shadow-xs space-y-1">
+                <span className="text-[11px] font-semibold text-[#9A9A9A] uppercase tracking-wider block">
                   Total Fee (Inclusive of All Taxes)
                 </span>
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-4xl font-extrabold text-[#0F172A] tracking-tight">₹{registrationFee}</span>
-                  <span className="text-xs font-bold text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                  <span className="text-4xl font-extrabold text-[#0D0D0D] tracking-tight">₹{registrationFee}</span>
+                  <span className="text-xs font-bold text-[#E64B2E] bg-[#fdf1ee] px-2 py-0.5 rounded-md border border-[#E64B2E]/20">
                     INR
                   </span>
                 </div>
-                <p className="text-[11px] text-[#64748B] pt-1">
+                <p className="text-[11px] text-[#9A9A9A] pt-1">
                   Flat ₹{registrationFee} INR per team · covers 2 to 3 members
                 </p>
               </div>
 
-              <div className="space-y-2 text-xs text-[#475569]">
+              <div className="space-y-2 text-xs text-[#9A9A9A]">
                 <div className="flex items-center space-x-2">
-                  <Building2 className="w-4 h-4 text-[#2563EB] shrink-0" />
+                  <Building2 className="w-4 h-4 text-[#E64B2E] shrink-0" />
                   <span>Hosted by <strong>Coders' Club, GPREC</strong></span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -162,13 +160,13 @@ const PricingPage = () => {
                 className={`w-full py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition-all ${
                   registrationsClosed
                     ? 'bg-rose-600 hover:bg-rose-700 text-white'
-                    : 'bg-[#2563EB] hover:bg-blue-700 text-white'
+                    : 'bg-[#E64B2E] hover:bg-[#c73d21] text-white'
                 }`}
               >
                 <span>{registrationsClosed ? 'Registrations Are Closed 🚀' : 'Register Your Team Now'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-              <p className="text-[11px] text-center text-[#64748B]">
+              <p className="text-[11px] text-center text-[#9A9A9A]">
                 {registrationsClosed ? 'Team requirements have been satisfied.' : 'Team capacity limit applies.'}
               </p>
             </div>
@@ -181,32 +179,32 @@ const PricingPage = () => {
       {/* Pricing Policy Highlights Grid */}
       <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
         
-        <div className="bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-card space-y-2">
-          <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-sm">
+        <div className="bg-white p-5 rounded-2xl border border-[#D6D3CF] shadow-card space-y-2">
+          <div className="w-9 h-9 rounded-xl bg-[#fdf1ee] text-[#E64B2E] flex items-center justify-center font-bold text-sm">
             INR
           </div>
-          <h4 className="font-bold text-sm text-[#0F172A]">Indian Rupee Billing</h4>
-          <p className="text-xs text-[#64748B] leading-relaxed">
+          <h4 className="font-bold text-sm text-[#0D0D0D]">Indian Rupee Billing</h4>
+          <p className="text-xs text-[#9A9A9A] leading-relaxed">
             All prices and fee quotes on this portal are in Indian Rupees (INR - ₹). No hidden processing surcharges.
           </p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-card space-y-2">
+        <div className="bg-white p-5 rounded-2xl border border-[#D6D3CF] shadow-card space-y-2">
           <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
             100%
           </div>
-          <h4 className="font-bold text-sm text-[#0F172A]">Instant Digital Delivery</h4>
-          <p className="text-xs text-[#64748B] leading-relaxed">
+          <h4 className="font-bold text-sm text-[#0D0D0D]">Instant Digital Delivery</h4>
+          <p className="text-xs text-[#9A9A9A] leading-relaxed">
             Upon payment verification, your Team ID pass and confirmation email are generated instantaneously.
           </p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-card space-y-2">
+        <div className="bg-white p-5 rounded-2xl border border-[#D6D3CF] shadow-card space-y-2">
           <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-sm">
             PCI
           </div>
-          <h4 className="font-bold text-sm text-[#0F172A]">PCI-DSS Secure Payments</h4>
-          <p className="text-xs text-[#64748B] leading-relaxed">
+          <h4 className="font-bold text-sm text-[#0D0D0D]">PCI-DSS Secure Payments</h4>
+          <p className="text-xs text-[#9A9A9A] leading-relaxed">
             Payments are securely handled by Cashfree Payments with 256-bit encryption. We never store payment credentials.
           </p>
         </div>
@@ -216,18 +214,18 @@ const PricingPage = () => {
       {/* Pricing FAQs */}
       <div className="max-w-4xl mx-auto space-y-6 pt-4">
         <div className="text-center">
-          <h3 className="text-xl font-bold text-[#0F172A]">Frequently Asked Questions about Pricing</h3>
-          <p className="text-xs text-[#64748B] mt-1">Have questions about payment methods, pass delivery, or invoicing?</p>
+          <h3 className="text-xl font-bold text-[#0D0D0D]">Frequently Asked Questions about Pricing</h3>
+          <p className="text-xs text-[#9A9A9A] mt-1">Have questions about payment methods, pass delivery, or invoicing?</p>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
           {FAQS.map((faq, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-card space-y-2">
-              <h4 className="font-bold text-xs sm:text-sm text-[#0F172A] flex items-start space-x-2">
-                <HelpCircle className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
+            <div key={idx} className="bg-white p-5 rounded-2xl border border-[#D6D3CF] shadow-card space-y-2">
+              <h4 className="font-bold text-xs sm:text-sm text-[#0D0D0D] flex items-start space-x-2">
+                <HelpCircle className="w-4 h-4 text-[#E64B2E] shrink-0 mt-0.5" />
                 <span>{faq.q}</span>
               </h4>
-              <p className="text-xs text-[#475569] leading-relaxed pl-6">
+              <p className="text-xs text-[#9A9A9A] leading-relaxed pl-6">
                 {faq.a}
               </p>
             </div>
@@ -235,20 +233,20 @@ const PricingPage = () => {
         </div>
 
         {/* Policy Links reminder */}
-        <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-5 text-center space-y-2">
+        <div className="bg-[#fdf1ee]/70 border border-[#E64B2E]/30 rounded-2xl p-5 text-center space-y-2">
           <p className="text-xs text-[#1E3A8A]">
             Please review our official compliance policies before completing your registration:
           </p>
           <div className="flex flex-wrap justify-center gap-3 text-xs font-semibold">
-            <Link to="/terms" className="text-[#2563EB] hover:underline">Terms & Conditions</Link>
+            <Link to="/terms" className="text-[#E64B2E] hover:underline">Terms & Conditions</Link>
             <span className="text-slate-300">•</span>
-            <Link to="/refund-policy" className="text-[#2563EB] hover:underline">Refund & Cancellation Policy</Link>
+            <Link to="/refund-policy" className="text-[#E64B2E] hover:underline">Refund & Cancellation Policy</Link>
             <span className="text-slate-300">•</span>
-            <Link to="/privacy" className="text-[#2563EB] hover:underline">Privacy Policy</Link>
+            <Link to="/privacy" className="text-[#E64B2E] hover:underline">Privacy Policy</Link>
             <span className="text-slate-300">•</span>
-            <Link to="/shipping-policy" className="text-[#2563EB] hover:underline">Shipping & Delivery</Link>
+            <Link to="/shipping-policy" className="text-[#E64B2E] hover:underline">Shipping & Delivery</Link>
             <span className="text-slate-300">•</span>
-            <Link to="/contact" className="text-[#2563EB] hover:underline">Contact Support</Link>
+            <Link to="/contact" className="text-[#E64B2E] hover:underline">Contact Support</Link>
           </div>
         </div>
 
