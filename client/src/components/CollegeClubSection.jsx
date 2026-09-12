@@ -27,8 +27,8 @@ const CollegeClubSection = () => {
           <div className="bg-[#F8FAFC] p-6 sm:p-8 rounded-2xl border border-[#E2E8F0] shadow-card hover:shadow-card-hover transition-all space-y-6 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-blue-100 text-[#2563EB] flex items-center justify-center border border-blue-200 shadow-xs">
-                  <GraduationCap className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-xl bg-white p-1.5 flex items-center justify-center border border-blue-200 shadow-xs overflow-hidden shrink-0">
+                  <img src="/gprec-logo.png" alt="G. Pulla Reddy Engineering College Logo" className="w-full h-full object-contain" />
                 </div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#2563EB] bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
                   Estd. 1984 · 40+ Years
@@ -86,8 +86,8 @@ const CollegeClubSection = () => {
           <div className="bg-[#F8FAFC] p-6 sm:p-8 rounded-2xl border border-[#E2E8F0] shadow-card hover:shadow-card-hover transition-all space-y-6 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center border border-emerald-200 shadow-xs">
-                  <Code2 className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-xl bg-white p-1.5 flex items-center justify-center border border-emerald-200 shadow-xs overflow-hidden shrink-0">
+                  <img src="/coders-club-logo.png" alt="Coders' Club GPREC Logo" className="w-full h-full object-contain" />
                 </div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                   Dept. of CSE (AI & ML) · GPREC
