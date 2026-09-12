@@ -327,9 +327,9 @@ const AdminDashboard = ({ adminToken, adminSecret, onLogout }) => {
           </div>
           <div>
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-xl font-bold tracking-tight">Admin Dashboard</h1>
+              <h1 className="text-xl font-bold tracking-tight">Tabraiz Admin Dashboard</h1>
               <span className="text-[10px] font-semibold bg-blue-500/20 text-blue-300 px-2.5 py-0.5 rounded-full border border-blue-400/30 uppercase tracking-wider">
-                Codex 4.0 · Coders' Club GPREC
+                Tabraiz - (Admin) · Coders' Club GPREC
               </span>
               <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold">
                 <Activity className="w-3 h-3" /> Live

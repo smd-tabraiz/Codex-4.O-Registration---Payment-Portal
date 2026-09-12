@@ -54,9 +54,9 @@ const AdminPage = () => {
             <div className="inline-flex p-3 bg-blue-50 text-[#2563EB] rounded-xl mb-3">
               <ShieldCheck className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-[#0F172A]">Organizer Admin Portal</h2>
+            <h2 className="text-2xl font-bold text-[#0F172A]">Tabraiz Admin Portal</h2>
             <p className="text-xs text-[#64748B] mt-1 font-normal">
-              Log in with Admin Username & Password to view team records & Excel export.
+              Log in with Tabraiz - (Admin) credentials to view team records & Excel export.
             </p>
           </div>
 

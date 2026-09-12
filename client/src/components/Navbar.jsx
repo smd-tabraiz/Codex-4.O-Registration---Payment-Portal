@@ -183,7 +183,7 @@ const Navbar = () => {
                     <User className="w-3.5 h-3.5" />
                   </div>
                   <span className="max-w-[80px] sm:max-w-[130px] truncate font-semibold">
-                    {user?.name || user?.email || (adminToken ? 'Admin' : 'Account')}
+                    {user?.name || user?.email || (adminToken ? 'Tabraiz - (Admin)' : 'Account')}
                   </span>
                   <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -195,7 +195,7 @@ const Navbar = () => {
                     {/* User Details Header */}
                     <div className="px-4 py-2 border-b border-slate-700/80">
                       <p className="text-xs font-bold text-white truncate">
-                        {user?.name || (adminToken ? 'Administrator' : 'User')}
+                        {user?.name || (adminToken ? 'Tabraiz - (Admin)' : 'User')}
                       </p>
                       {user?.email && (
                         <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
@@ -224,7 +224,7 @@ const Navbar = () => {
                           className="w-full px-4 py-2.5 text-left text-xs font-semibold text-slate-200 hover:bg-slate-700/70 hover:text-white flex items-center space-x-2 transition-colors cursor-pointer"
                         >
                           <LayoutDashboard className="w-4 h-4 text-blue-400" />
-                          <span>{adminToken ? 'Admin Dashboard' : 'My Team Dashboard'}</span>
+                          <span>{adminToken ? 'Tabraiz Admin Dashboard' : 'My Team Dashboard'}</span>
                         </button>
                       )}
 

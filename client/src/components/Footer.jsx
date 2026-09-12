@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Mail, Phone, ShieldCheck, MapPin } from 'lucide-react';
+import { Heart, Mail, Phone, ShieldCheck, MapPin, Code2 } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -110,22 +110,23 @@ const Footer = () => {
 
         </div>
 
-        {/* Bottom Bar: Copyright & Security Assurance */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <p className="text-slate-400 text-center sm:text-left">
+        {/* Bottom Bar: Copyright, Security & Developer Credit */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+          <p className="text-slate-400 text-center md:text-left">
             &copy; {new Date().getFullYear()} Coders' Club, GPREC. All rights reserved.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-400">
             <span className="flex items-center space-x-1">
-              <span>Secure Payments powered by</span>
-              <strong className="text-blue-400 font-semibold">Cashfree Payments</strong>
+              <span>Secure Payments by</span>
+              <strong className="text-blue-400 font-semibold">Cashfree</strong>
             </span>
             <span>•</span>
-            <span className="flex items-center space-x-1">
-              <span>Built with</span>
-              <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
-              <span>for Coders' Club GPREC</span>
+            <span className="flex items-center space-x-1.5 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700/60 text-slate-300">
+              <Code2 className="w-3.5 h-3.5 text-blue-400" />
+              <span>Developed by</span>
+              <strong className="text-white font-bold">SMD Tabraiz</strong>
+              <span className="text-blue-400 font-semibold text-[10px] tracking-wider uppercase">(Full Stack Developer)</span>
             </span>
           </div>
         </div>
