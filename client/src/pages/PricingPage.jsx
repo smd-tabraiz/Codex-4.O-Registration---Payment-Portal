@@ -81,7 +81,7 @@ const PricingPage = () => {
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D] tracking-tight">
           Event Passes & <span className="text-[#E64B2E]">Pricing Details</span>
         </h1>
-        <p className="text-[#9A9A9A] text-sm sm:text-base font-normal">
+        <p className="text-[#0D0D0D] text-sm sm:text-base font-normal">
           Transparent, all-inclusive pricing in INR (Indian Rupees) for Codex 4.0 technical coding competition.
         </p>
       </div>
@@ -100,7 +100,7 @@ const PricingPage = () => {
               <h2 className="text-2xl font-bold text-[#0D0D0D]">
                 Codex 4.0 Team Registration Pass
               </h2>
-              <p className="text-xs sm:text-sm text-[#9A9A9A] mt-1.5 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#0D0D0D] mt-1.5 leading-relaxed">
                 All-access registration pass for a team of 2 to 3 engineering students for the flagship Codex 4.0 on-campus coding battle at GPREC Kurnool.
               </p>
             </div>
@@ -124,7 +124,7 @@ const PricingPage = () => {
           <div className="md:col-span-2 bg-[#F2F2F2] border-t md:border-t-0 md:border-l border-[#D6D3CF] p-6 sm:p-10 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="bg-white p-5 rounded-2xl border border-[#D6D3CF] shadow-xs space-y-1">
-                <span className="text-[11px] font-semibold text-[#9A9A9A] uppercase tracking-wider block">
+                <span className="text-[11px] font-semibold text-[#0D0D0D] uppercase tracking-wider block">
                   Total Fee (Inclusive of All Taxes)
                 </span>
                 <div className="flex items-baseline space-x-2">
@@ -133,12 +133,12 @@ const PricingPage = () => {
                     INR
                   </span>
                 </div>
-                <p className="text-[11px] text-[#9A9A9A] pt-1">
+                <p className="text-[11px] text-[#0D0D0D] pt-1">
                   Flat ₹{registrationFee} INR per team · covers 2 to 3 members
                 </p>
               </div>
 
-              <div className="space-y-2 text-xs text-[#9A9A9A]">
+              <div className="space-y-2 text-xs text-[#0D0D0D]">
                 <div className="flex items-center space-x-2">
                   <Building2 className="w-4 h-4 text-[#E64B2E] shrink-0" />
                   <span>Hosted by <strong>Coders' Club, GPREC</strong></span>
@@ -166,7 +166,7 @@ const PricingPage = () => {
                 <span>{registrationsClosed ? 'Registrations Are Closed 🚀' : 'Register Your Team Now'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-              <p className="text-[11px] text-center text-[#9A9A9A]">
+              <p className="text-[11px] text-center text-[#0D0D0D]">
                 {registrationsClosed ? 'Team requirements have been satisfied.' : 'Team capacity limit applies.'}
               </p>
             </div>
@@ -184,7 +184,7 @@ const PricingPage = () => {
             INR
           </div>
           <h4 className="font-bold text-sm text-[#0D0D0D]">Indian Rupee Billing</h4>
-          <p className="text-xs text-[#9A9A9A] leading-relaxed">
+          <p className="text-xs text-[#0D0D0D] leading-relaxed">
             All prices and fee quotes on this portal are in Indian Rupees (INR - ₹). No hidden processing surcharges.
           </p>
         </div>
@@ -194,7 +194,7 @@ const PricingPage = () => {
             100%
           </div>
           <h4 className="font-bold text-sm text-[#0D0D0D]">Instant Digital Delivery</h4>
-          <p className="text-xs text-[#9A9A9A] leading-relaxed">
+          <p className="text-xs text-[#0D0D0D] leading-relaxed">
             Upon payment verification, your Team ID pass and confirmation email are generated instantaneously.
           </p>
         </div>
@@ -204,7 +204,7 @@ const PricingPage = () => {
             PCI
           </div>
           <h4 className="font-bold text-sm text-[#0D0D0D]">PCI-DSS Secure Payments</h4>
-          <p className="text-xs text-[#9A9A9A] leading-relaxed">
+          <p className="text-xs text-[#0D0D0D] leading-relaxed">
             Payments are securely handled by Cashfree Payments with 256-bit encryption. We never store payment credentials.
           </p>
         </div>
@@ -215,7 +215,7 @@ const PricingPage = () => {
       <div className="max-w-4xl mx-auto space-y-6 pt-4">
         <div className="text-center">
           <h3 className="text-xl font-bold text-[#0D0D0D]">Frequently Asked Questions about Pricing</h3>
-          <p className="text-xs text-[#9A9A9A] mt-1">Have questions about payment methods, pass delivery, or invoicing?</p>
+          <p className="text-xs text-[#0D0D0D] mt-1">Have questions about payment methods, pass delivery, or invoicing?</p>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
@@ -225,7 +225,7 @@ const PricingPage = () => {
                 <HelpCircle className="w-4 h-4 text-[#E64B2E] shrink-0 mt-0.5" />
                 <span>{faq.q}</span>
               </h4>
-              <p className="text-xs text-[#9A9A9A] leading-relaxed pl-6">
+              <p className="text-xs text-[#0D0D0D] leading-relaxed pl-6">
                 {faq.a}
               </p>
             </div>

@@ -10,7 +10,7 @@ const RulesSection = ({ onRegisterClick }) => {
         <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D] tracking-tight mb-3">
           Event Guidelines & <span className="text-[#E64B2E]">Rules</span>
         </h2>
-        <p className="text-[#9A9A9A] text-sm sm:text-base max-w-xl mx-auto font-normal">
+        <p className="text-[#444444] text-sm sm:text-base max-w-xl mx-auto font-normal">
           Please review the official competition structure, rounds, and 4th-year team constraints.
         </p>
       </div>
@@ -66,7 +66,7 @@ const RulesSection = ({ onRegisterClick }) => {
                   <Zap className="w-4 h-4" />
                   <span>ROUND 1: Preliminary Round (3 Hours)</span>
                 </div>
-                <p className="text-xs text-[#9A9A9A] leading-relaxed font-normal">
+                <p className="text-xs text-[#444444] leading-relaxed font-normal">
                   All registered teams battle through an intensive 3-hour algorithmic coding challenge testing speed and problem-solving.
                 </p>
               </div>
@@ -76,7 +76,7 @@ const RulesSection = ({ onRegisterClick }) => {
                   <Trophy className="w-4 h-4" />
                   <span>ROUND 2: Grand Finale (1 Hour 30 Mins)</span>
                 </div>
-                <p className="text-xs text-[#9A9A9A] leading-relaxed font-normal">
+                <p className="text-xs text-[#444444] leading-relaxed font-normal">
                   Top performing teams selected from Round 1 performance advance to the 90-minute Grand Finale to claim the ₹50K prize pool!
                 </p>
               </div>
@@ -100,7 +100,7 @@ const RulesSection = ({ onRegisterClick }) => {
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D]">Team Size & Leadership</h3>
           </div>
-          <ul className="space-y-3 text-[#9A9A9A] text-sm">
+          <ul className="space-y-3 text-[#444444] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>Each team must contain exactly <strong className="text-[#0D0D0D]">2 to 3 members</strong>. Single participant or 4+ member teams are not permitted.</span>
@@ -124,7 +124,7 @@ const RulesSection = ({ onRegisterClick }) => {
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D]">Registration & Roll Numbers</h3>
           </div>
-          <ul className="space-y-3 text-[#9A9A9A] text-sm">
+          <ul className="space-y-3 text-[#444444] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>Each student roll number can be registered in <strong className="text-[#0D0D0D]">only one team</strong>. Duplicate roll numbers will trigger automatic rejection.</span>
@@ -148,7 +148,7 @@ const RulesSection = ({ onRegisterClick }) => {
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D]">Event Timings & Check-in</h3>
           </div>
-          <ul className="space-y-3 text-[#9A9A9A] text-sm">
+          <ul className="space-y-3 text-[#444444] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span><strong className="text-[#0D0D0D]">Event Duration:</strong> Starts at <strong className="text-[#0D0D0D]">9:00 AM on 24th September</strong> and concludes at <strong className="text-[#0D0D0D]">5:00 PM</strong>.</span>
@@ -172,7 +172,7 @@ const RulesSection = ({ onRegisterClick }) => {
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D]">Tips for Participants</h3>
           </div>
-          <ul className="space-y-3 text-[#9A9A9A] text-sm">
+          <ul className="space-y-3 text-[#444444] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>Read the complete problem statement carefully.</span>
@@ -197,7 +197,7 @@ const RulesSection = ({ onRegisterClick }) => {
       {/* CTA Bottom Banner */}
       <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#D6D3CF] text-center shadow-card">
         <h3 className="text-2xl font-bold text-[#0D0D0D] mb-2">Ready to Register Your Team?</h3>
-        <p className="text-[#9A9A9A] text-sm mb-6 max-w-lg mx-auto font-normal">
+        <p className="text-[#444444] text-sm mb-6 max-w-lg mx-auto font-normal">
           Ensure your team complies with all guidelines and proceed to fill out member details.
         </p>
         <button

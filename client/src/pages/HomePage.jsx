@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeroSection from '../components/HeroSection';
 import CollegeClubSection from '../components/CollegeClubSection';
@@ -26,7 +26,7 @@ const HomePage = () => {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D] tracking-tight mb-2">
             Compete, Collaborate, <span className="text-[#E64B2E]">Conquer</span>
           </h2>
-          <p className="text-[#9A9A9A] text-sm sm:text-base max-w-xl mx-auto font-normal">
+          <p className="text-[#444444] text-sm sm:text-base max-w-xl mx-auto font-normal">
             Codex 4.0 tests your algorithmic prowess, teamwork, and coding speed in an authentic competitive arena.
           </p>
         </div>
@@ -37,8 +37,8 @@ const HomePage = () => {
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4 border border-amber-200 shadow-xs">
               <Trophy className="w-6 h-6 text-amber-600" />
             </div>
-            <h3 className="text-lg font-bold text-[#0D0D0D] mb-2">₹50,000 Prize Pool</h3>
-            <p className="text-[#9A9A9A] text-xs sm:text-sm leading-relaxed font-normal">
+            <h3 className="text-lg font-bold text-[#0D0D0D] mb-2">Up to ₹50,000 Prize Pool</h3>
+            <p className="text-[#444444] text-xs sm:text-sm leading-relaxed font-normal">
               Lucrative cash prizes, merit trophies, and official certificates for winning teams and top performers.
             </p>
           </div>
@@ -48,7 +48,7 @@ const HomePage = () => {
               <Clock className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D] mb-2">2 Competition Rounds</h3>
-            <p className="text-[#9A9A9A] text-xs sm:text-sm leading-relaxed font-normal">
+            <p className="text-[#444444] text-xs sm:text-sm leading-relaxed font-normal">
               Round 1 (3 Hours) Preliminary challenge + Round 2 (1.5 Hours) Grand Finale for selected finalists.
             </p>
           </div>
@@ -58,7 +58,7 @@ const HomePage = () => {
               <Users className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D] mb-2">Teams of 2–3 Members</h3>
-            <p className="text-[#9A9A9A] text-xs sm:text-sm leading-relaxed font-normal">
+            <p className="text-[#444444] text-xs sm:text-sm leading-relaxed font-normal">
               Collaborate and code together. Inter-branch and inter-year teams are highly encouraged.
             </p>
           </div>
@@ -68,7 +68,7 @@ const HomePage = () => {
               <ShieldAlert className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-[#0D0D0D] mb-2">4th-Year Student Rule</h3>
-            <p className="text-[#9A9A9A] text-xs sm:text-sm leading-relaxed font-normal">
+            <p className="text-[#444444] text-xs sm:text-sm leading-relaxed font-normal">
               Fair competition rule: A team may contain zero or maximum ONE 4th-year student (never 2+).
             </p>
           </div>
@@ -89,7 +89,7 @@ const HomePage = () => {
           <h2 className="text-3xl font-extrabold text-[#0D0D0D] tracking-tight">
             Schedule for <span className="text-[#E64B2E]">24th September 2026</span>
           </h2>
-          <p className="text-[#9A9A9A] text-sm mt-1">
+          <p className="text-[#0D0D0D] text-sm mt-1">
             Reporting Venue: Main Seminar Hall & CSE Computer Labs, GPREC Campus
           </p>
         </div>
@@ -101,7 +101,7 @@ const HomePage = () => {
               08:30 AM – 09:00 AM
             </span>
             <h4 className="font-bold text-[#0D0D0D] text-sm">Reporting & Check-in</h4>
-            <p className="text-xs text-[#9A9A9A] leading-relaxed">
+            <p className="text-xs text-[#444444] leading-relaxed">
               Show Team ID email pass & physical College ID card at verification desk.
             </p>
           </div>
@@ -113,7 +113,7 @@ const HomePage = () => {
             <h4 className="font-bold text-[#0D0D0D] text-sm flex items-center space-x-1">
               <span>ROUND 1: Preliminary</span>
             </h4>
-            <p className="text-xs text-[#9A9A9A] leading-relaxed">
+            <p className="text-xs text-[#444444] leading-relaxed">
               3-hour intensive coding battle. Top scoring teams qualify for Round 2.
             </p>
           </div>
@@ -125,7 +125,7 @@ const HomePage = () => {
             <h4 className="font-bold text-[#0D0D0D] text-sm flex items-center space-x-1">
               <span>ROUND 2: Grand Finale</span>
             </h4>
-            <p className="text-xs text-[#9A9A9A] leading-relaxed">
+            <p className="text-xs text-[#444444] leading-relaxed">
               90-minute championship round for finalists to claim the ₹50K prize pool.
             </p>
           </div>
@@ -135,7 +135,7 @@ const HomePage = () => {
               04:00 PM – 05:00 PM
             </span>
             <h4 className="font-bold text-[#0D0D0D] text-sm">Valedictory & Awards</h4>
-            <p className="text-xs text-[#9A9A9A] leading-relaxed">
+            <p className="text-xs text-[#444444] leading-relaxed">
               Prize distribution by Dignitaries, trophy handovers & certificates for all.
             </p>
           </div>

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Building2, Code2, Award, GraduationCap, Trophy, Users, BookOpen, CheckCircle2, Sparkles, MapPin, ExternalLink } from 'lucide-react';
 
 const CollegeClubSection = () => {
@@ -15,7 +15,7 @@ const CollegeClubSection = () => {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D] tracking-tight">
             About the <span className="text-[#E64B2E]">Institution & Club</span>
           </h2>
-          <p className="text-[#9A9A9A] text-sm sm:text-base mt-2 font-normal">
+          <p className="text-[#0D0D0D] text-sm sm:text-base mt-2 font-normal">
             Codex 4.0 is powered by the legacy of G. Pulla Reddy Engineering College and driven by the passion of Coders' Club.
           </p>
         </div>
@@ -44,7 +44,7 @@ const CollegeClubSection = () => {
                 </p>
               </div>
 
-              <p className="text-sm text-[#9A9A9A] leading-relaxed font-normal">
+              <p className="text-sm text-[#444444] leading-relaxed font-normal">
                 Founded by the revered philanthropist <strong>Late Sri G. Pulla Reddy Garu</strong> in 1984, GPREC stands as one of Andhra Pradesh's premier technical institutions. The college is recognized for academic excellence, state-of-the-art computational infrastructure, and industry-oriented engineering education.
               </p>
 
@@ -65,7 +65,7 @@ const CollegeClubSection = () => {
               </div>
             </div>
 
-            <div className="pt-4 flex items-center justify-between text-xs text-[#9A9A9A] border-t border-[#D6D3CF]">
+            <div className="pt-4 flex items-center justify-between text-xs text-[#444444] border-t border-[#D6D3CF]">
               <span className="flex items-center space-x-1">
                 <MapPin className="w-3.5 h-3.5 text-rose-500" />
                 <span>Kurnool, Andhra Pradesh</span>
@@ -103,7 +103,7 @@ const CollegeClubSection = () => {
                 </p>
               </div>
 
-              <p className="text-sm text-[#9A9A9A] leading-relaxed font-normal">
+              <p className="text-sm text-[#444444] leading-relaxed font-normal">
                 <strong>Coders' Club</strong> is the vibrant, student-led technical organization under the Department of Computer Science & Engineering at GPREC. Dedicated to cultivating problem-solving acumen, mastering Data Structures & Algorithms, and grooming students for top product-based tech roles.
               </p>
 
@@ -124,7 +124,7 @@ const CollegeClubSection = () => {
               </div>
             </div>
 
-            <div className="pt-4 flex items-center justify-between text-xs text-[#9A9A9A] border-t border-[#D6D3CF]">
+            <div className="pt-4 flex items-center justify-between text-xs text-[#444444] border-t border-[#D6D3CF]">
               <span className="flex items-center space-x-1">
                 <Users className="w-3.5 h-3.5 text-[#E64B2E]" />
                 <span>500+ Active Student Developers</span>
@@ -158,9 +158,9 @@ const CollegeClubSection = () => {
             </div>
 
             <div className="space-y-1.5 pt-4 md:pt-0">
-              <span className="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono block">₹50,000</span>
+              <span className="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono block">Up to ₹50,000</span>
               <span className="text-xs font-semibold text-slate-200 block uppercase tracking-wider">Prize Pool</span>
-              <p className="text-[11px] text-slate-400">Cash Awards & Trophies</p>
+              <p className="text-[11px] text-slate-400">Cash Awards & Certificates</p>
             </div>
 
           </div>

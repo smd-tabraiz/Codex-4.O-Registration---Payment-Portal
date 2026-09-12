@@ -54,7 +54,7 @@ const ContactPage = () => {
             <Mail className="w-5 h-5" />
           </div>
           <h3 className="font-bold text-sm text-[#0D0D0D]">Email Inquiries</h3>
-          <p className="text-xs text-[#9A9A9A]">Drop us an email anytime for registrations or sponsorships.</p>
+          <p className="text-xs text-[#0D0D0D]">Drop us an email anytime for registrations or sponsorships.</p>
           <div className="pt-1 space-y-1 text-xs">
             <a href="mailto:codersclubrecruitment@gmail.com" className="block text-[#E64B2E] font-medium hover:underline">
               codersclubrecruitment@gmail.com
@@ -68,12 +68,12 @@ const ContactPage = () => {
             <Phone className="w-5 h-5" />
           </div>
           <h3 className="font-bold text-sm text-[#0D0D0D]">Phone / WhatsApp</h3>
-          <p className="text-xs text-[#9A9A9A]">Call or WhatsApp our student event coordinator.</p>
+          <p className="text-xs text-[#0D0D0D]">Call or WhatsApp our student event coordinator.</p>
           <div className="pt-1 text-xs">
             <a href="tel:+919391491123" className="text-emerald-700 font-semibold hover:underline">
               +91 9391491123
             </a>
-            <span className="block text-[11px] text-[#9A9A9A] mt-0.5">Available 9:00 AM – 7:00 PM</span>
+            <span className="block text-[11px] text-[#0D0D0D] mt-0.5">Available 9:00 AM – 7:00 PM</span>
           </div>
         </div>
 
@@ -83,8 +83,8 @@ const ContactPage = () => {
             <MapPin className="w-5 h-5" />
           </div>
           <h3 className="font-bold text-sm text-[#0D0D0D]">Campus Address</h3>
-          <p className="text-xs text-[#9A9A9A] leading-relaxed">
-            Coders' Club, Department of Computer Science & Engineering,<br />
+          <p className="text-xs text-[#0D0D0D] leading-relaxed">
+            Coders' Club, Department of Computer Science & Engineering (AI & ML),<br />
             G. Pulla Reddy Engineering College (Autonomous),<br />
             Nandyal Road, Kurnool, Andhra Pradesh – 518007.
           </p>

@@ -49,14 +49,14 @@ const LegalPageLayout = ({
                   {title}
                 </h1>
                 {subtitle && (
-                  <p className="text-xs sm:text-sm text-[#9A9A9A] mt-1 font-normal">
+                  <p className="text-xs sm:text-sm text-[#0D0D0D] mt-1 font-normal">
                     {subtitle}
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="flex items-center space-x-1.5 text-xs text-[#9A9A9A] bg-[#F1F5F9] px-3 py-1.5 rounded-lg border border-[#D6D3CF] self-start sm:self-auto shrink-0">
+            <div className="flex items-center space-x-1.5 text-xs text-[#0D0D0D] bg-[#F1F5F9] px-3 py-1.5 rounded-lg border border-[#D6D3CF] self-start sm:self-auto shrink-0">
               <Clock className="w-3.5 h-3.5" />
               <span>Last updated: {lastUpdated}</span>
             </div>
@@ -75,14 +75,14 @@ const LegalPageLayout = ({
               )}
 
               {section.text && (
-                <p className="text-sm text-[#9A9A9A] leading-relaxed font-normal">
+                <p className="text-sm text-[#0D0D0D] leading-relaxed font-normal">
                   {section.text}
                 </p>
               )}
 
               {section.paragraphs &&
                 section.paragraphs.map((para, pIdx) => (
-                  <p key={pIdx} className="text-sm text-[#9A9A9A] leading-relaxed font-normal">
+                  <p key={pIdx} className="text-sm text-[#0D0D0D] leading-relaxed font-normal">
                     {para}
                   </p>
                 ))}
@@ -90,7 +90,7 @@ const LegalPageLayout = ({
               {section.list && (
                 <ul className="space-y-2 pl-2">
                   {section.list.map((item, lIdx) => (
-                    <li key={lIdx} className="text-sm text-[#9A9A9A] flex items-start space-x-2 leading-relaxed">
+                    <li key={lIdx} className="text-sm text-[#0D0D0D] flex items-start space-x-2 leading-relaxed">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#E64B2E] mt-2 shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -103,7 +103,7 @@ const LegalPageLayout = ({
           {children}
 
           {/* Organizer Footer Note */}
-          <div className="pt-6 border-t border-[#D6D3CF] text-center sm:text-left text-xs text-[#9A9A9A] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="pt-6 border-t border-[#D6D3CF] text-center sm:text-left text-xs text-[#0D0D0D] flex flex-col sm:flex-row items-center justify-between gap-3">
             <span>Codex 4.0 is organized by Coders' Club, GPREC, Kurnool.</span>
             {title !== 'Contact Us' && (
               <Link to="/contact" className="text-[#E64B2E] font-semibold hover:underline">

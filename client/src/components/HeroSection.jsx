@@ -51,7 +51,7 @@ const HeroSection = ({ onStartRegister }) => {
                 <h2 className="text-sm sm:text-lg lg:text-xl font-extrabold text-[#0D0D0D] tracking-tight">
                   G. Pulla Reddy Engineering College
                 </h2>
-                <span className="text-[11px] sm:text-sm font-bold text-[#9A9A9A]">(Autonomous)</span>
+                <span className="text-[11px] sm:text-sm font-bold text-[#0D0D0D]">(Autonomous)</span>
               </div>
               <p className="text-[11px] sm:text-sm font-bold text-[#E64B2E] flex items-center justify-center md:justify-start space-x-1 sm:space-x-1.5 mt-0.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#E64B2E]" />
@@ -133,16 +133,16 @@ const HeroSection = ({ onStartRegister }) => {
           <div className="bg-white p-4 rounded-xl text-left border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
             <div className="flex items-center space-x-2 text-[#E64B2E] mb-1">
               <Calendar className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#9A9A9A]">Date</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#0D0D0D]">Date</span>
             </div>
             <p className="text-base sm:text-lg font-bold text-[#0D0D0D]">24th Sept</p>
-            <span className="text-[11px] text-[#9A9A9A]">Full Day Event</span>
+            <span className="text-[11px] text-[#0D0D0D]">Full Day Event</span>
           </div>
 
           <div className="bg-white p-4 rounded-xl text-left border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
             <div className="flex items-center space-x-2 text-amber-600 mb-1">
               <Clock className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#9A9A9A]">Timings</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#0D0D0D]">Timings</span>
             </div>
             <p className="text-xs sm:text-sm font-bold text-[#0D0D0D]">9:00 AM – 5:00 PM</p>
             <span className="text-[11px] text-amber-700 font-semibold">Report 8:30 AM</span>
@@ -160,16 +160,16 @@ const HeroSection = ({ onStartRegister }) => {
           <div className="bg-white p-4 rounded-xl text-left border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200">
             <div className="flex items-center space-x-2 text-purple-600 mb-1">
               <Users className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#9A9A9A]">Team Size</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#0D0D0D]">Team Size</span>
             </div>
             <p className="text-base sm:text-lg font-bold text-[#0D0D0D]">2 – 3 Members</p>
-            <span className="text-[11px] text-[#9A9A9A]">₹300 Per Team</span>
+            <span className="text-[11px] text-[#0D0D0D]">₹300 Per Team</span>
           </div>
 
           <div className="bg-white p-4 rounded-xl text-left border border-[#D6D3CF] shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200 col-span-2 md:col-span-1">
             <div className="flex items-center space-x-2 text-rose-600 mb-1">
               <ShieldAlert className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#9A9A9A]">4th Year Rule</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#0D0D0D]">4th Year Rule</span>
             </div>
             <p className="text-xs sm:text-sm font-bold text-[#0D0D0D]">Max 1 Student</p>
             <span className="text-[11px] text-rose-600 font-semibold">Strictly Enforced</span>

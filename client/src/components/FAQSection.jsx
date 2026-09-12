@@ -52,7 +52,7 @@ const FAQSection = () => {
         <h2 className="text-3xl font-extrabold text-[#0D0D0D] tracking-tight mb-2">
           Frequently Asked <span className="text-[#E64B2E]">Questions</span>
         </h2>
-        <p className="text-[#9A9A9A] text-sm font-normal">
+        <p className="text-[#0D0D0D] text-sm font-normal">
           Everything you need to know about Codex 4.0 registration and guidelines.
         </p>
       </div>
@@ -75,7 +75,7 @@ const FAQSection = () => {
                 {isOpen ? <ChevronUp className="w-5 h-5 text-[#E64B2E] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#9A9A9A] shrink-0" />}
               </button>
               {isOpen && (
-                <div className="px-5 pb-5 text-xs sm:text-sm text-[#9A9A9A] border-t border-[#D6D3CF] pt-3 leading-relaxed font-normal">
+                <div className="px-5 pb-5 text-xs sm:text-sm text-[#0D0D0D] border-t border-[#D6D3CF] pt-3 leading-relaxed font-normal">
                   {faq.a}
                 </div>
               )}
@@ -91,7 +91,7 @@ const FAQSection = () => {
         </div>
         <div>
           <h3 className="text-xl font-bold text-[#0D0D0D]">Have More Questions or Need Help?</h3>
-          <p className="text-xs sm:text-sm text-[#9A9A9A] mt-1 font-normal">
+          <p className="text-xs sm:text-sm text-[#0D0D0D] mt-1 font-normal">
             Reach out directly to the Coders' Club organizing team for any event or payment queries.
           </p>
         </div>
