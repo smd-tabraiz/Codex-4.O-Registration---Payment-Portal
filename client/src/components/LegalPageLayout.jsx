@@ -105,9 +105,11 @@ const LegalPageLayout = ({
           {/* Organizer Footer Note */}
           <div className="pt-6 border-t border-[#E2E8F0] text-center sm:text-left text-xs text-[#64748B] flex flex-col sm:flex-row items-center justify-between gap-3">
             <span>Codex 4.0 is organized by Coders' Club, GPREC, Kurnool.</span>
-            <Link to="/contact" className="text-[#2563EB] font-semibold hover:underline">
-              Have questions? Contact Support →
-            </Link>
+            {title !== 'Contact Us' && (
+              <Link to="/contact" className="text-[#2563EB] font-semibold hover:underline">
+                Have questions? Contact Support →
+              </Link>
+            )}
           </div>
         </div>
 
