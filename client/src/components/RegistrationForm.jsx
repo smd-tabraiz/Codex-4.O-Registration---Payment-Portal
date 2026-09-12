@@ -1338,33 +1338,7 @@ const RegistrationForm = ({ onSuccess }) => {
             })}
           </div>
 
-          {/* Roll Numbers Availability Check Button */}
-          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5">
-              <span className="text-xs text-slate-500">
-                Check if your team's roll numbers are already registered.
-              </span>
-              <button
-                type="button"
-                onClick={handleCheckRollNumbers}
-                disabled={checkingRolls}
-                className="w-full sm:w-auto px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-xs"
-              >
-                {checkingRolls ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3 text-[#E64B2E]" />}
-                <span>Verify Roll Numbers</span>
-              </button>
-            </div>
 
-            {rollCheckStatus && (
-              <p
-                className={`text-xs font-semibold pt-0.5 ${
-                  rollCheckStatus.available ? 'text-emerald-600' : 'text-rose-600'
-                }`}
-              >
-                {rollCheckStatus.message}
-              </p>
-            )}
-          </div>
 
           {/* Navigation Action Buttons */}
           <div className="pt-3 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-between gap-2.5 sm:gap-0">
