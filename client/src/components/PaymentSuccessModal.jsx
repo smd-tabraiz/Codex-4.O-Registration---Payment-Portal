@@ -90,7 +90,7 @@ const PaymentSuccessModal = ({ registration, onClose }) => {
 
           {/* Join Official WhatsApp Group Banner */}
           <a
-            href="https://chat.whatsapp.com/Codex4OfficialGroup"
+            href="https://chat.whatsapp.com/IuGeagGKwFEF7sdbH42dkV?s=cl&p=a&mlu=4&ilr=4"
             target="_blank"
             rel="noopener noreferrer"
             className="no-print bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl p-4 flex items-center justify-between space-x-3 text-emerald-900 text-xs sm:text-sm font-semibold transition-all group shadow-xs"

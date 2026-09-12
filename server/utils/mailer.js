@@ -130,7 +130,7 @@ const sendConfirmationEmail = async (registration) => {
             <div style="background-color: #ECFDF5; border: 1px solid #BBF7D0; padding: 20px; border-radius: 10px; margin-bottom: 24px; text-align: center;">
               <h4 style="color: #166534; margin: 0 0 6px 0; font-size: 14px; font-weight: 700;">&#128172; Join Official Participants WhatsApp Group</h4>
               <p style="color: #15803D; margin: 0 0 14px 0; font-size: 12px;">Get live problem statements, round announcements &amp; event updates.</p>
-              <a href="https://chat.whatsapp.com/Codex4OfficialGroup" target="_blank"
+              <a href="https://chat.whatsapp.com/IuGeagGKwFEF7sdbH42dkV?s=cl&p=a&mlu=4&ilr=4" target="_blank"
                 style="background-color: #16A34A; color: #FFFFFF; padding: 10px 26px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 13px; display: inline-block; letter-spacing: 0.5px;">
                 &#128073; Join WhatsApp Group Now
               </a>

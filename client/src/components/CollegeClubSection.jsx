@@ -90,7 +90,7 @@ const CollegeClubSection = () => {
                   <Code2 className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                  Dept. of CSE · GPREC
+                  Dept. of CSE (AI & ML) · GPREC
                 </span>
               </div>
 

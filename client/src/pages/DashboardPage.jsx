@@ -16,7 +16,9 @@ import {
   AlertCircle,
   Loader2,
   Sparkles,
-  FileText
+  FileText,
+  MessageSquare,
+  ExternalLink
 } from 'lucide-react';
 import api from '../api/axiosInstance';
 
@@ -231,6 +233,28 @@ const DashboardPage = () => {
               ))}
             </div>
           </div>
+
+          {/* Official WhatsApp Group Banner */}
+          <a
+            href="https://chat.whatsapp.com/IuGeagGKwFEF7sdbH42dkV?s=cl&p=a&mlu=4&ilr=4"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl p-4 flex items-center justify-between space-x-3 text-emerald-950 transition-all group shadow-xs"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-xl bg-[#16A34A] text-white font-bold flex items-center justify-center shrink-0 shadow-xs">
+                <MessageSquare className="w-5 h-5" />
+              </div>
+              <div className="text-left">
+                <span className="text-slate-900 font-bold block text-sm">Join Official Participants WhatsApp Group</span>
+                <span className="text-emerald-700 text-xs font-medium">Get live announcements, problem statements & event updates</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-1 text-emerald-700 font-bold text-xs group-hover:translate-x-1 transition-transform shrink-0">
+              <span>Join Group</span>
+              <ExternalLink className="w-4 h-4" />
+            </div>
+          </a>
 
           {/* Event Schedule & Reporting Venue Box */}
           <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-4 sm:p-5 space-y-3">
