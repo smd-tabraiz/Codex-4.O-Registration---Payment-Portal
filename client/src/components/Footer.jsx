@@ -98,12 +98,25 @@ const Footer = () => {
                 className="flex items-center space-x-2 text-slate-300 hover:text-emerald-400 transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>+91 9391491123</span>
+                <span>Shaik Mohammed Tabraiz - +91 9391491123 </span>
               </a>
-
+              <a
+                href="tel:+919391491123"
+                className="flex items-center space-x-2 text-slate-300 hover:text-emerald-400 transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>Kashif - +91 9492068097 </span>
+              </a>
+              <a
+                href="tel:+919391491123"
+                className="flex items-center space-x-2 text-slate-300 hover:text-emerald-400 transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><span>S Vidya Sagar - +91 7416420488 </span> </span>
+              </a>
               <div className="flex items-start space-x-2 text-slate-400 text-[11px] pt-1">
                 <MapPin className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
-                <span>GPREC Campus, Nandyal Road, Kurnool, AP - 518007</span>
+                <span>GPREC Campus, Nandyal Road, Kurnool, Andhra Pradesh - 518007</span>
               </div>
             </div>
           </div>
