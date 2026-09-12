@@ -170,20 +170,24 @@ const RulesSection = ({ onRegisterClick }) => {
             <div className="p-2.5 bg-cyan-50 rounded-lg text-cyan-600">
               <Laptop className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-[#0F172A]">Laptops & Essentials</h3>
+            <h3 className="text-lg font-bold text-[#0F172A]">Tips for Participants</h3>
           </div>
           <ul className="space-y-3 text-[#475569] text-sm">
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>Every team must bring at least <strong className="text-[#0F172A]">1 functional laptop</strong> with charger and extension boards if necessary.</span>
+              <span>Read the complete problem statement carefully.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>High-speed Wi-Fi and power sockets will be provided at the venue.</span>
+              <span>Think about edge cases before submitting.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>Snacks and refreshments will be provided by Coders' Club.</span>
+              <span>Optimize your solution when necessary.</span>
+            </li>
+            <li className="flex items-start space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <span>Manage your time across all problems.</span>
             </li>
           </ul>
         </div>
