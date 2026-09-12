@@ -98,11 +98,11 @@ const FAQSection = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <a
-            href="mailto:codersclubrecuirtment@gmail.com"
+            href="mailto:codersclubrecruitment@gmail.com"
             className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#2563EB] text-xs font-semibold flex items-center justify-center space-x-2 border border-[#E2E8F0] transition-all"
           >
             <Mail className="w-4 h-4 text-[#2563EB]" />
-            <span>codersclubrecuirtment@gmail.com</span>
+            <span>codersclubrecruitment@gmail.com</span>
           </a>
 
           <a

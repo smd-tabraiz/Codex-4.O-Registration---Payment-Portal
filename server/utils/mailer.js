@@ -150,7 +150,7 @@ const sendConfirmationEmail = async (registration) => {
             <!-- Contact -->
             <p style="color: #94A3B8; font-size: 12px; text-align: center; margin: 20px 0 0 0; line-height: 1.8;">
               Questions? Contact the Coders' Club GPREC organizing team:<br>
-              <strong style="color: #64748B;">Email:</strong> codersclubrecuirtment@gmail.com &nbsp;|&nbsp;
+              <strong style="color: #64748B;">Email:</strong> codersclubrecruitment@gmail.com &nbsp;|&nbsp;
               <strong style="color: #64748B;">Phone:</strong> +91 9391491123<br><br>
               &#128187; Happy Coding &amp; All the Best!
             </p>
@@ -180,11 +180,11 @@ const sendConfirmationEmail = async (registration) => {
         name: leader.name,
       },
       from: {
-        email: process.env.EMAIL_FROM_ADDRESS || 'codersclub.gprec@gmail.com',
+        email: process.env.EMAIL_FROM_ADDRESS || 'codersclubrecruitment@gmail.com',
         name: "Coders' Club GPREC",
       },
       replyTo: {
-        email: 'codersclub@gprec.ac.in',
+        email: 'codersclubrecruitment@gmail.com',
         name: "Coders' Club GPREC",
       },
       subject: `[CONFIRMED] Codex 4.0 Registration — Team ID: ${registration.teamId} (${registration.teamName})`,

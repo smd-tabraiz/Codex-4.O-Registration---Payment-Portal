@@ -28,7 +28,7 @@ const REFUND_SECTIONS = [
     heading: 'Duplicate Transactions & Technical Overcharges',
     paragraphs: [
       'In the rare event of a technical glitch, network timeout, or payment gateway error resulting in duplicate debits for the same team registration, the duplicate/excess amount will be refunded in full.',
-      'To report a duplicate payment, the Team Leader must email codersclubrecuirtment@gmail.com within 48 hours of payment with the transaction details (Cashfree Payment / Reference ID, Bank reference number, team name, and date).',
+      'To report a duplicate payment, the Team Leader must email codersclubrecruitment@gmail.com within 48 hours of payment with the transaction details (Cashfree Payment / Reference ID, Bank reference number, team name, and date).',
       'Verified duplicate payments are processed directly through the Cashfree payment gateway back to the original payment source (UPI / Card / Net Banking) within 5 to 7 working days.',
     ],
   },
@@ -45,7 +45,7 @@ const REFUND_SECTIONS = [
       'For any transaction-related queries, duplicate payment disputes, or receipt verifications, please contact our financial and coordination team:',
     ],
     list: [
-      'Email: codersclubrecuirtment@gmail.com / codersclub@gprec.ac.in',
+      'Email: codersclubrecruitment@gmail.com',
       'Phone / WhatsApp Helpline: +91 9391491123',
       'Response Time: Within 24 hours',
     ],

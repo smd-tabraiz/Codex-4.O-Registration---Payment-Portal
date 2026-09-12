@@ -57,7 +57,7 @@ const PRIVACY_SECTIONS = [
   {
     heading: 'Contact for Privacy Concerns',
     paragraphs: [
-      'If you have any questions, concerns, or requests regarding your personal information, please reach out to the organizing team at codersclubrecuirtment@gmail.com or codersclub@gprec.ac.in.',
+      'If you have any questions, concerns, or requests regarding your personal information, please reach out to the organizing team at codersclubrecruitment@gmail.com.',
     ],
   },
 ];

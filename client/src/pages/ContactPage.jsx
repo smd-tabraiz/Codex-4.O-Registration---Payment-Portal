@@ -16,8 +16,7 @@ const CONTACT_SECTIONS = [
       'For technical issues with registration, payment queries, eligibility clarifications, or general event information, please reach out through our official channels:',
     ],
     list: [
-      'Primary Support Email: codersclubrecuirtment@gmail.com',
-      'Institutional Email: codersclub@gprec.ac.in',
+      'Official Support Email: codersclubrecruitment@gmail.com',
       'Event Helpline & WhatsApp: +91 9391491123',
       'Operating / Support Hours: Monday to Saturday, 9:00 AM – 7:00 PM IST',
       'Typical Response Time: Within 12 to 24 hours',
@@ -57,11 +56,8 @@ const ContactPage = () => {
           <h3 className="font-bold text-sm text-[#0F172A]">Email Inquiries</h3>
           <p className="text-xs text-[#64748B]">Drop us an email anytime for registrations or sponsorships.</p>
           <div className="pt-1 space-y-1 text-xs">
-            <a href="mailto:codersclubrecuirtment@gmail.com" className="block text-[#2563EB] font-medium hover:underline">
-              codersclubrecuirtment@gmail.com
-            </a>
-            <a href="mailto:codersclub@gprec.ac.in" className="block text-[#2563EB] font-medium hover:underline">
-              codersclub@gprec.ac.in
+            <a href="mailto:codersclubrecruitment@gmail.com" className="block text-[#2563EB] font-medium hover:underline">
+              codersclubrecruitment@gmail.com
             </a>
           </div>
         </div>
