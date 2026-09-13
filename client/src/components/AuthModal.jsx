@@ -3,8 +3,18 @@ import { X, LogIn, UserPlus, Terminal, Eye, EyeOff } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import api from '../api/axiosInstance';
 
-const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
+const AuthModal = ({ isOpen, onClose, onAuthSuccess, onSuccess }) => {
   if (!isOpen) return null;
+
+  const handleSuccessCallback = (userData) => {
+    const callback = onAuthSuccess || onSuccess;
+    if (typeof callback === 'function') {
+      callback(userData);
+    }
+    if (typeof onClose === 'function') {
+      onClose();
+    }
+  };
 
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -44,10 +54,9 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
         localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
       }
 
-      onAuthSuccess(res.data.user);
-      onClose();
+      handleSuccessCallback(res.data.user);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Google Sign-In failed. (Server could not verify identity or network error)');
+      setError(err.response?.data?.message || (err.message && !err.message.includes('is not a function') ? err.message : '') || 'Google Sign-In failed. (Server could not verify identity or network error)');
     } finally {
       setLoading(false);
     }
@@ -79,8 +88,7 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
         if (res.data.user) {
           localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
         }
-        onAuthSuccess(res.data.user);
-        onClose();
+        handleSuccessCallback(res.data.user);
       } else {
         if (!name || !email || !password) {
           setError('Please fill in Name, Email, and Password.');
@@ -106,11 +114,15 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
           localStorage.setItem('codex_user_data', JSON.stringify(res.data.user));
         }
 
-        onAuthSuccess(res.data.user);
-        onClose();
+        handleSuccessCallback(res.data.user);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Authentication failed. Please check your inputs.');
+      const msg = err.response?.data?.message || err.message;
+      if (msg && !msg.includes('is not a function')) {
+        setError(msg);
+      } else {
+        setError('Authentication failed. Please check your email and password.');
+      }
     } finally {
       setLoading(false);
     }

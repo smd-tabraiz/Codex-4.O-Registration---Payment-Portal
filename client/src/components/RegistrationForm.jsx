@@ -793,6 +793,10 @@ const RegistrationForm = ({ onSuccess }) => {
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
+        onAuthSuccess={(user) => {
+          setCurrentUser(user);
+          setShowAuthModal(false);
+        }}
         onSuccess={(user) => {
           setCurrentUser(user);
           setShowAuthModal(false);
